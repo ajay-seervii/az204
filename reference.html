@@ -1,0 +1,484 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  #quiz-root { padding: 1rem 0; }
+  .quiz-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 8px; }
+  .quiz-title { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
+  .quiz-meta { font-size: 13px; color: var(--color-text-secondary); }
+  .progress-bar-wrap { background: var(--color-background-secondary); border-radius: 4px; height: 6px; margin-bottom: 1.5rem; }
+  .progress-bar-fill { background: #378ADD; border-radius: 4px; height: 6px; transition: width 0.3s; }
+  .q-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; margin-bottom: 1rem; }
+  .q-number { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+  .q-text { font-size: 15px; color: var(--color-text-primary); line-height: 1.6; margin-bottom: 1rem; }
+  .q-code { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; font-family: var(--font-mono); font-size: 12px; color: var(--color-text-primary); margin-bottom: 1rem; white-space: pre-wrap; line-height: 1.5; }
+  .option-btn { display: block; width: 100%; text-align: left; background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 0.65rem 1rem; margin-bottom: 0.5rem; cursor: pointer; font-size: 14px; color: var(--color-text-primary); line-height: 1.5; transition: background 0.15s, border-color 0.15s; }
+  .option-btn:hover:not(:disabled) { background: var(--color-background-secondary); }
+  .option-btn.correct { background: var(--color-background-success); border-color: var(--color-border-success); color: var(--color-text-success); }
+  .option-btn.wrong { background: var(--color-background-danger); border-color: var(--color-border-danger); color: var(--color-text-danger); }
+  .option-btn.revealed { background: var(--color-background-success); border-color: var(--color-border-success); color: var(--color-text-success); }
+  .option-btn:disabled { cursor: default; }
+  .explanation { background: var(--color-background-secondary); border-left: 3px solid #378ADD; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; padding: 0.75rem 1rem; margin-top: 0.75rem; font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; display: none; }
+  .explanation.show { display: block; }
+  .nav-row { display: flex; gap: 10px; margin-top: 1rem; flex-wrap: wrap; }
+  .nav-btn { padding: 0.5rem 1.25rem; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); font-size: 14px; cursor: pointer; }
+  .nav-btn:hover { background: var(--color-background-secondary); }
+  .nav-btn.primary { background: #185FA5; color: #fff; border-color: #185FA5; }
+  .nav-btn.primary:hover { background: #0C447C; }
+  .score-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 2rem; text-align: center; margin-top: 1rem; }
+  .score-big { font-size: 48px; font-weight: 500; color: #185FA5; }
+  .score-label { font-size: 15px; color: var(--color-text-secondary); margin-top: 0.5rem; }
+  .score-breakdown { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 1.5rem; }
+  .scard { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem; }
+  .scard-num { font-size: 24px; font-weight: 500; }
+  .scard-lbl { font-size: 12px; color: var(--color-text-secondary); margin-top: 4px; }
+  .green { color: #3B6D11; } .red { color: #A32D2D; } .amber { color: #854F0B; }
+  .q-nav-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.5rem; }
+  .q-dot { width: 28px; height: 28px; border-radius: 50%; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--color-text-secondary); }
+  .q-dot.answered-correct { background: var(--color-background-success); border-color: var(--color-border-success); color: var(--color-text-success); }
+  .q-dot.answered-wrong { background: var(--color-background-danger); border-color: var(--color-border-danger); color: var(--color-text-danger); }
+  .q-dot.current { border-color: #378ADD; font-weight: 500; color: #185FA5; }
+  .timer { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); font-family: var(--font-mono); }
+  .timer.warn { color: #BA7517; }
+  .timer.danger { color: #A32D2D; }
+</style>
+
+<h2 class="sr-only">AZ-204 Mock Exam — Azure App Service and Functions, 40 Questions</h2>
+<div id="quiz-root"></div>
+
+<script>
+const QUESTIONS = [
+  {
+    q: "A company deploys an Azure App Service web app on a Standard S2 plan. The app experiences sudden traffic spikes. Auto-scale is configured with a scale-out rule triggering at 70% CPU for 10 minutes. During a spike, CPU hits 90% for 3 minutes then drops to 40%. Which outcome is correct?",
+    options: ["App scales out immediately when CPU hits 90%", "App does not scale out because the condition wasn't sustained for 10 minutes", "App scales out after 3 minutes and stays scaled until manually reduced", "Auto-scale fails because CPU fluctuated"],
+    answer: 1,
+    explanation: "Auto-scale rules require the metric threshold to be sustained for the entire configured duration. Since CPU only stayed above 70% for 3 of the required 10 minutes, no scale-out occurs."
+  },
+  {
+    q: "You have an Azure Function with the following configuration:\n\n[FunctionName(\"ProcessOrders\")]\npublic async Task Run(\n  [ServiceBusTrigger(\"orders\", Connection = \"SBConn\")] string msg,\n  ILogger log)\n\nThe function must process exactly once. You discover duplicate processing during partition rebalancing. What is the BEST fix?",
+    options: ["Set maxConcurrentCalls to 1 in host.json", "Use Sessions on the Service Bus queue and enable session support on the trigger", "Change to a Storage Queue trigger instead", "Add a Singleton attribute to the function class"],
+    answer: 1,
+    code: true,
+    explanation: "Service Bus sessions guarantee FIFO and exactly-once processing per session. Enabling sessions on the queue and trigger ensures messages with the same session ID are processed sequentially by one instance, eliminating duplicates during rebalancing."
+  },
+  {
+    q: "An App Service deployment slot swap is performed between staging and production. After the swap, users report the app is connecting to the staging database instead of production. What is the MOST LIKELY cause?",
+    options: ["App Settings marked as 'Deployment slot setting' were swapped with the slot", "Connection strings not marked as 'Deployment slot setting' were swapped along with the app", "The swap did not complete successfully", "App Service Plan needs to be in Premium tier for slot settings to work"],
+    answer: 0,
+    explanation: "Settings marked as 'Deployment slot setting' (sticky settings) stay with the slot they're configured on and do NOT swap. If the database connection string was marked sticky on staging, it travels with that config — meaning production now points to staging's DB. The fix is to mark environment-specific connection strings as slot settings."
+  },
+  {
+    q: "You are building an Azure Durable Function orchestration. The orchestrator must call ActivityA, then in parallel call ActivityB and ActivityC, then call ActivityD after both complete. What pattern should you use?",
+    code: true,
+    q_code: `// What replaces ???
+var a = await ctx.CallActivityAsync("ActivityA", null);
+???
+await ctx.CallActivityAsync("ActivityD", null);`,
+    options: [
+      "var b = await ctx.CallActivityAsync(\"ActivityB\", null);\nvar c = await ctx.CallActivityAsync(\"ActivityC\", null);",
+      "var tasks = new List<Task> { ctx.CallActivityAsync(\"ActivityB\",null), ctx.CallActivityAsync(\"ActivityC\",null) };\nawait Task.WhenAll(tasks);",
+      "await ctx.CallActivityAsync(\"ActivityB\", null);\nawait ctx.CallActivityAsync(\"ActivityC\", null);",
+      "ctx.StartNewOrchestration(\"ActivityB\"); ctx.StartNewOrchestration(\"ActivityC\");"
+    ],
+    answer: 1,
+    explanation: "Fan-out/fan-in in Durable Functions uses Task.WhenAll() on a list of activity tasks started without awaiting individually. Option A awaits sequentially. Option C is also sequential. Option D is wrong API usage."
+  },
+  {
+    q: "An Azure Function on a Consumption plan must complete within 10 minutes but occasionally times out at the default limit. You increase the functionTimeout in host.json to 15 minutes. After deploying, the function still times out at 10 minutes. Why?",
+    options: ["Consumption plan hard-limits function execution to 10 minutes regardless of host.json", "The WEBSITE_RUN_FROM_PACKAGE setting must be enabled to apply timeout changes", "You need to restart the Function App after changing host.json", "The timeout applies only to HTTP-triggered functions"],
+    answer: 0,
+    explanation: "On Consumption plan, the maximum allowed timeout is 10 minutes (600 seconds). Even if you set functionTimeout higher in host.json, the platform enforces the 10-minute cap. To exceed 10 minutes, you must switch to a Premium or Dedicated (App Service) plan."
+  },
+  {
+    q: "Your web app on Azure App Service needs to read a secret from Key Vault without storing credentials anywhere. You enable a system-assigned managed identity. What is the MINIMUM required Key Vault access configuration?",
+    options: ["Assign the app's managed identity the 'Key Vault Contributor' role on the Key Vault", "Grant the managed identity 'Get' permission on secrets in the Key Vault access policy", "Add the app's client ID and secret to App Settings and reference Key Vault", "Assign 'Key Vault Administrator' role to the managed identity"],
+    answer: 1,
+    explanation: "The minimum permission needed is 'Get' on Secrets in the Key Vault access policy (or 'Key Vault Secrets User' RBAC role). 'Key Vault Contributor' is a management plane role and does NOT grant data plane access (reading secrets). Never store credentials in App Settings when using managed identity."
+  },
+  {
+    q: "An HTTP-triggered Azure Function returns inconsistent results under high load. You check the code and find a static HttpClient is being used. A colleague suggests this is wrong and recommends creating a new HttpClient per request. Is your colleague correct?",
+    options: ["Yes — static HttpClient causes thread-safety issues under concurrent requests", "No — static HttpClient is preferred to avoid socket exhaustion; the correct fix is to use IHttpClientFactory", "Yes — static HttpClient doesn't respect DNS changes so should be recreated every request", "No — HttpClient is not thread-safe so static use is fine as long as requests are sequential"],
+    answer: 1,
+    explanation: "Creating a new HttpClient per request causes socket exhaustion (TIME_WAIT sockets). Static HttpClient solves that but can have stale DNS. The correct solution is IHttpClientFactory, which manages pooled handlers with proper DNS TTL rotation. In Azure Functions, inject IHttpClientFactory via DI."
+  },
+  {
+    q: "You need to run a background job that processes items from a queue every 5 minutes using a Timer trigger. The cron expression must run at minute 0, 5, 10, ... of every hour. Which expression is correct?",
+    options: ["0 */5 * * * *", "*/5 * * * * *", "0 0/5 * * * *", "0 5 * * * *"],
+    answer: 0,
+    explanation: "Azure Functions uses a 6-part NCRONTAB: {second} {minute} {hour} {day} {month} {weekday}. '0 */5 * * * *' means: at second 0, every 5th minute. '*/5 * * * * *' would fire every 5 seconds. '0 0/5' is equivalent and also valid but '0 */5' is cleaner and standard."
+  },
+  {
+    q: "An App Service app running on a B1 (Basic) plan needs deployment slots for blue/green deployments. What must you do first?",
+    options: ["Enable Always On in the app configuration", "Upgrade to a Standard S1 or higher plan — deployment slots require Standard tier or above", "Enable ARR Affinity to support multiple slots", "Add WEBSITE_SWAP_WARMUP_PING_PATH to app settings"],
+    answer: 1,
+    explanation: "Deployment slots are only available on Standard, Premium, and Isolated App Service plans. Basic (B1) does not support slots. You must upgrade to at least Standard S1."
+  },
+  {
+    q: "You have an Azure Function with output binding to Azure Blob Storage:\n\n[return: Blob(\"output/{rand-guid}.txt\", FileAccess.Write)]\n\nDuring testing, the blob is created but has zero bytes. The function returns a string value. What is the most likely issue?",
+    code: true,
+    options: ["The FileAccess.Write permission is incorrect for output bindings", "The function must use IAsyncCollector instead of a return binding for blobs", "The return type must be Stream or byte[], not string, for blob output bindings", "The {rand-guid} token is not supported in blob output paths"],
+    answer: 2,
+    explanation: "Blob output bindings support string, byte[], Stream, TextWriter, etc. However, if the function returns an empty string or null, the blob is created but empty. The issue is the function isn't returning the correct string content. But among these options, if returning a string results in empty blob, the return value itself is empty — the binding type is fine."
+  },
+  {
+    q: "A company needs their App Service to scale based on a custom metric from Application Insights. Which scaling approach supports this?",
+    options: ["Built-in auto-scale with custom metrics from Application Insights is natively supported in Standard plan", "Azure Monitor custom metrics-based auto-scale rules, using the custom metric namespace", "You must use Azure Functions with KEDA for custom metric scaling", "Custom metric scaling requires Azure Kubernetes Service"],
+    answer: 1,
+    explanation: "Azure Monitor auto-scale supports custom metrics. You create a scale rule targeting a custom metric from Application Insights (or any Azure Monitor source) using the metric namespace. This is supported on Standard and above App Service plans."
+  },
+  {
+    q: "You configure VNet Integration on your App Service to access resources in a private VNet. After setup, the app still cannot reach a VM at 10.0.0.5. DNS resolves correctly. What is the MOST LIKELY missing configuration?",
+    options: ["The app needs a private endpoint, not VNet Integration, to reach VNet resources", "WEBSITE_VNET_ROUTE_ALL must be set to 1 to route all outbound traffic through the VNet", "The App Service plan must be in the same region as the VNet", "The app's managed identity must have Network Contributor role on the VNet"],
+    answer: 1,
+    explanation: "By default, VNet Integration only routes RFC-1918 private traffic through the VNet. If the VM is at an address not covered or if routing isn't configured, traffic may bypass the VNet. Setting WEBSITE_VNET_ROUTE_ALL=1 forces ALL outbound traffic through the VNet integration, which is typically needed for full private access."
+  },
+  {
+    q: "An Azure Durable Function orchestration fails during a long-running workflow. When restarted, it replays history from the beginning. A developer notices a call to DateTime.UtcNow inside the orchestrator returns a different value than during the original execution. What is wrong?",
+    code: true,
+    options: ["DateTime.UtcNow is not supported in orchestrators; use DateTimeOffset instead", "Orchestrators must use ctx.CurrentUtcDateTime instead of DateTime.UtcNow to ensure determinism during replay", "The orchestrator should be marked with [Deterministic] attribute to fix this", "This is expected behavior and does not affect correctness"],
+    answer: 1,
+    explanation: "Durable Functions replays orchestrator code from the beginning using stored history. Calling DateTime.UtcNow returns a different value on replay, breaking determinism. Always use ctx.CurrentUtcDateTime which returns the deterministic timestamp stored in history."
+  },
+  {
+    q: "You need to ensure your Azure Function only processes messages that haven't been processed before, using an Azure Storage Queue trigger. Messages occasionally appear more than once due to network retries. What is the BEST approach?",
+    options: ["Set visibilityTimeout to 0 in host.json to process messages immediately", "Implement idempotency in the function logic using a deduplication key stored in Table Storage or Cosmos DB", "Use a Service Bus queue instead, which guarantees exactly-once delivery", "Set maxDequeueCount to 1 in host.json"],
+    answer: 1,
+    explanation: "Azure Storage Queues guarantee at-least-once delivery. Setting maxDequeueCount to 1 just sends to dead-letter after first failure, not deduplication. The correct approach is idempotent processing — check a deduplication store before processing. Service Bus with sessions helps but at-least-once is still possible without sessions."
+  },
+  {
+    q: "An App Service web app requires a custom domain with HTTPS. A free managed certificate is configured. After 6 months, users report SSL errors. What most likely happened?",
+    options: ["Free managed certificates are only valid for 3 months and must be manually renewed", "The App Service Plan was scaled down, causing certificate expiry", "Free managed certificates auto-renew but require the A/CNAME record to still resolve to the app", "Free managed certificates do not support custom domains at all"],
+    answer: 2,
+    explanation: "App Service free managed certificates auto-renew. However, renewal requires domain validation, which means the DNS A record or CNAME must still point to the App Service. If DNS was changed (e.g., during a migration), renewal fails silently and the certificate expires."
+  },
+  {
+    q: "You have this Azure Function code:\n\npublic static async Task<IActionResult> Run(\n  [HttpTrigger(AuthorizationLevel.Function, \"post\")] HttpRequest req)\n{\n  var body = await new StreamReader(req.Body).ReadToEndAsync();\n  return new OkObjectResult(body);\n}\n\nCallers report receiving empty responses. The request body contains valid JSON. What is wrong?",
+    code: true,
+    q_code: `public static async Task<IActionResult> Run(
+  [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
+{
+  var body = await new StreamReader(req.Body).ReadToEndAsync();
+  return new OkObjectResult(body);
+}`,
+    options: ["req.Body has already been consumed before the function executes when using Azure Functions v3+", "StreamReader should be wrapped in a using statement", "The HttpTrigger binding must specify \"*\" as the route to receive the body", "req.Body is a non-seekable stream; it must be read with req.EnableBuffering() first in middleware"],
+    answer: 0,
+    explanation: "In Azure Functions with certain middleware or binding configurations (especially v3+ with the new worker model), req.Body can be consumed by the binding pipeline before your code runs. You need to call req.EnableBuffering() and reset req.Body.Position = 0 before reading, or use the binding-provided deserialized model."
+  },
+  {
+    q: "A company wants to run containerized apps on Azure. They need per-second billing, no infrastructure management, and the ability to run multiple containers that share a network. Which service is MOST appropriate?",
+    options: ["Azure App Service with Docker container support", "Azure Container Instances with a container group", "Azure Kubernetes Service with a node pool", "Azure Container Apps with a container app environment"],
+    answer: 1,
+    explanation: "Azure Container Instances (ACI) supports per-second billing, zero infrastructure management, and container groups where multiple containers share the same network namespace and localhost. AKS has infrastructure overhead. Container Apps are higher-level. App Service Docker support doesn't offer per-second billing."
+  },
+  {
+    q: "Your Azure Function reads a Cosmos DB document and conditionally writes to a Storage Queue. Under heavy load, you notice duplicate queue messages. The code uses output bindings for both. What is the root cause?",
+    options: ["Cosmos DB output binding and Queue output binding cannot be used together", "Azure Functions may retry on transient failures after successful partial execution if the function doesn't complete cleanly, causing re-execution and duplicate queue writes", "The Cosmos DB change feed trigger causes duplicate invocations by design", "Queue output bindings don't guarantee delivery under load"],
+    answer: 1,
+    explanation: "Functions guarantee at-least-once execution. If a function crashes or times out after the queue message is written but before Azure marks it complete, the runtime retries the function. The queue write executes again, causing duplicates. Solution: idempotent output operations or use Durable Functions for reliable exactly-once patterns."
+  },
+  {
+    q: "You need to route 10% of traffic to a new App Service deployment slot for canary testing. Which feature enables this?",
+    options: ["Application Gateway weighted routing rules", "App Service Traffic Routing (slot percentage split) in the deployment slot configuration", "Azure Front Door origin group weights", "Azure Traffic Manager weighted routing profiles"],
+    answer: 1,
+    explanation: "App Service has built-in traffic splitting via the deployment slot Traffic Routing feature. You can direct a percentage of production traffic to a staging slot directly from the Azure portal or ARM without needing an external load balancer."
+  },
+  {
+    q: "An Azure Function using a Cosmos DB trigger processes change feed events. After deploying a new version, you notice events from the past 2 days are being reprocessed. What caused this?",
+    options: ["The Cosmos DB container's TTL expired causing events to re-appear in the change feed", "The leases container was deleted or recreated, so the trigger lost its checkpoint and started from the beginning of the change feed", "Cosmos DB change feed has a 2-day replay window by default", "The new version used a different FunctionName causing a new lease group to be created"],
+    answer: 1,
+    explanation: "The Cosmos DB trigger stores checkpoint state in a leases container. If this container is deleted, recreated, or the lease prefix changes (e.g., different FunctionName or leaseContainerPrefix), the trigger loses its position and replays from the start (or from a configured start time). Always preserve the leases container across deployments."
+  },
+  {
+    q: "You need to implement a retry policy for an HTTP call in an Azure Durable Function. Which approach is correct?",
+    options: ["Wrap the HttpClient call in a try/catch with Task.Delay for retries inside the orchestrator", "Use ctx.CallActivityWithRetryAsync() with a RetryOptions object specifying maxNumberOfAttempts and firstRetryInterval", "Add a Polly retry policy to the HttpClient registered in DI", "Set retry in the host.json retryOptions section"],
+    answer: 1,
+    explanation: "In Durable Functions, retries inside the orchestrator using Task.Delay violate determinism rules. ctx.CallActivityWithRetryAsync() is the correct approach — it handles retries durably, storing each attempt in history, with configurable backoff via RetryOptions. Polly in the activity itself is fine too, but the orchestrator-level retry must use the Durable API."
+  },
+  {
+    q: "An App Service plan hosts 5 apps. One app has a memory leak causing the worker process to consume all available RAM, degrading all other apps. What is the BEST mitigation without changing app code?",
+    options: ["Enable Always On for all apps to redistribute load", "Move the leaking app to its own dedicated App Service plan to isolate resource consumption", "Scale out the App Service plan to add more instances", "Enable auto-heal with a memory trigger to restart the leaking app's process"],
+    answer: 3,
+    explanation: "Auto-heal in App Service allows you to configure triggers (e.g., private bytes exceeding a threshold) that automatically restart the worker process. This is the correct operational mitigation without changing code or increasing cost. Moving to a dedicated plan isolates it but costs more. Auto-heal directly addresses the leak."
+  },
+  {
+    q: "A developer deploys a .NET 6 Azure Function using the isolated worker model. They observe the function logs show 'executed successfully' but the downstream HTTP call always returns 401 Unauthorized. The function uses DefaultAzureCredential. In local testing it works fine. What is the MOST LIKELY cause?",
+    options: ["DefaultAzureCredential is not supported in isolated worker model Functions", "The Function App does not have a managed identity enabled, so DefaultAzureCredential falls back to environment credentials which aren't configured in Azure", "AZURE_CLIENT_ID environment variable must be set even when using system-assigned managed identity", "The isolated worker model requires explicit AzureCliCredential in production"],
+    answer: 1,
+    explanation: "DefaultAzureCredential tries multiple credential sources in order: environment variables, managed identity, Visual Studio, Azure CLI, etc. In local dev, it likely uses Azure CLI credentials. In Azure, if no managed identity is enabled and no environment credentials are set, it finds no valid credential and uses an anonymous/wrong token. Enable system-assigned managed identity on the Function App and grant it appropriate permissions."
+  },
+  {
+    q: "You need an App Service app to access an on-premises SQL Server securely without exposing the server to the internet. Which combination is correct?",
+    options: ["VNet Integration + ExpressRoute or Site-to-Site VPN connecting the VNet to on-premises", "Hybrid Connections (Azure Relay) installed on the on-premises machine", "Private Endpoint on the App Service + VPN Gateway", "Service Endpoint on the subnet + Azure Route Table"],
+    answer: 1,
+    explanation: "Hybrid Connections use Azure Relay (outbound from on-premises via HTTPS port 443) to create a secure tunnel. No VPN or firewall changes are needed on-premises. The Hybrid Connection Manager agent runs on the on-premises machine. This is specifically designed for App Service to reach on-premises resources."
+  },
+  {
+    q: "A Function App using Consumption plan has FUNCTIONS_WORKER_RUNTIME set to 'dotnet' and runtime version ~4. You deploy a function that uses .NET 7. What happens?",
+    options: ["The function runs normally since .NET 7 is backward compatible with the ~4 runtime", "The function fails to load because 'dotnet' (in-process) ~4 runtime supports .NET 6 LTS only; .NET 7 requires the isolated worker model", "You must set FUNCTIONS_EXTENSION_VERSION to ~7 to run .NET 7", "Consumption plan does not support .NET 7 at all"],
+    answer: 1,
+    explanation: "Azure Functions v4 in-process model ('dotnet') is locked to .NET 6. To run .NET 7 or .NET 8, you must use the isolated worker model by setting FUNCTIONS_WORKER_RUNTIME to 'dotnet-isolated'. The in-process model won't load a .NET 7 assembly."
+  },
+  {
+    q: "You configure the following in host.json for a Service Bus-triggered function:\n\n\"serviceBus\": {\n  \"maxConcurrentCalls\": 16,\n  \"prefetchCount\": 100\n}\n\nYou observe messages being processed out of order and some being abandoned. What is the MOST LIKELY cause?",
+    code: true,
+    q_code: `"serviceBus": {
+  "maxConcurrentCalls": 16,
+  "prefetchCount": 100
+}`,
+    options: ["prefetchCount greater than maxConcurrentCalls causes lock expiry on prefetched messages before they're processed", "maxConcurrentCalls must equal prefetchCount for correct operation", "Service Bus triggers don't support prefetchCount in host.json", "Messages are processed out of order because the Service Bus queue isn't partitioned"],
+    answer: 0,
+    explanation: "When prefetchCount (100) greatly exceeds maxConcurrentCalls (16), messages are locked and prefetched but sit waiting. If processing is slow, the lock duration expires on prefetched messages before they're processed, causing them to become visible again and be processed by other instances — leading to out-of-order processing and abandoned messages. Set prefetchCount closer to maxConcurrentCalls or increase lock duration."
+  },
+  {
+    q: "An App Service app must read configuration values that differ per environment (dev, staging, prod). You want to use Azure App Configuration with feature flags. What is the RECOMMENDED way to load configuration without restarting the app when values change?",
+    options: ["Poll App Configuration every 30 seconds using a background timer in Startup.cs", "Use the App Configuration provider with sentinel key refresh — register UseAzureAppConfiguration middleware with refreshOptions pointing to a sentinel key", "Read App Configuration values directly via HttpClient in each controller action", "Use Event Grid to trigger a Function that updates App Settings on change"],
+    answer: 1,
+    explanation: "App Configuration supports dynamic refresh via a sentinel key pattern. The middleware checks a lightweight sentinel key on each request (cached with a configurable TTL). When the sentinel changes, the full config refreshes — no restart needed. This is the recommended pattern for zero-downtime config updates."
+  },
+  {
+    q: "A Premium plan Azure Function must process large video files stored in Blob Storage. Each file takes 25–40 minutes to process. What is the MINIMUM configuration change required?",
+    options: ["Set functionTimeout to 00:40:00 in host.json — Premium plan supports up to 60 minutes by default", "Set functionTimeout to -1 in host.json for unlimited execution time on Premium plan", "Upgrade to Dedicated (App Service) plan — Premium plan has a 30-minute cap", "Enable WEBSITE_RUN_FROM_PACKAGE and set functionTimeout to 2400"],
+    answer: 1,
+    explanation: "On Premium and Dedicated plans, you can set functionTimeout to -1 for unlimited execution time (or any specific value beyond 10 minutes). Premium plan does NOT have a 30-minute cap — that's a common misconception. The default on Premium is 30 minutes, but it can be extended to unlimited."
+  },
+  {
+    q: "You deploy an App Service app with WEBSITE_RUN_FROM_PACKAGE=1. A developer pushes a hotfix by FTP-uploading changed .dll files to wwwroot. The change has no effect. Why?",
+    options: ["FTP is disabled when WEBSITE_RUN_FROM_PACKAGE is enabled", "WEBSITE_RUN_FROM_PACKAGE mounts the app as a read-only zip package; direct file changes to wwwroot are ignored", "The developer must restart the app after FTP upload for changes to take effect", "FTP uploads only work with the Kudu deployment endpoint, not direct wwwroot"],
+    answer: 1,
+    explanation: "WEBSITE_RUN_FROM_PACKAGE=1 mounts the deployment package as a read-only virtual file system. Any direct writes to wwwroot are ignored. To update the app, you must redeploy a new package. This is by design for atomic deployments and improved cold-start performance."
+  },
+  {
+    q: "An orchestrator function calls a sub-orchestration 100 times in a loop and collects results. You observe the orchestrator history table grows extremely large and replay becomes slow. What pattern should be applied?",
+    options: ["Use ContinueAsNew() after every 10 sub-orchestrations to truncate history", "Replace sub-orchestrations with direct activity calls to reduce history entries", "Increase the Azure Storage account performance tier to handle the load", "Set the maxQueuePollingInterval lower in host.json to speed up replay"],
+    answer: 0,
+    explanation: "ctx.ContinueAsNew() restarts the orchestrator with a fresh history, discarding completed history entries. This is the standard pattern for eternal orchestrators or ones with large fan-out loops. It prevents unbounded history growth and keeps replay fast."
+  },
+  {
+    q: "An HTTP-triggered Function returns results from Cosmos DB. Under high load, Cosmos DB throttles with 429 responses. The function returns 500 to callers. You want the function to return 429 to callers when Cosmos DB throttles. What is the BEST approach?",
+    options: ["Set the Cosmos DB SDK's MaxRetryAttemptsOnRateLimitedRequests to 0 and catch CosmosException with StatusCode 429, returning ObjectResult with status 429", "Add a Polly retry policy to retry indefinitely until Cosmos DB responds successfully", "Increase Cosmos DB RU/s to prevent throttling", "Return HTTP 503 instead since 429 is not a valid HTTP response from Azure Functions"],
+    answer: 0,
+    explanation: "Set MaxRetryAttemptsOnRateLimitedRequests=0 to disable SDK-level retries (so 429s surface immediately). Catch CosmosException where StatusCode == HttpStatusCode.TooManyRequests and return a 429 ObjectResult. This propagates backpressure to callers correctly. Retrying indefinitely (Polly infinite) just delays failure."
+  },
+  {
+    q: "You need to run an App Service app that requires 64-bit processes and WebSockets. You configure these under Configuration > General Settings. After deployment, WebSocket connections are rejected with a 403. What is the MOST LIKELY cause?",
+    options: ["64-bit mode is incompatible with WebSockets in App Service", "WebSockets are blocked by default at the networking layer; you must add an inbound rule in the App Service IP restrictions for the WS protocol", "The App Service Plan is on Basic tier which doesn't support WebSockets", "The app is behind an Application Gateway that has WebSocket support disabled"],
+    answer: 3,
+    explanation: "App Service itself supports WebSockets when enabled. However, if the app sits behind Application Gateway, WAF, or Azure Front Door, WebSocket support must be explicitly enabled on those services too. Application Gateway requires WebSocket to be enabled in the backend settings. 403 (not 101 Switching Protocols) suggests an intermediary is blocking it."
+  },
+  {
+    q: "A developer creates an Azure Function with both HTTP trigger and Blob output binding:\n\n[FunctionName(\"Upload\")]\npublic static async Task<IActionResult> Run(\n  [HttpTrigger] HttpRequest req,\n  [Blob(\"uploads/{rand-guid}\")] out string blobContent)\n\nThe function throws a compilation error. What is wrong?",
+    code: true,
+    q_code: `[FunctionName("Upload")]
+public static async Task<IActionResult> Run(
+  [HttpTrigger] HttpRequest req,
+  [Blob("uploads/{rand-guid}")] out string blobContent)`,
+    options: ["out parameters are not supported with async methods in C#", "The Blob binding must specify FileAccess.Write explicitly", "rand-guid token is only valid in output binding paths when using IAsyncCollector", "The function return type must be void when using out parameters"],
+    answer: 0,
+    explanation: "C# does not allow 'out' parameters in async methods — it's a language constraint, not an Azure Functions limitation. For async blob output, use IAsyncCollector<string>, CloudBlockBlob, or Stream as the parameter type, or return the blob content and use the [return: Blob(...)] attribute."
+  },
+  {
+    q: "A company wants to monitor Azure Function cold start times. They need to alert when p95 cold start exceeds 3 seconds. Which metric and approach is correct?",
+    options: ["Use the FunctionExecutionCount metric with a threshold filter in Azure Monitor", "Cold start is not directly measurable as an Azure Monitor metric; use Application Insights custom telemetry with a custom availability test", "Query Application Insights for requests where operation_Name contains 'coldstart' and duration > 3000ms", "Use Application Insights Live Metrics stream to observe real-time invocation durations and set a smart detection rule"],
+    answer: 1,
+    explanation: "Azure Monitor does not expose a dedicated 'cold start' metric for Functions. The standard approach is to track first-request latency via Application Insights custom events/metrics, or analyze requests where the Function host was just started. You can also use the 'FunctionAppLogs' table in Log Analytics filtering for host startup events correlated with high first-invocation latency."
+  },
+  {
+    q: "You configure IP restrictions on an App Service to allow only traffic from 203.0.113.0/24. After configuration, the app returns 403 for requests coming from that CIDR. No other rules exist. What is the issue?",
+    options: ["App Service IP restrictions only support /32 (single IP) CIDR masks", "The default 'Deny all' rule takes precedence because Allow rules need an explicit 'Allow All' rule as fallback", "When you add an Allow rule, App Service automatically adds a Deny All rule with lower priority. Requests from outside the allowed range are denied — but if the app is behind a proxy, the client IP seen by App Service may be the proxy IP, not the original client", "IP restrictions require the app to be on a Premium plan to take effect"],
+    answer: 2,
+    explanation: "When an Allow rule is added, App Service implicitly adds a Deny All with lowest priority — this is expected. The issue is that if the app is behind a reverse proxy, CDN, or Application Gateway, App Service sees the proxy's IP, not the client's. The request from 203.0.113.x arrives as the proxy's IP and fails the Allow rule. Fix: configure X-Forwarded-For handling or add the proxy IP range to allowed rules."
+  },
+  {
+    q: "An Azure Durable Function must wait for an external event (human approval) for up to 72 hours. If no approval arrives, it should auto-reject. Which implementation is correct?",
+    code: true,
+    options: [
+      "var approval = await ctx.WaitForExternalEvent<bool>(\"Approval\");\nif (!approval) { /* reject */ }",
+      "using var cts = new CancellationTokenSource();\nvar timeout = ctx.CreateTimer(ctx.CurrentUtcDateTime.AddHours(72), cts.Token);\nvar approval = ctx.WaitForExternalEvent<bool>(\"Approval\");\nvar winner = await Task.WhenAny(approval, timeout);\nif (winner == timeout) { /* auto-reject */ cts.Cancel(); }",
+      "await Task.Delay(TimeSpan.FromHours(72), cts.Token);",
+      "ctx.SetCustomStatus(\"waiting\"); await ctx.WaitForExternalEvent<bool>(\"Approval\", TimeSpan.FromHours(72));"
+    ],
+    answer: 1,
+    explanation: "The correct pattern for timeouts in Durable Functions is ctx.CreateTimer() raced against WaitForExternalEvent() using Task.WhenAny(). Task.Delay is not deterministic in orchestrators. Option D — passing a timeout to WaitForExternalEvent — is valid in newer SDKs but less portable. The canonical approach is the timer race pattern. Always cancel the timer if the event arrives first."
+  },
+  {
+    q: "A Function App's Consumption plan deployment is in East US. The app accesses a Storage Account in West US for its trigger and bindings. What is the impact and recommendation?",
+    options: ["There is no impact; Azure Functions routing handles cross-region transparently", "Cross-region Storage access increases latency for trigger polling and may increase costs due to egress charges; the Storage Account should be in the same region as the Function App", "The Function App will fail to trigger because Storage triggers require same-region accounts", "Storage Account for triggers must always be in paired regions, not the same region"],
+    answer: 1,
+    explanation: "Azure Functions uses the Storage Account for trigger state (queue messages, blob leases, timer state). Cross-region access adds latency to every trigger poll and incurs egress charges. Best practice is to keep the Function App and its associated Storage Account in the same region."
+  },
+  {
+    q: "You need to deploy a containerized Azure Function. The container must scale to zero when idle. Which hosting option supports this?",
+    options: ["Azure Kubernetes Service with KEDA", "Azure Container Apps with Consumption workload profile", "Azure Container Instances with a timer-based scaler", "App Service with Docker container support on a Basic plan"],
+    answer: 1,
+    explanation: "Azure Container Apps with Consumption workload profile supports scale-to-zero for containerized Azure Functions. AKS with KEDA can scale to zero but requires infrastructure management. ACI is per-container, not a scale-to-zero hosting model for Functions. App Service Basic doesn't scale to zero."
+  },
+  {
+    q: "An App Service app is configured with Application Insights auto-instrumentation. A developer adds manual TrackEvent() calls. Under load testing, custom events are missing from Application Insights while standard request telemetry is present. What is the MOST LIKELY cause?",
+    options: ["TrackEvent() is not supported with auto-instrumentation; only SDK-based initialization supports custom events", "The TelemetryClient used for TrackEvent() is not flushed before the request completes, and telemetry is lost in the buffer", "Application Insights sampling is configured and is dropping custom events while keeping request telemetry", "Auto-instrumentation overrides the InstrumentationKey used by the manual TelemetryClient"],
+    answer: 2,
+    explanation: "Application Insights adaptive sampling can selectively drop telemetry types. By default, sampling affects custom events and traces more aggressively than requests. If sampling rate is low, custom events get dropped while requests survive. Fix: configure sampling exclusions for EventTelemetry in ApplicationInsights.config or the SDK setup, or increase the sampling threshold."
+  },
+  {
+    q: "A Function App uses an App Service plan (Dedicated). You need to ensure the function continues running during App Service platform maintenance (OS patching). What setting achieves this?",
+    options: ["Enable Always On in the Function App configuration", "Set WEBSITE_DISABLE_OVERLAPPED_RECYCLING=1 to prevent recycling during maintenance", "Upgrade to a Premium plan with zone redundancy enabled", "Enable Health Check with a custom endpoint so the platform skips instances that are processing"],
+    answer: 2,
+    explanation: "Zone redundancy on Premium or Dedicated (Isolated v2) App Service plans distributes instances across availability zones. During platform maintenance (which is zone-by-zone), other zones continue serving traffic. Always On just prevents idle timeouts. WEBSITE_DISABLE_OVERLAPPED_RECYCLING affects deployment, not platform maintenance."
+  }
+];
+
+let current = 0;
+let answers = new Array(QUESTIONS.length).fill(null);
+let revealed = new Array(QUESTIONS.length).fill(false);
+let startTime = Date.now();
+let timerInterval;
+
+function formatTime(ms) {
+  const total = Math.floor(ms / 1000);
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+  return m + ':' + String(s).padStart(2, '0');
+}
+
+function getTimerClass(elapsed) {
+  const mins = elapsed / 60000;
+  if (mins > 110) return 'timer danger';
+  if (mins > 90) return 'timer warn';
+  return 'timer';
+}
+
+function renderNavDots() {
+  return QUESTIONS.map((_, i) => {
+    let cls = 'q-dot';
+    if (i === current) cls += ' current';
+    else if (answers[i] !== null) {
+      cls += answers[i] === QUESTIONS[i].answer ? ' answered-correct' : ' answered-wrong';
+    }
+    return `<div class="${cls}" onclick="jumpTo(${i})" title="Q${i+1}">${i+1}</div>`;
+  }).join('');
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[current];
+  const answered = answers[current] !== null;
+  const elapsed = Date.now() - startTime;
+  const answered_count = answers.filter(a => a !== null).length;
+  const progress = (answered_count / QUESTIONS.length * 100).toFixed(0);
+
+  let optionsHtml = q.options.map((opt, i) => {
+    let cls = 'option-btn';
+    let disabled = '';
+    if (answered) {
+      disabled = 'disabled';
+      if (i === q.answer) cls += ' correct';
+      else if (i === answers[current]) cls += ' wrong';
+    }
+    return `<button class="${cls}" ${disabled} onclick="selectAnswer(${i})">${String.fromCharCode(65+i)}. ${opt.replace(/\n/g, '<br>')}</button>`;
+  }).join('');
+
+  let codeBlock = '';
+  if (q.q_code) {
+    codeBlock = `<div class="q-code">${q.q_code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>`;
+  }
+
+  let explanation = '';
+  if (answered) {
+    const correct = answers[current] === q.answer;
+    const icon = correct ? '✓ Correct' : '✗ Incorrect';
+    explanation = `<div class="explanation show"><strong>${icon}</strong> — ${q.explanation}</div>`;
+  }
+
+  const allAnswered = answers.every(a => a !== null);
+
+  document.getElementById('quiz-root').innerHTML = `
+    <div class="quiz-header">
+      <span class="quiz-title">AZ-204 Mock Exam</span>
+      <span class="timer ${getTimerClass(elapsed)}" id="timer-display">${formatTime(elapsed)}</span>
+    </div>
+    <div class="q-nav-grid">${renderNavDots()}</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${progress}%"></div></div>
+    <div class="quiz-meta" style="margin-bottom:1rem">${answered_count} of ${QUESTIONS.length} answered</div>
+    <div class="q-card">
+      <div class="q-number">Question ${current + 1} of ${QUESTIONS.length}</div>
+      <div class="q-text">${q.q}</div>
+      ${codeBlock}
+      ${optionsHtml}
+      ${explanation}
+    </div>
+    <div class="nav-row">
+      ${current > 0 ? '<button class="nav-btn" onclick="prevQ()">← Previous</button>' : ''}
+      ${current < QUESTIONS.length - 1 ? '<button class="nav-btn primary" onclick="nextQ()">Next →</button>' : ''}
+      ${allAnswered ? '<button class="nav-btn primary" onclick="showResults()">View Results</button>' : ''}
+    </div>
+  `;
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    const el = document.getElementById('timer-display');
+    if (el) {
+      const e = Date.now() - startTime;
+      el.textContent = formatTime(e);
+      el.className = getTimerClass(e);
+    }
+  }, 1000);
+}
+
+function selectAnswer(i) {
+  if (answers[current] !== null) return;
+  answers[current] = i;
+  renderQuestion();
+}
+
+function nextQ() {
+  if (current < QUESTIONS.length - 1) { current++; renderQuestion(); }
+}
+function prevQ() {
+  if (current > 0) { current--; renderQuestion(); }
+}
+function jumpTo(i) { current = i; renderQuestion(); }
+
+function showResults() {
+  clearInterval(timerInterval);
+  const elapsed = Date.now() - startTime;
+  const correct = answers.filter((a, i) => a === QUESTIONS[i].answer).length;
+  const wrong = answers.filter((a, i) => a !== null && a !== QUESTIONS[i].answer).length;
+  const pct = Math.round(correct / QUESTIONS.length * 100);
+  let verdict = '';
+  if (pct >= 75) verdict = '<span class="green">✓ Pass range — well done!</span>';
+  else if (pct >= 60) verdict = '<span class="amber">⚠ Close — review weak areas</span>';
+  else verdict = '<span class="red">✗ Needs more prep — focus on explanations</span>';
+
+  document.getElementById('quiz-root').innerHTML = `
+    <div class="score-card">
+      <div class="score-big">${pct}%</div>
+      <div class="score-label">${correct} / ${QUESTIONS.length} correct &nbsp;|&nbsp; ${formatTime(elapsed)}</div>
+      <div style="margin-top:0.75rem;font-size:14px;">${verdict}</div>
+      <div class="score-breakdown">
+        <div class="scard"><div class="scard-num green">${correct}</div><div class="scard-lbl">Correct</div></div>
+        <div class="scard"><div class="scard-num red">${wrong}</div><div class="scard-lbl">Wrong</div></div>
+        <div class="scard"><div class="scard-num">${formatTime(elapsed)}</div><div class="scard-lbl">Time taken</div></div>
+      </div>
+      <div style="margin-top:1.5rem;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="nav-btn" onclick="reviewWrong()">Review wrong answers</button>
+        <button class="nav-btn primary" onclick="restart()">Restart exam</button>
+      </div>
+    </div>
+  `;
+}
+
+function reviewWrong() {
+  const firstWrong = answers.findIndex((a, i) => a !== null && a !== QUESTIONS[i].answer);
+  if (firstWrong === -1) return;
+  current = firstWrong;
+  renderQuestion();
+}
+
+function restart() {
+  answers = new Array(QUESTIONS.length).fill(null);
+  revealed = new Array(QUESTIONS.length).fill(false);
+  current = 0;
+  startTime = Date.now();
+  renderQuestion();
+}
+
+renderQuestion();
+</script>
