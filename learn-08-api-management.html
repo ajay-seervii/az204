@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Management — AZ-204 Study Notes</title>
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --azure:#0078D4;--azure-dark:#005a9e;--azure-light:#deecf9;
+  --bg:#f4f6f9;--surface:#fff;--nav-bg:#1a1f36;
+  --border:#d0d7de;--border-light:#e8ecf0;
+  --text:#1a1f36;--text-muted:#6b7280;--text-light:#9ca3af;
+  --ok-bg:#ecfdf5;--ok-bdr:#10b981;--ok-txt:#065f46;
+  --err-bg:#fef2f2;--err-bdr:#ef4444;--err-txt:#991b1b;
+  --warn-bg:#fffbeb;--warn-bdr:#fbbf24;--warn-txt:#92400e;
+  --r:10px;--rs:6px;
+  --sh:0 1px 3px rgba(0,0,0,.08);--shm:0 4px 12px rgba(0,0,0,.12);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--azure);text-decoration:none}
+a:hover{text-decoration:underline}
+#top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
+.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
+.nav-bc a{color:rgba(255,255,255,.75)}
+.nav-bc a:hover{color:#fff;text-decoration:none}
+.nav-bc span{color:rgba(255,255,255,.35)}
+.nav-bc strong{color:#fff}
+.nav-acts{display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
+.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.page-layout{display:flex;min-height:calc(100vh - 54px)}
+.sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
+.sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
+.sb-back:hover{color:var(--azure);text-decoration:none}
+.sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-light);padding:.5rem 1rem;margin-top:.25rem}
+.sb-link{display:flex;align-items:center;gap:8px;padding:.45rem 1rem;font-size:13px;color:var(--text-muted);border-left:3px solid transparent;cursor:pointer;transition:background .1s,color .1s,border-color .1s}
+.sb-link:hover{background:#f8fafc;color:var(--text)}
+.sb-link.active{border-left-color:var(--azure);color:var(--azure);background:#eff6ff;font-weight:600}
+.sb-num{font-size:10px;background:#f3f4f6;border:1px solid var(--border-light);padding:1px 6px;border-radius:20px;margin-left:auto;color:var(--text-light)}
+.sb-next{display:flex;align-items:center;gap:6px;padding:.45rem 1rem;font-size:12px;color:var(--text-muted);margin-top:.5rem;border-top:1px solid var(--border-light)}
+.sb-next:hover{color:var(--azure);text-decoration:none}
+.main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
+.topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
+.topic-header p{font-size:13px;color:var(--text-muted);margin:0}
+.topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
+.module{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem 1.75rem;margin-bottom:1.75rem;scroll-margin-top:70px}
+.module h2{font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--border-light)}
+.module h2 .mod-num{background:var(--azure);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--azure);margin-bottom:.5rem;margin-top:1.25rem;display:flex;align-items:center;gap:6px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--azure-light)}
+h3{font-size:14px;font-weight:700;color:var(--text);margin:.75rem 0 .4rem}
+p,li{font-size:13px;color:var(--text-muted);line-height:1.7}
+ul,ol{padding-left:1.4rem;margin:.4rem 0}
+li{margin-bottom:.25rem}
+strong{color:var(--text)}
+code{font-family:Consolas,'Cascadia Code','Courier New',monospace;font-size:.85em;background:#f3f4f6;padding:1px 5px;border-radius:4px;color:#1a1f36}
+pre{font-family:Consolas,'Cascadia Code','Courier New',monospace;background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:var(--rs);padding:1.1rem 1.25rem;overflow-x:auto;font-size:12.5px;line-height:1.65;margin:.6rem 0}
+pre code{background:none;padding:0;color:inherit}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--rs);margin:.6rem 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f8fafc;color:var(--text-muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.55rem .9rem;text-align:left;border-bottom:2px solid var(--border)}
+td{padding:.55rem .9rem;border-bottom:1px solid var(--border-light);color:var(--text-muted);vertical-align:top;line-height:1.5}
+td:first-child{color:var(--text);font-weight:500}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+.callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
+.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-body{flex:1}
+.callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
+.callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
+.callout.gotcha .callout-title{color:var(--err-txt)}
+.callout.tip{background:#eff6ff;border-left:3px solid var(--azure)}
+.callout.tip .callout-title{color:var(--azure-dark)}
+.callout.warn{background:var(--warn-bg);border-left:3px solid var(--warn-bdr)}
+.callout.warn .callout-title{color:var(--warn-txt)}
+.callout.success{background:var(--ok-bg);border-left:3px solid var(--ok-bdr)}
+.callout.success .callout-title{color:var(--ok-txt)}
+.qa-list{margin-top:.5rem}
+.qa-item{border:1px solid var(--border);border-radius:var(--rs);margin-bottom:.6rem;overflow:hidden}
+.qa-q{display:flex;align-items:flex-start;gap:.65rem;padding:.85rem 1rem;cursor:pointer;background:var(--surface);user-select:none}
+.qa-q:hover{background:#f8fafc}
+.qa-n{flex-shrink:0;width:20px;height:20px;background:var(--azure);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.qa-text{flex:1;font-size:13px;color:var(--text);line-height:1.5;font-weight:500}
+.qa-tog{flex-shrink:0;color:var(--text-light);transition:transform .2s;font-size:14px;margin-top:2px}
+.qa-item.open .qa-tog{transform:rotate(180deg)}
+.qa-ans{display:none;padding:.85rem 1rem 1rem;background:#f8fafc;border-top:1px solid var(--border-light)}
+.qa-item.open .qa-ans{display:block}
+.qa-correct{display:inline-flex;align-items:center;gap:5px;background:var(--ok-bg);color:var(--ok-txt);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-bottom:.6rem}
+.qa-body{font-size:12.5px;color:var(--text-muted);line-height:1.7}
+.qa-body ul{padding-left:1.25rem;margin:.4rem 0}
+.qa-body strong{color:var(--text)}
+.nav-end{display:flex;justify-content:space-between;padding:1.25rem 0;border-top:1px solid var(--border);margin-top:.5rem}
+.btn-link{display:inline-flex;align-items:center;gap:5px;padding:.4rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--text-muted)}
+.btn-link:hover{border-color:var(--azure);color:var(--azure);text-decoration:none}
+.btn-link.fwd{background:var(--azure);color:#fff;border-color:var(--azure)}
+.btn-link.fwd:hover{background:var(--azure-dark);text-decoration:none}
+@media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
+
+</style>
+</head>
+<body>
+
+<nav id="top-nav">
+  <div class="nav-brand">
+    <div class="nav-brand-icon">Az</div>
+    <div class="nav-bc">
+      <a href="learn.html">Study Notes</a>
+      <span>/</span>
+      <strong>API Management</strong>
+    </div>
+  </div>
+  <div class="nav-acts">
+    <a href="learn.html" class="btn btn-ghost">← All Topics</a>
+    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <a href="learn.html" class="sb-back">← All Topics</a>
+    <div class="sb-label">API Management</div>
+    <a href="#m1" class="sb-link" data-m="1">🔍 Explore API Management<span class="sb-num">6 sections</span></a>
+    <a href="learn-09-events.html" class="sb-next">Next: Events →</a>
+  </aside>
+
+  <main class="main">
+    <div class="topic-header">
+      <div class="topic-icon-lg">🔀</div>
+      <div>
+        <h1>API Management</h1>
+        <p>1 module · Explore API Management</p>
+      </div>
+      <div class="topic-num">Topic 08</div>
+    </div>
+
+    <!-- MODULE 1 -->
+    <section class="module" id="m1">
+      <h2><span class="mod-num">M1</span> Explore API Management</h2>
+
+      <!-- ① Key Concepts -->
+      <div class="sec-lbl">① Key Concepts</div>
+
+      <h3>APIM Architecture: Three Core Components</h3>
+      <p>Azure API Management sits between API consumers and your backend services. Every request passes through the <strong>Gateway</strong>, which applies policies, enforces authentication, throttles traffic, and forwards calls to the backend. The <strong>Management Plane</strong> is the administrative API used by the Azure Portal, CLI, ARM templates, and Bicep — it lets you define APIs, configure products, write policies, and manage users. The <strong>Developer Portal</strong> is an auto-generated, customizable website where API consumers browse documentation, test endpoints interactively, and self-subscribe to products.</p>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Gateway is the only component that handles live traffic</div>
+          Changes made in the Management Plane (new policies, new API versions) do not take effect until the Gateway picks them up. In the Consumption tier this is near-instant; in dedicated tiers there can be a short propagation delay. The Developer Portal is for documentation and subscription management only — it never proxies API calls.
+        </div>
+      </div>
+
+      <h3>Products and Subscriptions</h3>
+      <p>A <strong>Product</strong> is a logical bundle of one or more APIs. To call an API via APIM, a consumer must subscribe to a product that contains that API (unless the product is set to "Open" with no subscription required). Each <strong>Subscription</strong> generates two 512-bit keys (primary + secondary) that the caller passes in the <code>Ocp-Apim-Subscription-Key</code> HTTP header (or as a <code>subscription-key</code> query parameter). Subscriptions can be scoped to a product, a single API, or all APIs (global scope). Rate-limit and quota policies operate against the subscription key by default.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Subscription Scope</th><th>Grants Access To</th><th>Use Case</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Product</td><td>All APIs bundled in the product</td><td>Standard consumer access; policy can differ per product</td></tr>
+            <tr><td>API</td><td>A single API only</td><td>Granular access for partners needing one API</td></tr>
+            <tr><td>All APIs (Global)</td><td>Every published API in the instance</td><td>Admin/internal tooling; avoid for external consumers</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Gateway Tiers Comparison</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Tier</th><th>SLA</th><th>VNET Support</th><th>Cache</th><th>Multi-Region</th><th>Key Exam Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Consumption</td><td>99.95%</td><td>None</td><td>External Redis only</td><td>No</td><td>Serverless, pay-per-call; no built-in cache; scales to zero</td></tr>
+            <tr><td>Developer</td><td>No SLA</td><td>External + Internal</td><td>Built-in</td><td>No</td><td>For dev/test only; single unit; never for production</td></tr>
+            <tr><td>Basic</td><td>99.95%</td><td>None</td><td>Built-in</td><td>No</td><td>Entry-level production; limited scale units</td></tr>
+            <tr><td>Standard</td><td>99.95%</td><td>None</td><td>Built-in</td><td>No</td><td>Production; more scale units than Basic</td></tr>
+            <tr><td>Premium</td><td>99.99%</td><td>External + Internal</td><td>Built-in</td><td>Yes</td><td>Multi-region, VNET injection, zone redundancy; highest SLA</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">VNET support is tier-gated — Premium only for production VNET</div>
+          Developer tier supports VNET but has no SLA. If a scenario requires VNET injection AND production-grade SLA, the answer is always <strong>Premium</strong>. Basic and Standard do not support VNET at all. The Consumption tier also has no VNET support.
+        </div>
+      </div>
+
+      <h3>Policy Scopes and Execution Order</h3>
+      <p>Policies are XML documents applied at four scopes, evaluated from broadest to most specific. The <code>&lt;base/&gt;</code> element explicitly imports the parent scope's policy block at that insertion point. If <code>&lt;base/&gt;</code> is omitted, the parent policy does not execute for that scope.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Scope Level</th><th>Where Configured</th><th>Applies To</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Global</td><td>All APIs section in APIM instance</td><td>Every request through the gateway</td></tr>
+            <tr><td>Product</td><td>Per-product policy editor</td><td>All APIs in that product</td></tr>
+            <tr><td>API</td><td>Per-API policy editor</td><td>All operations in that API</td></tr>
+            <tr><td>Operation</td><td>Per-operation policy editor</td><td>One specific HTTP operation</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Policy Sections</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Section</th><th>When It Runs</th><th>Typical Uses</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>&lt;inbound&gt;</code></td><td>After request received, before forwarding to backend</td><td>Auth (validate-jwt), rate limiting, header injection, URL rewriting, caching lookup</td></tr>
+            <tr><td><code>&lt;backend&gt;</code></td><td>Just before the backend call is made</td><td>Set backend URL dynamically, load balancing between backends</td></tr>
+            <tr><td><code>&lt;outbound&gt;</code></td><td>After backend response received, before returning to caller</td><td>Transform response, filter fields, add response headers, cache-store</td></tr>
+            <tr><td><code>&lt;on-error&gt;</code></td><td>When an exception occurs in any section</td><td>Custom error responses, logging, retry logic</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Named Values</h3>
+      <p>Named Values are a global key-value store in APIM used to avoid hard-coding secrets or configuration strings directly in policy XML. A Named Value is referenced in policy using double-curly-brace syntax: <code>{{my-named-value}}</code>. Values can be plain text, secrets (stored encrypted), or references to Azure Key Vault secrets. Using Key Vault-backed Named Values is the exam-preferred approach for storing API keys, connection strings, and signing certificates.</p>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Named Values vs. hard-coded secrets in policy XML</div>
+          On the exam, any scenario asking how to store a backend API key securely without embedding it in policy XML should be answered with <strong>Named Values backed by Key Vault</strong>. APIM uses its system-assigned Managed Identity to retrieve the Key Vault secret, so no credentials are stored in APIM itself.
+        </div>
+      </div>
+
+      <h3>Key Policies Reference</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Policy</th><th>Section</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>rate-limit</code></td><td>inbound</td><td>Limit calls per subscription key per time window (seconds/minutes/hours)</td></tr>
+            <tr><td><code>rate-limit-by-key</code></td><td>inbound</td><td>Limit calls by any computed key (e.g., IP address, JWT claim)</td></tr>
+            <tr><td><code>quota</code></td><td>inbound</td><td>Overall usage cap per subscription per renewal period (longer horizon than rate-limit)</td></tr>
+            <tr><td><code>quota-by-key</code></td><td>inbound</td><td>Overall usage cap by computed key</td></tr>
+            <tr><td><code>validate-jwt</code></td><td>inbound</td><td>Verify JWT signature, expiry, and claims; reject with 401 if invalid</td></tr>
+            <tr><td><code>set-header</code></td><td>inbound / outbound</td><td>Add, update, or delete HTTP headers</td></tr>
+            <tr><td><code>set-query-parameter</code></td><td>inbound</td><td>Add, update, or delete query string parameters</td></tr>
+            <tr><td><code>rewrite-url</code></td><td>inbound</td><td>Transform the request URL path before forwarding to backend</td></tr>
+            <tr><td><code>mock-response</code></td><td>inbound</td><td>Return a static response immediately; backend is never called</td></tr>
+            <tr><td><code>return-response</code></td><td>inbound / on-error</td><td>Terminate pipeline and return a custom response</td></tr>
+            <tr><td><code>send-request</code></td><td>any</td><td>Make an HTTP call to another service from within the policy pipeline</td></tr>
+            <tr><td><code>cache-lookup</code></td><td>inbound</td><td>Check built-in cache; serve cached response if hit</td></tr>
+            <tr><td><code>cache-store</code></td><td>outbound</td><td>Store backend response in cache with TTL</td></tr>
+            <tr><td><code>cors</code></td><td>inbound</td><td>Add CORS headers; handle preflight OPTIONS requests</td></tr>
+            <tr><td><code>ip-filter</code></td><td>inbound</td><td>Allow or deny requests based on caller IP address or range</td></tr>
+            <tr><td><code>validate-client-certificate</code></td><td>inbound</td><td>Validate mutual TLS client certificate against trusted CAs or thumbprint</td></tr>
+            <tr><td><code>transform-json-to-xml</code></td><td>outbound</td><td>Convert JSON backend response to XML for legacy consumers</td></tr>
+            <tr><td><code>redirect-content-urls</code></td><td>outbound</td><td>Rewrite backend URLs in response body to APIM gateway URLs</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ② Exam Gotchas -->
+      <div class="sec-lbl">② Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">rate-limit vs. rate-limit-by-key — shared key = shared limit</div>
+          <code>rate-limit</code> applies its counter <em>per subscription key</em>. If two callers (e.g., two mobile app instances) both use the same subscription key, they collectively exhaust the same rate-limit counter — there is no per-IP or per-caller isolation. To independently limit each caller's IP address regardless of which subscription key they use, you must use <code>rate-limit-by-key</code> with <code>counter-key="@(context.Request.IpAddress)"</code>. The exam frequently presents scenarios where "each unique IP should get 100 calls/minute" — the only correct policy is <code>rate-limit-by-key</code>, not <code>rate-limit</code>.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Omitting &lt;base/&gt; silently skips parent scope policies</div>
+          When you write a policy at the Operation scope, the default template includes <code>&lt;base/&gt;</code> in each section, which instructs APIM to execute the parent (API-level) policy at that point. If you delete <code>&lt;base/&gt;</code> from the <code>&lt;inbound&gt;</code> section of an operation policy, the API-level inbound policy — including any <code>validate-jwt</code> or rate-limit configured there — is silently skipped for that operation. This is a common trap: an operation appears to bypass authentication because someone removed <code>&lt;base/&gt;</code> while "cleaning up" the policy XML. The exam may present this as a security scenario where one operation is unprotected.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">validate-jwt validates but does NOT authorize — require-claim is separate</div>
+          <code>validate-jwt</code> checks the token's signature against the provided JWKS/certificate and verifies standard claims (expiry, issuer, audience). It does NOT check whether the token contains a specific role or scope claim. If a valid token for a read-only user calls an admin endpoint, <code>validate-jwt</code> alone will let it through. To enforce role-based authorization, you must add a <code>&lt;required-claims&gt;</code> element inside <code>validate-jwt</code>, or follow up with a <code>choose</code>/<code>when</code> policy that inspects <code>context.Request.Headers["Authorization"]</code> claims. The exam presents scenarios where "only users with the admin role should access this operation" — the answer is <code>validate-jwt</code> with <code>required-claims</code>.
+        </div>
+      </div>
+
+      <!-- ③ Key Numbers & Limits -->
+      <div class="sec-lbl">③ Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Metric</th><th>Value</th><th>Exam Note</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Default request size limit</td><td>102,400 bytes (100 KB)</td><td>Can be overridden per-operation; if payload exceeds this, gateway returns 413</td></tr>
+            <tr><td>Cache default TTL (cache-store)</td><td>3600 seconds (1 hour)</td><td>Override with <code>duration</code> attribute; 0 disables caching for that response</td></tr>
+            <tr><td>Subscription key header name</td><td><code>Ocp-Apim-Subscription-Key</code></td><td>Alternative: query param <code>subscription-key</code>; both are valid on the exam</td></tr>
+            <tr><td>Subscription keys per subscription</td><td>2 (primary + secondary)</td><td>Enables zero-downtime key rotation — rotate to secondary, regenerate primary</td></tr>
+            <tr><td>Consumption tier pricing</td><td>Per 10,000 calls</td><td>No monthly base cost; first 1M calls/month free; no built-in cache</td></tr>
+            <tr><td>Premium tier SLA</td><td>99.99%</td><td>All other production tiers (Basic, Standard) have 99.95% SLA</td></tr>
+            <tr><td>Developer Portal self-service</td><td>Enabled by default</td><td>Users can browse, subscribe, and get keys without admin; can be disabled per product</td></tr>
+            <tr><td>Named Value max length (plain)</td><td>1000 characters</td><td>For longer values use Key Vault reference instead</td></tr>
+            <tr><td>rate-limit window minimum</td><td>1 second</td><td>Unit can be seconds, minutes, hours, or days</td></tr>
+            <tr><td>Trace header for debugging</td><td><code>Ocp-Apim-Trace: true</code></td><td>Must be enabled per-subscription; reveals policy execution trace in response headers</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ④ CLI / SDK Patterns -->
+      <div class="sec-lbl">④ CLI / SDK Patterns</div>
+
+      <h3>Creating an APIM Instance (Azure CLI)</h3>
+      <pre><code># Create a resource group
+az group create --name rg-apim-demo --location eastus
+
+# Create APIM instance — publisher-email and publisher-name are REQUIRED
+# --sku-name: Consumption | Developer | Basic | Standard | Premium
+az apim create \
+  --name my-apim-instance \          # must be globally unique
+  --resource-group rg-apim-demo \
+  --publisher-email admin@contoso.com \  # required: who receives alerts
+  --publisher-name "Contoso API Team" \  # required: shown in Developer Portal
+  --sku-name Developer \             # Developer = no SLA, good for dev/test
+  --location eastus</code></pre>
+
+      <h3>Import an API from OpenAPI Specification</h3>
+      <pre><code># Import a REST API using an OpenAPI (Swagger) spec URL
+az apim api import \
+  --resource-group rg-apim-demo \
+  --service-name my-apim-instance \
+  --api-id orders-api \              # unique within the APIM instance
+  --path /orders \                   # URL path prefix in the gateway
+  --specification-format OpenApiJson \
+  --specification-url https://contoso.com/api/swagger.json \
+  --display-name "Orders API"</code></pre>
+
+      <h3>Applying a Policy via ARM / Bicep</h3>
+      <pre><code>// Bicep: set an inbound rate-limit policy at the API level
+resource apiPolicy 'Microsoft.ApiManagement/service/apis/policies@2022-08-01' = {
+  name: '${apim.name}/${api.name}/policy'
+  properties: {
+    format: 'xml'        // 'xml' for inline XML; 'xml-link' for external URL
+    value: '''
+      &lt;policies&gt;
+        &lt;inbound&gt;
+          &lt;base /&gt;
+          &lt;rate-limit calls="100" renewal-period="60" /&gt;
+          &lt;validate-jwt header-name="Authorization" failed-validation-httpcode="401"&gt;
+            &lt;openid-config url="https://login.microsoftonline.com/{tenant}/.well-known/openid-configuration" /&gt;
+            &lt;required-claims&gt;
+              &lt;claim name="roles" match="any"&gt;
+                &lt;value&gt;API.Read&lt;/value&gt;
+              &lt;/claim&gt;
+            &lt;/required-claims&gt;
+          &lt;/validate-jwt&gt;
+        &lt;/inbound&gt;
+        &lt;backend&gt;&lt;base /&gt;&lt;/backend&gt;
+        &lt;outbound&gt;&lt;base /&gt;&lt;/outbound&gt;
+        &lt;on-error&gt;&lt;base /&gt;&lt;/on-error&gt;
+      &lt;/policies&gt;
+    '''
+  }
+}</code></pre>
+
+      <h3>Named Values — Create via CLI</h3>
+      <pre><code># Create a plain Named Value (referenced as {{backend-api-key}} in policy)
+az apim nv create \
+  --resource-group rg-apim-demo \
+  --service-name my-apim-instance \
+  --named-value-id backend-api-key \
+  --display-name "Backend API Key" \
+  --value "supersecretvalue123" \
+  --secret true                      # --secret true encrypts it at rest
+
+# Create a Key Vault-backed Named Value (preferred for exam scenarios)
+az apim nv create \
+  --resource-group rg-apim-demo \
+  --service-name my-apim-instance \
+  --named-value-id kv-backend-key \
+  --display-name "KV Backend Key" \
+  --key-vault-secret-identifier https://my-vault.vault.azure.net/secrets/BackendKey \
+  --secret true                      # always true for KV-backed values</code></pre>
+
+      <h3>Policy Expressions: C# Inline Syntax</h3>
+      <pre><code>&lt;!-- Single-expression: @(expression) returns a value --&gt;
+&lt;set-header name="X-Caller-IP" exists-action="override"&gt;
+  &lt;value&gt;@(context.Request.IpAddress)&lt;/value&gt;
+&lt;/set-header&gt;
+
+&lt;!-- Multi-statement block: @{...} returns via return statement --&gt;
+&lt;rate-limit-by-key
+  calls="50"
+  renewal-period="60"
+  counter-key="@{
+    var userId = context.Request.Headers.GetValueOrDefault(&quot;X-User-Id&quot;, &quot;&quot;);
+    return string.IsNullOrEmpty(userId)
+      ? context.Request.IpAddress   // fall back to IP if no user ID
+      : userId;
+  }" /&gt;
+
+&lt;!-- Accessing JWT claims in policy expressions --&gt;
+&lt;set-header name="X-User-Email" exists-action="override"&gt;
+  &lt;value&gt;@(context.Request.Headers["Authorization"]
+      .Split(' ')[1]
+      .AsJwt()?.Claims["email"].FirstOrDefault()?.Value ?? "unknown")&lt;/value&gt;
+&lt;/set-header&gt;</code></pre>
+
+      <h3>Calling APIM with Subscription Key (C# SDK / HttpClient)</h3>
+      <pre><code>using var client = new HttpClient();
+
+// Method 1: Header (preferred — not visible in server logs)
+client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
+
+// Method 2: Query string (fallback — visible in URL/logs)
+var url = $"https://my-apim.azure-api.net/orders?subscription-key={subscriptionKey}";
+
+// Trace header — only works if subscription has tracing enabled in APIM portal
+client.DefaultRequestHeaders.Add("Ocp-Apim-Trace", "true");
+
+var response = await client.GetAsync("https://my-apim.azure-api.net/orders");
+// Trace output is in the Ocp-Apim-Trace-Location response header</code></pre>
+
+      <!-- ⑤ Wrong-Answer Traps -->
+      <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Use Consumption tier for VNET-integrated backend access"</div>
+          The Consumption tier has <strong>zero VNET support</strong>. It cannot reach backends deployed in private virtual networks. Questions that describe a backend App Service deployed in a VNET (internal VNET integration) and ask which APIM tier supports this should be answered with <strong>Premium</strong> (for production with SLA) or Developer (for testing only, no SLA). Choosing Consumption tier here is a plausible-sounding wrong answer because Consumption is "modern" and "serverless."
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "mock-response still calls the backend for fallback if there is no mock"</div>
+          <code>mock-response</code> <strong>always terminates the pipeline immediately</strong> — it never falls through to the backend. When the policy is present and active, the backend service is never called, regardless of whether the mock data fully covers all scenarios. This is by design: it is used during development to simulate responses before the backend exists. If you need conditional mock behavior (mock only for certain inputs), you must wrap it in a <code>&lt;choose&gt;&lt;when condition="..."&gt;</code> block. The exam may imply mock-response is a "soft fallback" — it is not.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "quota and rate-limit are the same thing — just different time windows"</div>
+          They are semantically different. <code>rate-limit</code> enforces a <strong>burst rate</strong> (calls per short window, typically seconds or minutes) and resets automatically each window. <code>quota</code> enforces a <strong>total allocation</strong> over a longer renewal period (days, weeks, months) and is used for billing/entitlement: "your plan includes 10,000 calls per month." They are complementary — production APIM deployments often use both together: rate-limit to prevent bursts, quota to enforce the total monthly allowance. The exam distinguishes them: "prevent a single client from overwhelming the API in a burst" = rate-limit; "enforce monthly API consumption limits per subscription plan" = quota.
+        </div>
+      </div>
+
+      <!-- ⑥ Practice Q&A -->
+      <div class="sec-lbl">⑥ Practice Q&amp;A</div>
+
+      <div class="qa-list">
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">You need to limit each unique IP address to 100 requests per minute through your APIM gateway, regardless of which subscription key the caller uses. Which policy and configuration achieves this?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ rate-limit-by-key with counter-key="@(context.Request.IpAddress)"</div>
+            <div class="qa-body">
+              <strong>Why not rate-limit?</strong>
+              <ul>
+                <li><code>rate-limit</code> applies its counter per subscription key. Two callers from different IPs using the same subscription key share one counter.</li>
+                <li><code>rate-limit-by-key</code> lets you specify any computed key as the counter discriminator, including <code>context.Request.IpAddress</code>, JWT claims, or custom headers.</li>
+                <li>Configuration: <code>&lt;rate-limit-by-key calls="100" renewal-period="60" counter-key="@(context.Request.IpAddress)" /&gt;</code></li>
+                <li>Place this in the <code>&lt;inbound&gt;</code> section, ideally at Global or Product scope so it applies to all APIs uniformly.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">An API operation's policy XML has &lt;inbound&gt;&lt;rate-limit calls="10" renewal-period="60"/&gt;&lt;/inbound&gt; with no &lt;base/&gt; tag. The parent API-level policy has validate-jwt in its inbound section. What happens when a caller sends a request to this operation without a JWT token?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ The request is processed without JWT validation — the API-level validate-jwt is skipped</div>
+            <div class="qa-body">
+              <strong>Why the operation bypasses JWT validation:</strong>
+              <ul>
+                <li>The <code>&lt;base/&gt;</code> element is the mechanism by which a child scope inherits and executes its parent scope's policy block.</li>
+                <li>When <code>&lt;base/&gt;</code> is absent from the operation's <code>&lt;inbound&gt;</code> section, the runtime executes only the operation-level inbound policies — the parent's <code>validate-jwt</code> is never invoked.</li>
+                <li>The caller will be rate-limited (10 calls/min) but their token is never verified. A request with an expired, forged, or missing JWT will succeed.</li>
+                <li>Fix: add <code>&lt;base/&gt;</code> before or after the <code>rate-limit</code> depending on desired order. Typically <code>&lt;base/&gt;</code> comes first so authentication runs before rate limiting.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">Your APIM gateway is deployed in the Consumption tier. You want to cache GET /products responses for 5 minutes to reduce backend load. Which approach is valid?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Configure an external Azure Cache for Redis and use cache-lookup / cache-store policies pointing to it</div>
+            <div class="qa-body">
+              <strong>Consumption tier cache constraint:</strong>
+              <ul>
+                <li>The Consumption tier has <strong>no built-in gateway cache</strong>. The <code>cache-lookup</code> and <code>cache-store</code> policies require either the built-in cache (unavailable in Consumption) or an explicitly configured external Redis cache.</li>
+                <li>To enable caching in Consumption, go to APIM &gt; External cache &gt; Add, and add your Azure Cache for Redis connection string.</li>
+                <li>Once configured, <code>cache-lookup</code>/<code>cache-store</code> policies work normally — APIM uses Redis as the backing store.</li>
+                <li>Tiers with built-in cache (Developer, Basic, Standard, Premium) do not require this external configuration step.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">A developer is building a new API backend that is not yet complete. You need to return sample response data from the APIM gateway immediately so the frontend team can continue development. Which policy provides this and what is its behavior?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ mock-response — returns a static response and never calls the backend</div>
+            <div class="qa-body">
+              <strong>mock-response behavior:</strong>
+              <ul>
+                <li><code>mock-response</code> is placed in the <code>&lt;inbound&gt;</code> section. When the gateway reaches it, the request pipeline is terminated immediately and a synthetic response is returned to the caller.</li>
+                <li>The backend service receives <strong>zero requests</strong> — it is not called at all. This is by design and is the key point distinguishing it from a fallback or circuit breaker.</li>
+                <li>The mock data can come from the API definition (examples in OpenAPI spec) or be specified inline in the policy XML via <code>&lt;status-code&gt;</code>, <code>&lt;headers&gt;</code>, and <code>&lt;body&gt;</code> elements.</li>
+                <li>To mock only specific scenarios, wrap it in <code>&lt;choose&gt;&lt;when condition="..."&gt;&lt;mock-response/&gt;&lt;/when&gt;&lt;otherwise&gt;&lt;!-- let through --&gt;&lt;/otherwise&gt;&lt;/choose&gt;</code>.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">A backend API key must be injected into all outbound requests as a header named X-Internal-Key. You want to store this key securely without embedding it as plaintext in the APIM policy XML. What is the correct approach?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Store the key in a Key Vault-backed Named Value; reference it as {{named-value-id}} in the set-header policy</div>
+            <div class="qa-body">
+              <strong>Named Values + Key Vault integration:</strong>
+              <ul>
+                <li>In the APIM portal, create a Named Value with type "Key Vault" and point it to your Key Vault secret URI. APIM uses its system-assigned Managed Identity to retrieve the secret — no credentials stored in APIM.</li>
+                <li>In the policy XML: <code>&lt;set-header name="X-Internal-Key" exists-action="override"&gt;&lt;value&gt;{{backend-api-key}}&lt;/value&gt;&lt;/set-header&gt;</code></li>
+                <li>The <code>{{backend-api-key}}</code> placeholder is resolved at policy evaluation time, not at deploy time — so rotating the Key Vault secret is reflected automatically after the cache refresh interval (default 4 hours; can trigger refresh manually).</li>
+                <li>Place this policy in the <code>&lt;inbound&gt;</code> or <code>&lt;backend&gt;</code> section so the header is added before the backend call is made.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">Your organization requires that the APIM gateway be deployed inside a private virtual network so that the Developer Portal and gateway are only accessible from within the corporate network. Which tier and network mode supports this?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Premium tier with Internal VNET mode</div>
+            <div class="qa-body">
+              <strong>APIM VNET modes:</strong>
+              <ul>
+                <li><strong>External VNET</strong>: APIM is injected into a VNET for backend connectivity, but the gateway and Developer Portal remain accessible from the public internet. Available in Developer and Premium tiers.</li>
+                <li><strong>Internal VNET</strong>: Both the gateway endpoint and Developer Portal are only accessible from within the VNET (or via VPN/ExpressRoute). Available in Developer and Premium tiers only.</li>
+                <li>For production (SLA required), Internal VNET = <strong>Premium tier</strong> is the only valid answer. Developer tier supports Internal VNET but carries no SLA.</li>
+                <li>Basic and Standard tiers have <strong>no VNET support</strong> in any form. Consumption tier also has no VNET support.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">A validate-jwt policy is configured in the inbound section of an API. A caller sends a request with a valid, unexpired JWT signed by the correct issuer — but the token does not contain the required "admin" role claim. What does APIM return?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ 401 Unauthorized — if required-claims is configured; 200 forwarded to backend if required-claims is absent</div>
+            <div class="qa-body">
+              <strong>validate-jwt claim enforcement behavior:</strong>
+              <ul>
+                <li><code>validate-jwt</code> by default only verifies the token's signature, expiry (<code>exp</code>), issuer (<code>iss</code>), and audience (<code>aud</code>). It does NOT reject requests based on missing role/scope claims unless you explicitly add <code>&lt;required-claims&gt;</code>.</li>
+                <li>If <code>&lt;required-claims&gt;&lt;claim name="roles" match="any"&gt;&lt;value&gt;admin&lt;/value&gt;&lt;/claim&gt;&lt;/required-claims&gt;</code> is present in the policy, a token without the "admin" role claim returns 401 with the body specified by <code>failed-validation-error-message</code>.</li>
+                <li>This is one of the most common exam traps: a token being "valid" (signature OK, not expired) does not mean it is "authorized" (has required claims). The two checks are independent and require separate policy configuration.</li>
+                <li>The <code>failed-validation-httpcode</code> attribute controls the status code returned on failure — it defaults to 401 but can be set to 403 for semantic correctness when the identity is known but lacks permission.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">8</div>
+            <div class="qa-text">You have a subscription key that is approaching compromise. You need to rotate the key without any downtime for callers. What is the correct procedure using APIM's built-in key management?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Update callers to use the secondary key, then regenerate the primary key; update callers back to primary when ready</div>
+            <div class="qa-body">
+              <strong>Zero-downtime key rotation procedure:</strong>
+              <ul>
+                <li>Every APIM subscription has two keys: <strong>primary</strong> and <strong>secondary</strong>. Both keys are active simultaneously — APIM accepts either key for the same subscription.</li>
+                <li>Step 1: Distribute the secondary key to all active callers and confirm they switch to it (no downtime — both keys work during this transition).</li>
+                <li>Step 2: Regenerate the primary key in the APIM portal or via CLI. The old primary key is now invalid. Since callers are using secondary, there is no service interruption.</li>
+                <li>Step 3 (optional): Distribute the new primary key to callers, switch them back, then optionally regenerate secondary to produce a fresh backup key.</li>
+                <li>The exam may ask "how do you revoke a compromised key without downtime" — the two-key system is the answer. Never regenerate the key that callers are currently using.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <div class="nav-end">
+      <a href="learn-07-security.html" class="btn-link">← Security</a>
+      <a href="learn-09-events.html" class="btn-link fwd">Events →</a>
+    </div>
+  </main>
+</div>
+
+<script>
+
+(function(){
+  // Q&A accordion
+  document.querySelectorAll('.qa-q').forEach(function(q){
+    q.addEventListener('click',function(){
+      this.closest('.qa-item').classList.toggle('open');
+    });
+  });
+  // Sidebar scroll-spy
+  var links=document.querySelectorAll('.sb-link[data-m]');
+  var sections=document.querySelectorAll('.module[id]');
+  if(links.length&&sections.length){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var n=e.target.id.replace('m','');
+          links.forEach(function(l){l.classList.toggle('active',l.dataset.m===n);});
+        }
+      });
+    },{rootMargin:'-8% 0px -72% 0px'});
+    sections.forEach(function(s){obs.observe(s);});
+  }
+  // Sidebar click scroll
+  links.forEach(function(l){
+    l.addEventListener('click',function(e){
+      e.preventDefault();
+      var t=document.getElementById('m'+this.dataset.m);
+      if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+})();
+
+</script>
+</body>
+</html>

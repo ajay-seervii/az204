@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App Service Web Apps — AZ-204 Study Notes</title>
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --azure:#0078D4;--azure-dark:#005a9e;--azure-light:#deecf9;
+  --bg:#f4f6f9;--surface:#fff;--nav-bg:#1a1f36;
+  --border:#d0d7de;--border-light:#e8ecf0;
+  --text:#1a1f36;--text-muted:#6b7280;--text-light:#9ca3af;
+  --ok-bg:#ecfdf5;--ok-bdr:#10b981;--ok-txt:#065f46;
+  --err-bg:#fef2f2;--err-bdr:#ef4444;--err-txt:#991b1b;
+  --warn-bg:#fffbeb;--warn-bdr:#fbbf24;--warn-txt:#92400e;
+  --r:10px;--rs:6px;
+  --sh:0 1px 3px rgba(0,0,0,.08);--shm:0 4px 12px rgba(0,0,0,.12);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--azure);text-decoration:none}
+a:hover{text-decoration:underline}
+#top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
+.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
+.nav-bc a{color:rgba(255,255,255,.75)}
+.nav-bc a:hover{color:#fff;text-decoration:none}
+.nav-bc span{color:rgba(255,255,255,.35)}
+.nav-bc strong{color:#fff}
+.nav-acts{display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
+.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.page-layout{display:flex;min-height:calc(100vh - 54px)}
+.sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
+.sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
+.sb-back:hover{color:var(--azure);text-decoration:none}
+.sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-light);padding:.5rem 1rem;margin-top:.25rem}
+.sb-link{display:flex;align-items:center;gap:8px;padding:.45rem 1rem;font-size:13px;color:var(--text-muted);border-left:3px solid transparent;cursor:pointer;transition:background .1s,color .1s,border-color .1s}
+.sb-link:hover{background:#f8fafc;color:var(--text)}
+.sb-link.active{border-left-color:var(--azure);color:var(--azure);background:#eff6ff;font-weight:600}
+.sb-num{font-size:10px;background:#f3f4f6;border:1px solid var(--border-light);padding:1px 6px;border-radius:20px;margin-left:auto;color:var(--text-light)}
+.sb-next{display:flex;align-items:center;gap:6px;padding:.45rem 1rem;font-size:12px;color:var(--text-muted);margin-top:.5rem;border-top:1px solid var(--border-light)}
+.sb-next:hover{color:var(--azure);text-decoration:none}
+.main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
+.topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
+.topic-header p{font-size:13px;color:var(--text-muted);margin:0}
+.topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
+.module{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem 1.75rem;margin-bottom:1.75rem;scroll-margin-top:70px}
+.module h2{font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--border-light)}
+.module h2 .mod-num{background:var(--azure);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--azure);margin-bottom:.5rem;margin-top:1.25rem;display:flex;align-items:center;gap:6px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--azure-light)}
+h3{font-size:14px;font-weight:700;color:var(--text);margin:.75rem 0 .4rem}
+p,li{font-size:13px;color:var(--text-muted);line-height:1.7}
+ul,ol{padding-left:1.4rem;margin:.4rem 0}
+li{margin-bottom:.25rem}
+strong{color:var(--text)}
+code{font-family:Consolas,'Cascadia Code','Courier New',monospace;font-size:.85em;background:#f3f4f6;padding:1px 5px;border-radius:4px;color:#1a1f36}
+pre{font-family:Consolas,'Cascadia Code','Courier New',monospace;background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:var(--rs);padding:1.1rem 1.25rem;overflow-x:auto;font-size:12.5px;line-height:1.65;margin:.6rem 0}
+pre code{background:none;padding:0;color:inherit}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--rs);margin:.6rem 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f8fafc;color:var(--text-muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.55rem .9rem;text-align:left;border-bottom:2px solid var(--border)}
+td{padding:.55rem .9rem;border-bottom:1px solid var(--border-light);color:var(--text-muted);vertical-align:top;line-height:1.5}
+td:first-child{color:var(--text);font-weight:500}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+.callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
+.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-body{flex:1}
+.callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
+.callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
+.callout.gotcha .callout-title{color:var(--err-txt)}
+.callout.tip{background:#eff6ff;border-left:3px solid var(--azure)}
+.callout.tip .callout-title{color:var(--azure-dark)}
+.callout.warn{background:var(--warn-bg);border-left:3px solid var(--warn-bdr)}
+.callout.warn .callout-title{color:var(--warn-txt)}
+.callout.success{background:var(--ok-bg);border-left:3px solid var(--ok-bdr)}
+.callout.success .callout-title{color:var(--ok-txt)}
+.qa-list{margin-top:.5rem}
+.qa-item{border:1px solid var(--border);border-radius:var(--rs);margin-bottom:.6rem;overflow:hidden}
+.qa-q{display:flex;align-items:flex-start;gap:.65rem;padding:.85rem 1rem;cursor:pointer;background:var(--surface);user-select:none}
+.qa-q:hover{background:#f8fafc}
+.qa-n{flex-shrink:0;width:20px;height:20px;background:var(--azure);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.qa-text{flex:1;font-size:13px;color:var(--text);line-height:1.5;font-weight:500}
+.qa-tog{flex-shrink:0;color:var(--text-light);transition:transform .2s;font-size:14px;margin-top:2px}
+.qa-item.open .qa-tog{transform:rotate(180deg)}
+.qa-ans{display:none;padding:.85rem 1rem 1rem;background:#f8fafc;border-top:1px solid var(--border-light)}
+.qa-item.open .qa-ans{display:block}
+.qa-correct{display:inline-flex;align-items:center;gap:5px;background:var(--ok-bg);color:var(--ok-txt);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-bottom:.6rem}
+.qa-body{font-size:12.5px;color:var(--text-muted);line-height:1.7}
+.qa-body ul{padding-left:1.25rem;margin:.4rem 0}
+.qa-body strong{color:var(--text)}
+.nav-end{display:flex;justify-content:space-between;padding:1.25rem 0;border-top:1px solid var(--border);margin-top:.5rem}
+.btn-link{display:inline-flex;align-items:center;gap:5px;padding:.4rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--text-muted)}
+.btn-link:hover{border-color:var(--azure);color:var(--azure);text-decoration:none}
+.btn-link.fwd{background:var(--azure);color:#fff;border-color:var(--azure)}
+.btn-link.fwd:hover{background:var(--azure-dark);text-decoration:none}
+@media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
+
+</style>
+</head>
+<body>
+
+<nav id="top-nav">
+  <div class="nav-brand">
+    <div class="nav-brand-icon">Az</div>
+    <div class="nav-bc">
+      <a href="learn.html">Study Notes</a>
+      <span>/</span>
+      <strong>App Service Web Apps</strong>
+    </div>
+  </div>
+  <div class="nav-acts">
+    <a href="learn.html" class="btn btn-ghost">← All Topics</a>
+    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <a href="learn.html" class="sb-back">← All Topics</a>
+    <div class="sb-label">App Service Web Apps</div>
+    <a href="#m1" class="sb-link" data-m="1">🏗️ Explore Azure App Service<span class="sb-num">6 sections</span></a>
+    <a href="#m2" class="sb-link" data-m="2">⚙️ Configure Web App Settings<span class="sb-num">6 sections</span></a>
+    <a href="#m3" class="sb-link" data-m="3">📈 Scale Apps in Azure App Service<span class="sb-num">6 sections</span></a>
+    <a href="#m4" class="sb-link" data-m="4">🔄 Deployment Slots<span class="sb-num">6 sections</span></a>
+    <a href="learn-02-functions.html" class="sb-next">Next: Azure Functions →</a>
+  </aside>
+
+  <main class="main">
+    <div class="topic-header">
+      <div class="topic-icon-lg">⚙️</div>
+      <div>
+        <h1>App Service Web Apps</h1>
+        <p>4 modules · Explore Azure App Service · Configure Web App Settings · Scale Apps in Azure App Service · Deployment Slots</p>
+      </div>
+      <div class="topic-num">Topic 01</div>
+    </div>
+
+    <!-- MODULE 1 -->
+    <section class="module" id="m1">
+      <h2><span class="mod-num">M1</span> 🏗️ Explore Azure App Service</h2>
+
+      <div class="sec-lbl">① Key Concepts</div>
+
+      <h3>App Service Plans — The Foundation</h3>
+      <p>An App Service Plan defines the <strong>region, number of VM instances, and VM size</strong> that all apps on the plan share. The plan is the billing unit — not individual apps. Multiple apps on one plan share the same compute resources.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tier Category</th>
+              <th>SKUs</th>
+              <th>VM Type</th>
+              <th>Key Capabilities</th>
+              <th>Max Scale-Out</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Free</td>
+              <td>F1</td>
+              <td>Shared</td>
+              <td>60 min CPU/day, no custom domain, no SSL</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td>Shared</td>
+              <td>D1</td>
+              <td>Shared</td>
+              <td>Custom domain, 240 min CPU/day, no SSL</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td>Basic</td>
+              <td>B1, B2, B3</td>
+              <td>Dedicated</td>
+              <td>Custom domain + SSL, manual scale only, no slots, no autoscale</td>
+              <td>3</td>
+            </tr>
+            <tr>
+              <td>Standard</td>
+              <td>S1, S2, S3</td>
+              <td>Dedicated</td>
+              <td>Autoscale, 5 deployment slots, daily backups, traffic manager</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td>Premium v3</td>
+              <td>P0v3–P3v3</td>
+              <td>Dedicated</td>
+              <td>20 slots, enhanced perf, VNet integration, zone redundancy</td>
+              <td>30</td>
+            </tr>
+            <tr>
+              <td>Isolated v2</td>
+              <td>I1v2–I6v2</td>
+              <td>Dedicated (ASE)</td>
+              <td>App Service Environment, private VNet injection, 20 slots</td>
+              <td>100</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Plan vs App distinction</div>
+          When you scale a plan (e.g., from S1 to S2), <strong>every app on that plan</strong> gets the larger VM. When you scale out a plan (add instances), all apps distribute load across all instances. There is no per-app instance control within a shared plan.
+        </div>
+      </div>
+
+      <h3>WebJobs</h3>
+      <p>WebJobs run background tasks within the same App Service plan as your web app — they consume the same CPU/memory resources. Two types:</p>
+      <ul>
+        <li><strong>Continuous WebJobs</strong> — start immediately and run in a loop; must include an infinite loop in code; can run on a single instance or all instances</li>
+        <li><strong>Triggered WebJobs</strong> — run only when explicitly triggered (manually, or via a CRON schedule set in <code>settings.job</code>); always run on a single instance</li>
+      </ul>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">WebJobs vs Azure Functions</div>
+          The exam may ask when to prefer WebJobs over Functions. Prefer WebJobs when you need the code to run in the <strong>same process as the web app</strong> (access to HttpContext, same deployment unit), or when migrating legacy background tasks from an on-premises app. For new greenfield background processing, prefer Azure Functions.
+        </div>
+      </div>
+
+      <h3>Built-in Authentication (EasyAuth)</h3>
+      <p>EasyAuth is a middleware layer injected <strong>before your application code</strong> by the App Service platform. It intercepts every incoming HTTP request and handles the entire OAuth/OIDC flow. Key behaviors:</p>
+      <ul>
+        <li>Runs as a separate module in the same IIS/Nginx sandbox — zero code changes needed</li>
+        <li>Injects headers (<code>X-MS-CLIENT-PRINCIPAL-NAME</code>, <code>X-MS-TOKEN-*</code>) into requests your code receives</li>
+        <li>Supports: Azure AD (Microsoft), Facebook, Google, Twitter, any OIDC provider</li>
+        <li>Two actions when unauthenticated: <strong>Restrict access (HTTP 401/403)</strong> or <strong>Allow unauthenticated requests</strong> (your code decides)</li>
+        <li>Token store at <code>/.auth/me</code> — returns JSON with claims</li>
+      </ul>
+
+      <div class="sec-lbl">② Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Free/Shared Tiers Cannot Use VNet or Custom SSL</div>
+          Free (F1) and Shared (D1) plans run on <strong>shared VMs that Microsoft owns</strong> — they are multi-tenant at the VM level. This means you cannot inject them into a VNet, cannot bind a custom SSL certificate, and cannot set IP restrictions. The exam presents scenarios like "you need to restrict inbound traffic to your app — which is the minimum tier?" The answer is <strong>Basic</strong> (B1), which runs on dedicated VMs and supports IP-based access restrictions and custom SSL via SNI or IP-based binding.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Basic Tier: Dedicated VMs but NO Autoscale and NO Slots</div>
+          Basic (B1–B3) is the first dedicated-VM tier, so it supports custom domains, SSL, and manual instance count increases. However, <strong>Basic does NOT support autoscale rules and has zero deployment slots</strong>. The exam exploits this boundary frequently: a scenario will describe an app that needs SSL and the ability to auto-scale — the answer requires Standard (S1+), not Basic. Students who know Basic is dedicated often assume it has all Standard features.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Contributor Role Does NOT Grant Secret Access</div>
+          The Contributor role on an App Service resource gives full <strong>management-plane</strong> access (create, configure, delete the resource) but <strong>zero data-plane access</strong> to secrets stored in Azure Key Vault. A common trap question: "A developer has Contributor on the App Service but cannot read the Key Vault secrets the app uses. What role should you assign?" The answer is <strong>Key Vault Secrets User</strong> (data plane), assigned on the Key Vault resource. Contributor on the Key Vault itself would also be wrong — that still doesn't grant data-plane access in the new RBAC model.
+        </div>
+      </div>
+
+      <div class="sec-lbl">③ Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+              <th>Exam Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Free tier CPU/day</td>
+              <td>60 minutes</td>
+              <td>App is throttled (not stopped) after 60 min; Shared is 240 min</td>
+            </tr>
+            <tr>
+              <td>Standard max scale-out</td>
+              <td>10 instances</td>
+              <td>Autoscale requires Standard+; Basic max scale is 3 (manual only)</td>
+            </tr>
+            <tr>
+              <td>Premium v3 max scale-out</td>
+              <td>30 instances</td>
+              <td>P0v3 is smallest Premium v3 SKU; good for cost-optimized Premium</td>
+            </tr>
+            <tr>
+              <td>Isolated v2 max scale-out</td>
+              <td>100 instances</td>
+              <td>Runs in App Service Environment (ASE) — requires VNet</td>
+            </tr>
+            <tr>
+              <td>Standard deployment slots</td>
+              <td>5 (including production)</td>
+              <td>So 4 non-prod slots on Standard; Premium/Isolated get 20</td>
+            </tr>
+            <tr>
+              <td>Premium/Isolated slots</td>
+              <td>20 (including production)</td>
+              <td>19 non-prod staging slots</td>
+            </tr>
+            <tr>
+              <td>EasyAuth token refresh</td>
+              <td>72 hours (default session)</td>
+              <td>Token store cookie expiry; configurable</td>
+            </tr>
+            <tr>
+              <td>Custom domains per app</td>
+              <td>500</td>
+              <td>Free/Shared = 0 custom domains; Basic+ = custom domains allowed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">④ CLI / SDK Patterns</div>
+
+      <pre><code># Create an App Service Plan (Standard tier, Linux, 2 workers)
+az appservice plan create \
+  --name MyPlan \
+  --resource-group MyRG \
+  --sku S1 \                    # S1=Standard; B1=Basic; P1v3=Premium v3
+  --is-linux \                  # omit for Windows; cannot change after creation
+  --number-of-workers 2
+
+# Create a web app — RUNTIME uses pipe separator (NOT colon or slash)
+az webapp create \
+  --name MyWebApp \
+  --resource-group MyRG \
+  --plan MyPlan \
+  --runtime "DOTNET|8.0"        # common runtimes: "NODE|20-lts", "PYTHON|3.11", "JAVA|17-java17"
+
+# List available runtimes for Linux
+az webapp list-runtimes --os-type linux
+
+# Show current plan details
+az appservice plan show \
+  --name MyPlan \
+  --resource-group MyRG \
+  --query "{sku:sku.name, workers:sku.capacity}"
+
+# Scale up the plan (change SKU)
+az appservice plan update \
+  --name MyPlan \
+  --resource-group MyRG \
+  --sku P1v3                    # upgrade from S1 to Premium v3
+
+# Scale out manually (set fixed instance count)
+az appservice plan update \
+  --name MyPlan \
+  --resource-group MyRG \
+  --number-of-workers 5         # sets count; requires Standard+ for >3
+
+# Create a continuous WebJob (must upload as zip)
+az webapp webjob continuous add \
+  --webjob-name MyWorker \
+  --webjob-zip worker.zip \
+  --resource-group MyRG \
+  --name MyWebApp</code></pre>
+
+      <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Use Free tier for dev/test with custom domain"</div>
+          The Free (F1) tier does <strong>not support custom domains</strong>. The minimum tier for a custom domain is <strong>Shared (D1)</strong>. For a custom domain <em>plus</em> SSL, you need <strong>Basic (B1)</strong>. The exam places these options close together to test whether you know the exact tier boundary.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Scaling a single app on a shared plan only affects that app"</div>
+          This is <strong>false</strong>. When you scale up or out an App Service Plan, <strong>all apps on that plan</strong> are affected — they all move to the new VM size or gain the new instances. There is no per-app isolation within a single plan. If you want to scale one app independently, it must be on its own plan.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "EasyAuth requires changes to application code"</div>
+          EasyAuth is a <strong>platform-level middleware</strong> — it requires zero application code changes. It intercepts requests before they reach your app and injects claims as HTTP headers. Your app can read those headers if needed, but doesn't have to. If a question asks for the approach with the least code changes for authentication, EasyAuth is the answer over MSAL-based custom authentication.
+        </div>
+      </div>
+
+      <div class="sec-lbl">⑥ Practice Q&amp;A</div>
+      <div class="qa-list">
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">A company runs a .NET web application on App Service Standard S1. They want to add a background process that reads messages from a queue and must restart automatically if it crashes. The background process must share the same deployment pipeline as the web app. What should you use?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Continuous WebJob</div>
+            <div class="qa-body">
+              <strong>A Continuous WebJob is the right choice here because:</strong>
+              <ul>
+                <li>It runs within the same App Service as the web app, sharing the same deployment and plan.</li>
+                <li>Continuous WebJobs run as an infinite loop and are <strong>automatically restarted</strong> by the platform if the process exits unexpectedly.</li>
+                <li>They share the same zip/package deployment, satisfying the "same pipeline" requirement.</li>
+                <li>Azure Functions would be correct for greenfield but requires a separate Functions app and infrastructure.</li>
+                <li>A Triggered WebJob would not restart automatically — it runs once per trigger and stops.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">Your App Service app on a Basic B2 plan is experiencing traffic spikes. You configure an autoscale rule to add 2 instances when CPU exceeds 70%. After deploying, the rule never triggers despite CPU regularly hitting 85%. What is the most likely reason?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Basic tier does not support autoscale</div>
+            <div class="qa-body">
+              <strong>The Basic tier (B1–B3) does not support autoscale rules.</strong>
+              <ul>
+                <li>Autoscale is only available on <strong>Standard (S1+), Premium, and Isolated</strong> tiers.</li>
+                <li>The Azure portal may allow you to configure the autoscale setting, but it will not take effect on a Basic plan.</li>
+                <li>To resolve: upgrade the plan to at least Standard S1, then the autoscale rule will fire.</li>
+                <li>On Basic, you can only manually set a fixed instance count (up to 3 instances).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">An application is deployed on App Service Free tier (F1). Users report the app becomes unresponsive for the rest of the day starting around 3 PM. No errors appear in Application Insights. What is the most likely cause?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: The 60-minute daily CPU quota has been exhausted</div>
+            <div class="qa-body">
+              <strong>Free (F1) apps are limited to 60 minutes of CPU time per day.</strong>
+              <ul>
+                <li>Once the quota is exhausted, the app is <strong>throttled</strong> — HTTP requests receive a 403 or the app becomes extremely slow; it is not stopped outright.</li>
+                <li>The quota resets at midnight UTC each day, which is why users can access it in the morning.</li>
+                <li>This does not generate application-level errors visible in Application Insights; it is a platform-level throttle.</li>
+                <li>The fix is to upgrade to at least Shared (D1) for 240 min/day, or Basic (B1) for unlimited CPU on a dedicated VM.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">A developer with the Contributor role on the App Service resource reports they cannot retrieve secrets from the Azure Key Vault that the app references. The app itself retrieves secrets successfully at runtime via Managed Identity. What is the minimum role to grant the developer read access to those secrets?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Key Vault Secrets User (assigned on the Key Vault)</div>
+            <div class="qa-body">
+              <strong>Key Vault uses a separate data-plane RBAC model.</strong>
+              <ul>
+                <li>Contributor on the App Service resource is a <strong>management-plane role</strong> — it controls the App Service, not the Key Vault or its contents.</li>
+                <li>Even Contributor on the Key Vault itself does not grant secret read access in the RBAC permission model.</li>
+                <li><strong>Key Vault Secrets User</strong> is the built-in role granting <code>get</code> and <code>list</code> on secrets — this is assigned at the Key Vault scope.</li>
+                <li>Key Vault Secrets Officer would also work but grants create/update/delete — too permissive for read-only.</li>
+                <li>The Managed Identity the app uses has its own role assignment separate from the developer's account.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">You need to deploy a web application that: (1) requires a custom domain with SSL, (2) must handle traffic spikes automatically, and (3) needs two non-production deployment slots. What is the minimum App Service Plan tier that satisfies all three requirements?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Standard S1</div>
+            <div class="qa-body">
+              <strong>Mapping each requirement to minimum tier:</strong>
+              <ul>
+                <li><strong>Custom domain + SSL</strong> — minimum is Basic (B1)</li>
+                <li><strong>Autoscale</strong> — minimum is Standard (S1)</li>
+                <li><strong>Deployment slots</strong> — minimum is Standard (S1); Standard provides up to 5 slots including production, so 4 non-prod slots — two slots is achievable</li>
+                <li>The binding constraint is autoscale + slots, both requiring Standard S1.</li>
+                <li>Basic would satisfy SSL + custom domain but fails on autoscale and has zero slots.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">You deploy a web app to an App Service using the CLI command: <code>az webapp create --runtime "DOTNET:8.0"</code>. The command fails. What is the correct syntax for the runtime flag?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Use a pipe separator — "DOTNET|8.0"</div>
+            <div class="qa-body">
+              <strong>The App Service CLI runtime format uses a pipe (<code>|</code>) as the separator, not a colon.</strong>
+              <ul>
+                <li>Correct: <code>--runtime "DOTNET|8.0"</code></li>
+                <li>Other correct examples: <code>"NODE|20-lts"</code>, <code>"PYTHON|3.11"</code>, <code>"JAVA|17-java17"</code></li>
+                <li>You can retrieve the exact valid strings with <code>az webapp list-runtimes --os-type linux</code></li>
+                <li>This is a classic exam trap — the colon format looks logical but is incorrect and will cause the CLI command to fail with a validation error.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">Your company requires that all App Service apps be isolated within a private VNet for compliance reasons, with no public internet exposure. Which App Service tier satisfies this requirement?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Isolated v2 (App Service Environment)</div>
+            <div class="qa-body">
+              <strong>Only the Isolated tier runs inside an App Service Environment (ASE) fully injected into a VNet.</strong>
+              <ul>
+                <li>Standard and Premium tiers support <strong>VNet Integration</strong> for <em>outbound</em> traffic, but inbound traffic still arrives over the public internet (though you can add private endpoints).</li>
+                <li>Isolated (I1v2–I6v2) deploys into a dedicated ASE within your VNet — both inbound and outbound are fully private by default.</li>
+                <li>The ASE has its own dedicated inbound IP that is a private IP in your VNet.</li>
+                <li>ASE v3 is the current generation; it eliminates the stamp fee that existed in ASE v2.</li>
+                <li>Scale-out up to 100 instances makes Isolated suitable for large enterprise workloads requiring compliance isolation.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- MODULE 2 -->
+    <section class="module" id="m2">
+      <h2><span class="mod-num">M2</span> ⚙️ Configure Web App Settings</h2>
+
+      <div class="sec-lbl">① Key Concepts</div>
+
+      <h3>App Settings and Connection Strings</h3>
+      <p>App settings are name-value pairs that App Service injects as <strong>environment variables</strong> at runtime. For .NET apps they also override matching keys in <code>appsettings.json</code> and <code>web.config</code>. For connection strings, App Service prefixes the values with a type identifier when exposing them as environment variables.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Connection String Type</th>
+              <th>Env Var Prefix</th>
+              <th>Example Env Var</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>SQLAzure</td>
+              <td><code>SQLAZURECONNSTR_</code></td>
+              <td><code>SQLAZURECONNSTR_MyDb</code></td>
+            </tr>
+            <tr>
+              <td>SQLServer</td>
+              <td><code>SQLCONNSTR_</code></td>
+              <td><code>SQLCONNSTR_MyDb</code></td>
+            </tr>
+            <tr>
+              <td>MySQL</td>
+              <td><code>MYSQLCONNSTR_</code></td>
+              <td><code>MYSQLCONNSTR_MyDb</code></td>
+            </tr>
+            <tr>
+              <td>PostgreSQL</td>
+              <td><code>POSTGRESQLCONNSTR_</code></td>
+              <td><code>POSTGRESQLCONNSTR_MyDb</code></td>
+            </tr>
+            <tr>
+              <td>Custom</td>
+              <td><code>CUSTOMCONNSTR_</code></td>
+              <td><code>CUSTOMCONNSTR_MyDb</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Slot-Sticky (Deployment Slot) Settings</h3>
+      <p>By default, app settings <strong>travel with the code during a swap</strong> — they move to the other slot. Marking a setting as <strong>slot-sticky</strong> (deployment slot setting) causes it to stay bound to the slot it's defined on, regardless of swaps.</p>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">When to use slot-sticky settings</div>
+          Use slot-sticky for environment-specific values: production database connection string, production API keys, feature flags that differ per environment. If <code>DB_CONNECTION_STRING</code> is slot-sticky on production, after a code swap the new code in production still connects to the production database — not the staging database that traveled with the code.
+        </div>
+      </div>
+
+      <h3>Critical Platform Environment Variables</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Environment Variable</th>
+              <th>Value</th>
+              <th>Effect</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>WEBSITE_RUN_FROM_PACKAGE</code></td>
+              <td><code>1</code> or URL</td>
+              <td>Mounts zip as a read-only filesystem; fastest cold starts; <code>/home/site/wwwroot</code> becomes read-only</td>
+            </tr>
+            <tr>
+              <td><code>SCM_DO_BUILD_DURING_DEPLOYMENT</code></td>
+              <td><code>true</code></td>
+              <td>Enables Oryx build system — runs <code>npm install</code>, <code>pip install</code>, etc. on the server during deployment</td>
+            </tr>
+            <tr>
+              <td><code>WEBSITE_SWAP_WARMUP_PING_PATH</code></td>
+              <td><code>/health</code> (custom path)</td>
+              <td>Custom path the platform pings to warm up the slot before completing a swap</td>
+            </tr>
+            <tr>
+              <td><code>WEBSITE_SWAP_WARMUP_PING_WAIT</code></td>
+              <td>seconds (default 90)</td>
+              <td>Maximum time to wait for warmup ping to succeed before aborting swap</td>
+            </tr>
+            <tr>
+              <td><code>WEBSITES_ENABLE_APP_SERVICE_STORAGE</code></td>
+              <td><code>false</code></td>
+              <td>For containers: disables persistent <code>/home</code> storage (faster startup, no shared state)</td>
+            </tr>
+            <tr>
+              <td><code>WEBSITE_NODE_DEFAULT_VERSION</code></td>
+              <td>e.g. <code>~18</code></td>
+              <td>Pins Node.js version on Windows App Service plans</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">② Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">App Settings Override appsettings.json — the App Service Value Always Wins</div>
+          If your <code>appsettings.json</code> defines <code>"ConnectionStrings:MyDb": "dev-connection-string"</code> and you also define a <code>MyDb</code> connection string in App Service configuration, the <strong>App Service value completely overrides the file</strong>. The file-based value is never used at runtime. This is intentional — it allows environment-specific overrides without code changes — but it catches developers who add a new key to appsettings.json and wonder why it isn't taking effect in production (because an identically named App Service setting is shadowing it).
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">WEBSITE_RUN_FROM_PACKAGE=1 Makes wwwroot Read-Only</div>
+          Setting <code>WEBSITE_RUN_FROM_PACKAGE=1</code> mounts the deployment zip as a read-only virtual filesystem at <code>/home/site/wwwroot</code>. Any application code that writes files to that path at runtime (log files, temp caches, generated assets) will fail with <code>access denied</code>. The fix is to write to <code>/home/LogFiles</code> or <code>/tmp</code> instead, or disable run-from-package if write access to wwwroot is genuinely required. The exam presents this as a scenario where a previously-working app suddenly gets file-write failures after a deployment change.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Non-Sticky Settings Travel with Code — Wrong DB After Swap</div>
+          A classic exam scenario: staging has <code>DB_HOST=staging-db</code> (non-sticky). Production has <code>DB_HOST=prod-db</code> (also non-sticky). After a swap, the code that was in staging is now in production — but it brought its <code>DB_HOST=staging-db</code> setting with it. Production is now pointing at the staging database. The fix: mark <code>DB_HOST</code> as <strong>slot-sticky</strong> on both slots. Then <code>DB_HOST</code> stays bound to its slot regardless of which code is running there.
+        </div>
+      </div>
+
+      <div class="sec-lbl">③ Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+              <th>Exam Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>App settings per app</td>
+              <td>No documented hard limit (practical ~10,000)</td>
+              <td>Very large counts slow down startup; prefer Key Vault references for secrets</td>
+            </tr>
+            <tr>
+              <td>App setting value max size</td>
+              <td>16 KB per value</td>
+              <td>For large configs use Azure App Configuration or Key Vault</td>
+            </tr>
+            <tr>
+              <td>WEBSITE_RUN_FROM_PACKAGE URL timeout</td>
+              <td>Download must complete before app starts</td>
+              <td>Use Azure Blob SAS URL; large packages increase cold start time</td>
+            </tr>
+            <tr>
+              <td>Swap warmup default timeout</td>
+              <td>90 seconds (<code>WEBSITE_SWAP_WARMUP_PING_WAIT</code>)</td>
+              <td>If warmup ping doesn't respond within 90s, swap is aborted</td>
+            </tr>
+            <tr>
+              <td>Key Vault reference format</td>
+              <td><code>@Microsoft.KeyVault(SecretUri=https://...)</code></td>
+              <td>App must have Managed Identity with Key Vault Secrets User role</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">④ CLI / SDK Patterns</div>
+
+      <pre><code># Set app settings (multiple key=value pairs in one command)
+az webapp config appsettings set \
+  --name MyWebApp \
+  --resource-group MyRG \
+  --settings \
+    ENV=production \
+    API_URL=https://api.example.com \
+    "DB_CONN=Server=myserver;Database=mydb"   # quote values with spaces/semicolons
+
+# Mark a setting as slot-sticky (stays with the slot, not the code)
+az webapp config appsettings set \
+  --name MyWebApp \
+  --resource-group MyRG \
+  --slot staging \
+  --slot-settings DB_CONN=staging-connection-string   # --slot-settings flag marks sticky
+
+# Set a connection string with type
+az webapp config connection-string set \
+  --name MyWebApp \
+  --resource-group MyRG \
+  --connection-string-type SQLAzure \
+  --settings MyDb="Server=tcp:myserver.database.windows.net;..."
+
+# Make a connection string slot-sticky
+az webapp config connection-string set \
+  --name MyWebApp \
+  --resource-group MyRG \
+  --connection-string-type SQLAzure \
+  --slot-settings MyDb="Server=tcp:myserver.database.windows.net;..."  # slot-sticky
+
+# Reference a Key Vault secret as an app setting
+az webapp config appsettings set \
+  --name MyWebApp \
+  --resource-group MyRG \
+  --settings \
+    "MY_SECRET=@Microsoft.KeyVault(SecretUri=https://myvault.vault.azure.net/secrets/MySecret/)"
+
+# Enable run-from-package
+az webapp config appsettings set \
+  --name MyWebApp \
+  --resource-group MyRG \
+  --settings WEBSITE_RUN_FROM_PACKAGE=1
+
+# View current app settings
+az webapp config appsettings list \
+  --name MyWebApp \
+  --resource-group MyRG \
+  --output table</code></pre>
+
+      <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "To keep different DB connections per slot, set them as regular (non-sticky) app settings"</div>
+          This is the <strong>opposite</strong> of correct. Non-sticky settings travel with the code on swap, so after a swap, your production slot would have the staging DB connection. You must mark environment-specific settings as <strong>slot-sticky</strong> so they remain bound to their slot regardless of which deployment is running there.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "SCM_DO_BUILD_DURING_DEPLOYMENT=true runs a build on every request"</div>
+          This setting runs the <strong>Oryx build system once, during deployment</strong> — not on every request. It's used for Node.js, Python, Ruby apps where you want the server to run <code>npm install</code> or <code>pip install</code> as part of the deployment process rather than pre-building locally. It has no effect on runtime request handling.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Key Vault references work with any identity type — no special configuration needed"</div>
+          Key Vault references in App Service require the app to have a <strong>system-assigned or user-assigned Managed Identity</strong> enabled, and that identity must have the <strong>Key Vault Secrets User</strong> role (or access policy with <code>get</code> permission) on the Key Vault. Without this, the app setting will show as a failed reference and the environment variable will be empty or contain an error string at runtime.
+        </div>
+      </div>
+
+      <div class="sec-lbl">⑥ Practice Q&amp;A</div>
+      <div class="qa-list">
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">A web app reads its database connection string from <code>appsettings.json</code> using the key <code>ConnectionStrings:MainDb</code>. A junior developer adds a connection string named <code>MainDb</code> of type <code>SQLAzure</code> to App Service configuration pointing to the wrong database. At runtime, which connection string does the app use?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: The App Service connection string (wrong database)</div>
+            <div class="qa-body">
+              <strong>App Service settings always override appsettings.json for the same key.</strong>
+              <ul>
+                <li>For .NET apps, connection strings set in App Service are injected into the <code>ConnectionStrings</code> section of the configuration provider, <strong>overriding</strong> values from the file.</li>
+                <li>The App Service value is exposed as environment variable <code>SQLAZURECONNSTR_MainDb</code>, and the .NET configuration provider picks this up with higher priority than the JSON file.</li>
+                <li>To fix: update the App Service connection string value to the correct database, or remove it to fall back to the file.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">After setting <code>WEBSITE_RUN_FROM_PACKAGE=1</code> and redeploying, your app crashes with <code>UnauthorizedAccessException</code> when writing to <code>/home/site/wwwroot/cache</code>. What is the cause and fix?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: wwwroot is read-only when run-from-package is enabled; write to /tmp instead</div>
+            <div class="qa-body">
+              <strong>WEBSITE_RUN_FROM_PACKAGE mounts the deployment as a read-only zip archive.</strong>
+              <ul>
+                <li>When this setting is active, <code>/home/site/wwwroot</code> is a read-only mount — writes fail with access denied.</li>
+                <li>Fix: change the cache directory to <code>/tmp/cache</code> (ephemeral, per-instance) or <code>/home/LogFiles/cache</code> (persistent, shared across instances).</li>
+                <li>If the app genuinely needs to write to wwwroot (e.g., a CMS generating static files), remove <code>WEBSITE_RUN_FROM_PACKAGE</code> and use standard zip deployment instead.</li>
+                <li>The benefit of run-from-package is faster cold starts and atomic deployments — worth keeping if you can eliminate the write requirement.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">You have a production slot with <code>DB_CONN=prod-db</code> (slot-sticky) and a staging slot with <code>DB_CONN=staging-db</code> (slot-sticky). You deploy new code to staging and perform a slot swap. What does the production slot's <code>DB_CONN</code> value equal after the swap?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: prod-db (unchanged)</div>
+            <div class="qa-body">
+              <strong>Slot-sticky settings remain bound to their slot through any number of swaps.</strong>
+              <ul>
+                <li>After the swap, the new code (previously in staging) is now running in the production slot.</li>
+                <li>Because <code>DB_CONN</code> is slot-sticky on production, it stays as <code>prod-db</code> — the production slot always has the production DB connection, regardless of which code revision is running.</li>
+                <li>Similarly, the staging slot still has <code>DB_CONN=staging-db</code> — now running the old production code, but pointing at staging DB.</li>
+                <li>This is the correct pattern: slot-sticky ensures environment-specific settings are environment-specific regardless of code swaps.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">A Python Flask app is deployed via zip deploy. The app fails to start because modules listed in <code>requirements.txt</code> are not installed. No build step is configured. What is the simplest fix using an App Service setting?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Set SCM_DO_BUILD_DURING_DEPLOYMENT=true</div>
+            <div class="qa-body">
+              <strong>This enables the Oryx build system, which runs <code>pip install -r requirements.txt</code> server-side during deployment.</strong>
+              <ul>
+                <li>Without this setting, App Service simply unpacks the zip — it does not install Python dependencies.</li>
+                <li>With <code>SCM_DO_BUILD_DURING_DEPLOYMENT=true</code>, the Kudu build pipeline invokes Oryx, which detects the Python app, creates a virtual environment, and installs all packages.</li>
+                <li>This is the recommended approach for Linux App Service apps where you prefer not to include the <code>site-packages</code> directory in your deployment artifact.</li>
+                <li>Alternatively, you can install dependencies locally, include the packages in the zip, and not use Oryx — but this increases zip size significantly.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">Your App Service app uses a Key Vault reference for an app setting: <code>@Microsoft.KeyVault(SecretUri=https://myvault.vault.azure.net/secrets/ApiKey/)</code>. The app setting shows "Key Vault reference is invalid" in the portal. Managed Identity is enabled on the app. What is the most likely missing configuration?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: The Managed Identity has not been granted Key Vault Secrets User role on the Key Vault</div>
+            <div class="qa-body">
+              <strong>Enabling Managed Identity is necessary but not sufficient — the identity must also be authorized on the Key Vault.</strong>
+              <ul>
+                <li>The App Service uses its Managed Identity to authenticate to Key Vault at app startup to resolve the reference.</li>
+                <li>Without a role assignment (Key Vault Secrets User) or an access policy granting <code>get</code> on the Key Vault, the authentication succeeds but authorization fails — hence "reference is invalid."</li>
+                <li>Check: Azure Portal → Key Vault → Access control (IAM) → verify the App Service identity has Key Vault Secrets User.</li>
+                <li>Also verify the Key Vault is in the same tenant and the firewall isn't blocking the App Service's outbound IP.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">Which environment variable format correctly exposes a connection string named <code>OrdersDb</code> of type <code>Custom</code> to the application as an environment variable?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: CUSTOMCONNSTR_OrdersDb</div>
+            <div class="qa-body">
+              <strong>App Service prefixes connection string environment variables based on their type.</strong>
+              <ul>
+                <li><code>Custom</code> type → <code>CUSTOMCONNSTR_OrdersDb</code></li>
+                <li><code>SQLAzure</code> → <code>SQLAZURECONNSTR_OrdersDb</code></li>
+                <li><code>SQLServer</code> → <code>SQLCONNSTR_OrdersDb</code></li>
+                <li><code>MySQL</code> → <code>MYSQLCONNSTR_OrdersDb</code></li>
+                <li>Your application reads this via <code>Environment.GetEnvironmentVariable("CUSTOMCONNSTR_OrdersDb")</code> or through the .NET configuration provider as <code>ConnectionStrings:OrdersDb</code>.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- MODULE 3 -->
+    <section class="module" id="m3">
+      <h2><span class="mod-num">M3</span> 📈 Scale Apps in Azure App Service</h2>
+
+      <div class="sec-lbl">① Key Concepts</div>
+
+      <h3>Scale Up vs Scale Out</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Operation</th>
+              <th>What Changes</th>
+              <th>How</th>
+              <th>Tier Requirement</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Scale Up</td>
+              <td>VM size (CPU, RAM, storage per instance)</td>
+              <td>Change the plan SKU (S1 → S2 → S3)</td>
+              <td>Any tier</td>
+            </tr>
+            <tr>
+              <td>Manual Scale Out</td>
+              <td>Number of VM instances (fixed count)</td>
+              <td>Set instance count in plan settings</td>
+              <td>Basic+ (max 3 on Basic, 10 on Standard)</td>
+            </tr>
+            <tr>
+              <td>Autoscale</td>
+              <td>Instance count driven by rules/metrics</td>
+              <td>Configure autoscale conditions and rules</td>
+              <td>Standard+ (not available on Basic)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Autoscale Architecture</h3>
+      <p>Autoscale in App Service uses <strong>Azure Monitor autoscale</strong> — the same engine used across VMs, VMSS, and other resources. Key components:</p>
+      <ul>
+        <li><strong>Scale condition</strong> — a named set of rules that activates under defined conditions (default, or schedule-based)</li>
+        <li><strong>Scale rule</strong> — a single metric threshold that triggers a scale-out or scale-in action</li>
+        <li><strong>Observation window (time grain + time aggregation)</strong> — how long the metric must sustain the threshold before triggering</li>
+        <li><strong>Cooldown period</strong> — minimum time between consecutive scale actions to prevent thrashing</li>
+        <li><strong>Instance limits</strong> — minimum, maximum, and default instance count per scale condition</li>
+      </ul>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Autoscale does not trigger instantly on threshold breach</div>
+          The metric must <strong>sustain the threshold for the entire observation window</strong> before autoscale fires. A 10-minute window means CPU must be above your threshold for a continuous 10-minute period. A 5-minute spike during a 10-minute window will NOT trigger scale-out. This is by design to prevent over-scaling on transient spikes.
+        </div>
+      </div>
+
+      <h3>Common Scale Metrics</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Source</th>
+              <th>Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CPU Percentage</td>
+              <td>App Service Plan</td>
+              <td>General compute-bound scaling; most common</td>
+            </tr>
+            <tr>
+              <td>Memory Percentage</td>
+              <td>App Service Plan</td>
+              <td>Memory-intensive workloads (caching, large datasets)</td>
+            </tr>
+            <tr>
+              <td>Http Queue Length</td>
+              <td>App Service Plan</td>
+              <td>Request backlog; scale before CPU is saturated</td>
+            </tr>
+            <tr>
+              <td>Data In / Data Out</td>
+              <td>App Service Plan</td>
+              <td>Network-bound apps (file serving, streaming)</td>
+            </tr>
+            <tr>
+              <td>Custom metric</td>
+              <td>Application Insights</td>
+              <td>Business metrics (orders/min, queue depth); requires App Insights integration</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">② Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">The Observation Window Trap — Spike Duration vs Window Duration</div>
+          Classic exam scenario: "CPU spikes to 85% for 5 minutes. The autoscale rule has a threshold of 75% CPU with a 10-minute observation window. Does autoscale trigger?" Answer: <strong>No</strong>. The spike must sustain the threshold for the <em>full</em> 10-minute window. A 5-minute spike followed by a return to normal resets the window. The exam will sometimes say "the rule is correctly configured" and ask why it didn't fire — the answer is always the observation window vs spike duration mismatch. To catch shorter spikes, reduce the observation window (minimum: 1 minute).
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Scaling the Plan Scales ALL Apps on It</div>
+          An App Service Plan is a shared compute resource. When you scale out the plan (add instances), <strong>every app hosted on that plan</strong> runs on all instances — not just the app you configured autoscale for. This means a single bursty app on a shared plan can trigger scale-out that benefits all apps. Conversely, all apps incur the cost of the extra instances. For cost isolation, put high-traffic apps on their own dedicated plan.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Cooldown Prevents Back-to-Back Scale Actions</div>
+          After a scale-out fires, the cooldown period (default 5 minutes) must elapse before another scale action (in or out) can trigger. The exam presents a scenario: traffic spikes for 3 minutes, drops, spikes again 2 minutes later. If cooldown is 5 minutes and the first scale-out already fired, the second spike won't trigger another scale-out even if CPU is above threshold — the cooldown hasn't expired. The platform logs the cooldown as a "scale action suppressed" event in the Activity Log.
+        </div>
+      </div>
+
+      <div class="sec-lbl">③ Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+              <th>Exam Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Default autoscale cooldown</td>
+              <td>5 minutes</td>
+              <td>Applies to both scale-out and scale-in; configurable per rule</td>
+            </tr>
+            <tr>
+              <td>Minimum observation window</td>
+              <td>1 minute</td>
+              <td>Cannot set lower; 5 min is recommended for stability</td>
+            </tr>
+            <tr>
+              <td>Standard max instances</td>
+              <td>10</td>
+              <td>Hard plan limit; autoscale max setting cannot exceed this</td>
+            </tr>
+            <tr>
+              <td>Premium v3 max instances</td>
+              <td>30</td>
+              <td>With zone redundancy, minimum is 3 (one per availability zone)</td>
+            </tr>
+            <tr>
+              <td>Isolated v2 max instances</td>
+              <td>100</td>
+              <td>ASE-based; each instance is a dedicated VM in your VNet</td>
+            </tr>
+            <tr>
+              <td>Max autoscale instance limit (setting)</td>
+              <td>1000 (platform max)</td>
+              <td>Plan SKU limits apply first; setting 1000 on Standard S1 won't exceed 10</td>
+            </tr>
+            <tr>
+              <td>Basic tier manual scale max</td>
+              <td>3 instances</td>
+              <td>Basic B3 max = 3 instances; no autoscale available</td>
+            </tr>
+            <tr>
+              <td>Scale-in default cooldown</td>
+              <td>5 minutes (recommended: longer)</td>
+              <td>Increase scale-in cooldown (e.g., 15 min) to prevent premature scale-in</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">④ CLI / SDK Patterns</div>
+
+      <pre><code># Create an autoscale profile for an App Service Plan
+az monitor autoscale create \
+  --resource-group MyRG \
+  --resource MyPlan \
+  --resource-type Microsoft.Web/serverfarms \
+  --name MyAutoscale \
+  --min-count 2 \              # minimum instance count (never scale below this)
+  --max-count 10 \             # maximum instance count (plan limit is 10 for Standard)
+  --count 2                    # default instance count when no rules trigger
+
+# Add a scale-OUT rule: add 2 instances when CPU > 70% for 5 minutes
+az monitor autoscale rule create \
+  --resource-group MyRG \
+  --autoscale-name MyAutoscale \
+  --condition "Percentage CPU > 70 avg 5m" \  # metric, operator, threshold, aggregation, window
+  --scale out 2 \                              # direction + instance delta
+  --cooldown 5                                 # minutes before next scale action allowed
+
+# Add a scale-IN rule: remove 1 instance when CPU < 30% for 10 minutes
+az monitor autoscale rule create \
+  --resource-group MyRG \
+  --autoscale-name MyAutoscale \
+  --condition "Percentage CPU < 30 avg 10m" \
+  --scale in 1 \
+  --cooldown 10                 # longer cooldown for scale-in to prevent flapping
+
+# Add a schedule-based profile (weekday business hours)
+az monitor autoscale profile create \
+  --resource-group MyRG \
+  --autoscale-name MyAutoscale \
+  --name BusinessHours \
+  --timezone "UTC" \
+  --start 2024-01-01T08:00:00 \
+  --end 2024-01-01T18:00:00 \
+  --recurrence day monday tuesday wednesday thursday friday \
+  --min-count 4 \               # keep 4 instances during business hours
+  --max-count 10 \
+  --count 4
+
+# Manual scale (set fixed count on Basic tier)
+az appservice plan update \
+  --name MyBasicPlan \
+  --resource-group MyRG \
+  --number-of-workers 3         # max on Basic tier
+
+# View current autoscale settings
+az monitor autoscale show \
+  --resource-group MyRG \
+  --name MyAutoscale</code></pre>
+
+      <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "You can configure autoscale for a specific app within a shared plan"</div>
+          Autoscale operates at the <strong>App Service Plan level</strong>, not the individual app level. There is no per-app autoscale within a plan — when you configure autoscale, you configure it for the plan, and the scaling affects all apps on that plan equally. To scale a specific app independently, it must be on its own dedicated App Service Plan.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Setting max-count to 50 on a Standard S1 plan allows up to 50 instances"</div>
+          The <strong>plan SKU hard limit</strong> overrides the autoscale max setting. Standard S1 has a hard ceiling of 10 instances. Even if you configure the autoscale max at 50, the plan will never exceed 10. To get more instances, you must upgrade the plan to Premium v3 (max 30) or Isolated v2 (max 100).
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "A shorter cooldown period improves response to traffic spikes"</div>
+          A very short cooldown (e.g., 1 minute) allows rapid successive scale-out actions, which <em>sounds</em> better for spikes. However, it also means rapid scale-in once the spike ends, which can cause <strong>thrashing</strong> — constantly adding and removing instances. The recommendation is to have a longer scale-in cooldown (15–30 minutes) and a shorter scale-out cooldown (5 minutes) to respond quickly to demand but scale in conservatively to avoid repeated churn.
+        </div>
+      </div>
+
+      <div class="sec-lbl">⑥ Practice Q&amp;A</div>
+      <div class="qa-list">
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">An autoscale rule is configured: scale out when CPU > 75%, observation window = 10 minutes, cooldown = 5 minutes. CPU rises to 80% at 2:00 PM and drops to 65% at 2:07 PM. Does autoscale trigger a scale-out?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: No — the threshold was not sustained for the full 10-minute window</div>
+            <div class="qa-body">
+              <strong>The 10-minute observation window requires continuous threshold breach for 10 minutes.</strong>
+              <ul>
+                <li>CPU was above 75% from 2:00 PM to 2:07 PM — only 7 minutes.</li>
+                <li>When CPU dropped to 65% at 2:07 PM, the window resets. The threshold was not sustained for the full 10 minutes.</li>
+                <li>To catch this spike, reduce the observation window to 5 minutes or less.</li>
+                <li>Alternatively, use a pre-emptive scale rule based on Http Queue Length, which typically rises before CPU saturates.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">You have two apps on the same Standard S1 plan. App A handles batch processing (high CPU). App B is a low-traffic API. You configure autoscale on the plan to trigger when App A's CPU exceeds 70%. After autoscale fires, what happens to App B?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: App B also runs on the new instances — both apps scale together</div>
+            <div class="qa-body">
+              <strong>Scaling the plan affects all apps hosted on it.</strong>
+              <ul>
+                <li>When the plan adds instances, both App A and App B run across all instances.</li>
+                <li>App B incurs no cost on its own — it shares the plan — but it does gain extra capacity it doesn't need.</li>
+                <li>For App A's scaling to not affect App B's resource allocation, move App A to its own dedicated plan.</li>
+                <li>Alternatively, App B on a separate plan and App A on the batch plan keeps them independently scaled and billed.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">A Standard S1 autoscale rule fires and adds instances at 3:00 PM (cooldown = 5 min). CPU spikes again at 3:03 PM above the threshold. What happens?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: The second scale-out is suppressed — cooldown has not elapsed</div>
+            <div class="qa-body">
+              <strong>The cooldown period blocks scale actions until it expires.</strong>
+              <ul>
+                <li>The first scale-out fired at 3:00 PM. The 5-minute cooldown expires at 3:05 PM.</li>
+                <li>At 3:03 PM (only 3 minutes later), the platform detects the threshold is breached but the cooldown is still active — the scale action is suppressed.</li>
+                <li>If CPU is still above threshold at 3:05 PM (after cooldown), a new scale-out can fire.</li>
+                <li>To handle rapid successive spikes, reduce cooldown to 1–2 minutes (accepting some thrash risk) or increase instance delta (scale out 3 instead of 1 per action).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">Your app on a Standard S2 plan needs to handle up to 25 concurrent instances during peak load. What should you do?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Upgrade the plan to Premium v3 (P1v3 or higher)</div>
+            <div class="qa-body">
+              <strong>Standard tier has a hard maximum of 10 instances regardless of autoscale configuration.</strong>
+              <ul>
+                <li>To reach 25 instances, you must upgrade to <strong>Premium v3</strong> (max 30 instances) or Isolated v2 (max 100).</li>
+                <li>Premium v3 P0v3 is the smallest and most cost-effective Premium v3 SKU.</li>
+                <li>You cannot override the plan SKU instance ceiling via autoscale max-count settings.</li>
+                <li>After upgrading the plan, update the autoscale max-count to 25 and the platform will scale to that level.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">You want your App Service app to scale based on the number of pending orders in a Service Bus queue. Which metric type enables this?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Custom metric via Application Insights (or Azure Monitor metric from Service Bus)</div>
+            <div class="qa-body">
+              <strong>Azure Monitor autoscale supports scaling on custom metrics from external resources.</strong>
+              <ul>
+                <li>Service Bus exposes metrics like <strong>Active Messages</strong> (queue depth) as Azure Monitor metrics — you can target this metric directly in an autoscale rule using the "metric resource" setting.</li>
+                <li>In the autoscale rule, set the metric resource to your Service Bus namespace and metric name to <code>ActiveMessages</code>.</li>
+                <li>You can also emit custom metrics from your app to Application Insights and scale on those values.</li>
+                <li>This pattern decouples scaling from CPU and directly reflects business demand (queue backlog).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">You need predictable instance counts of 8 during business hours (9–5 weekdays) and 2 outside those hours. Autoscale metric-based rules sometimes keep too many or too few instances at the boundary. What should you add?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Add schedule-based autoscale profiles for business hours and off-hours</div>
+            <div class="qa-body">
+              <strong>Schedule-based profiles override metric-based rules during specified time windows.</strong>
+              <ul>
+                <li>Create a "Business Hours" profile: recurrence Monday–Friday, 9:00–17:00, min=8, max=10, default=8.</li>
+                <li>Create an "Off Hours" profile: recurrence all days, 17:00–9:00, min=2, max=4, default=2.</li>
+                <li>The default profile (metric-based) fires at all other times.</li>
+                <li>Schedule profiles guarantee the instance count at profile start — they don't wait for metric thresholds to trigger scaling.</li>
+                <li>This is the recommended pattern for workloads with known diurnal traffic patterns.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- MODULE 4 -->
+    <section class="module" id="m4">
+      <h2><span class="mod-num">M4</span> 🔄 Deployment Slots</h2>
+
+      <div class="sec-lbl">① Key Concepts</div>
+
+      <h3>What Are Deployment Slots?</h3>
+      <p>Deployment slots are <strong>live, named instances</strong> of your web app within the same App Service Plan. Each slot has its own hostname (<code>myapp-staging.azurewebsites.net</code>), its own configuration, and its own running code. Slots share the same plan resources (compute, memory).</p>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Slots are not separate apps</div>
+          A slot is not billed as an additional app — it runs within your existing plan allocation. However, each slot does consume VM instances from your plan. Running 3 instances on production + 3 instances on staging = 6 instance-hours of billing, even though it's one app with two slots.
+        </div>
+      </div>
+
+      <h3>The Swap Operation</h3>
+      <p>A slot swap is an <strong>atomic exchange</strong> of the routing rules between two slots. The platform:</p>
+      <ol>
+        <li>Applies the target slot's (production) configuration to the source slot (staging) instances</li>
+        <li>Pings the warmup path on the staging instances (<code>WEBSITE_SWAP_WARMUP_PING_PATH</code>)</li>
+        <li>Once all staging instances respond with HTTP 2xx (or timeout expires), switches the routing</li>
+        <li>Applies the old production configuration back to what is now the staging slot</li>
+      </ol>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Setting Type</th>
+              <th>Behavior During Swap</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Slot-sticky setting</td>
+              <td>Stays with the slot — does NOT move</td>
+              <td><code>DB_CONN=prod-db</code> stays in production slot regardless of which code runs there</td>
+            </tr>
+            <tr>
+              <td>Non-sticky setting</td>
+              <td>Travels with the code to the new slot</td>
+              <td><code>FEATURE_FLAG=true</code> set on staging will be in production after swap</td>
+            </tr>
+            <tr>
+              <td>Custom domain binding</td>
+              <td>Stays with production slot (not swapped)</td>
+              <td>Production always has <code>myapp.com</code> regardless of swap</td>
+            </tr>
+            <tr>
+              <td>TLS/SSL settings</td>
+              <td>Stays with production slot (not swapped)</td>
+              <td>SSL certificate binding remains on production</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Traffic Routing (A/B Testing)</h3>
+      <p>You can route a <strong>percentage of production traffic</strong> to a non-production slot. This is set per-slot in the portal or via CLI. Users assigned to the slot receive a cookie (<code>x-ms-routing-name</code>) that pins them to that slot for subsequent requests. This allows gradual rollout without a full swap.</p>
+
+      <h3>Auto-Swap</h3>
+      <p>Auto-swap automatically swaps a slot into production when a new deployment is pushed to it. Configured per-slot. Useful for CD pipelines where every push to staging should go live automatically after warmup. <strong>Not available on Linux App Service</strong> — Linux slots do not support auto-swap.</p>
+
+      <div class="sec-lbl">② Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">After a Swap, the Staging Slot Has the OLD Production Code</div>
+          This is the most-tested deployment slot concept. After you swap staging → production: staging now contains what was in production, and production contains what was in staging. To <strong>rollback</strong> a bad deployment, you do <strong>another swap</strong> — you swap production back to staging. No re-deployment needed. The exam asks: "You discover a bug after swapping staging to production. How do you roll back?" The answer is: perform another swap (production ↔ staging). The old code is still warm in the staging slot, so the rollback is instant.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Minimum Tier for Slots Is Standard — NOT Premium</div>
+          Many candidates assume deployment slots require Premium tier because slots are an "advanced" feature. The minimum tier is actually <strong>Standard (S1)</strong>. Standard provides up to 5 slots total (4 non-production). Premium v3 provides up to 20 slots. Basic provides <strong>zero</strong> deployment slots. A question asking for the minimum tier to enable a staging slot has the answer Standard, not Premium.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Non-Sticky Connection String After Swap Causes Wrong Database</div>
+          Scenario: production has <code>DB=prod-db</code> (non-sticky) and staging has <code>DB=staging-db</code> (non-sticky). After swap, production now has <code>DB=staging-db</code> — it's pointing at the staging database in the production environment. This is a data integrity disaster. The fix is to mark the <code>DB</code> connection string as <strong>slot-sticky</strong> on both slots. With slot-sticky settings, the production slot always uses <code>DB=prod-db</code> and the staging slot always uses <code>DB=staging-db</code>, regardless of which code revision is active. The exam presents this exact scenario and asks "why is production connecting to the wrong database after a slot swap?"
+        </div>
+      </div>
+
+      <div class="sec-lbl">③ Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+              <th>Exam Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Standard tier total slots</td>
+              <td>5 (incl. production)</td>
+              <td>4 non-production slots available on Standard</td>
+            </tr>
+            <tr>
+              <td>Premium v3 / Isolated v2 total slots</td>
+              <td>20 (incl. production)</td>
+              <td>19 non-production slots</td>
+            </tr>
+            <tr>
+              <td>Basic tier slots</td>
+              <td>0</td>
+              <td>Basic has zero deployment slots — a common trap</td>
+            </tr>
+            <tr>
+              <td>Swap warmup timeout default</td>
+              <td>90 seconds</td>
+              <td>Set via <code>WEBSITE_SWAP_WARMUP_PING_WAIT</code>; swap aborts if warmup fails in time</td>
+            </tr>
+            <tr>
+              <td>Traffic routing percentage</td>
+              <td>0–100%</td>
+              <td>Set per non-production slot; remainder goes to production automatically</td>
+            </tr>
+            <tr>
+              <td>Auto-swap availability</td>
+              <td>Windows only</td>
+              <td>Auto-swap is NOT supported on Linux App Service plans</td>
+            </tr>
+            <tr>
+              <td>Slot hostname format</td>
+              <td><code>appname-slotname.azurewebsites.net</code></td>
+              <td>Each slot gets a unique hostname for direct testing without traffic routing</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">④ CLI / SDK Patterns</div>
+
+      <pre><code># Create a deployment slot named "staging"
+az webapp deployment slot create \
+  --name MyWebApp \
+  --resource-group MyRG \
+  --slot staging               # slot name; hostname = mywebapp-staging.azurewebsites.net
+
+# Deploy code to a specific slot (via zip deploy)
+az webapp deployment source config-zip \
+  --name MyWebApp \
+  --resource-group MyRG \
+  --slot staging \             # deploy to staging, not production
+  --src ./publish.zip
+
+# Swap staging slot into production
+az webapp deployment slot swap \
+  --name MyWebApp \
+  --resource-group MyRG \
+  --slot staging \             # source slot
+  --target-slot production     # destination (default is "production" if omitted)
+
+# Preview swap (apply production config to staging without routing traffic)
+az webapp deployment slot swap \
+  --name MyWebApp \
+  --resource-group MyRG \
+  --slot staging \
+  --action preview             # "preview" | "swap" | "reset"
+
+# Configure traffic routing — send 20% of traffic to staging slot
+az webapp traffic-routing set \
+  --name MyWebApp \
+  --resource-group MyRG \
+  --distribution staging=20   # 20% to staging, remaining 80% goes to production automatically
+
+# Clear traffic routing (all traffic back to production)
+az webapp traffic-routing clear \
+  --name MyWebApp \
+  --resource-group MyRG
+
+# Set a slot setting as sticky on the staging slot
+az webapp config appsettings set \
+  --name MyWebApp \
+  --resource-group MyRG \
+  --slot staging \
+  --slot-settings DB_CONN=staging-connection-string   # sticky — won't swap to production
+
+# Configure auto-swap (Windows only)
+az webapp deployment slot auto-swap \
+  --name MyWebApp \
+  --resource-group MyRG \
+  --slot staging \
+  --auto-swap-slot production  # swap to production automatically on deployment
+
+# List all slots
+az webapp deployment slot list \
+  --name MyWebApp \
+  --resource-group MyRG \
+  --output table</code></pre>
+
+      <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "To roll back after a bad swap, redeploy the last good build to production"</div>
+          Redeployment is slower and unnecessary. The old production code is <strong>still running warm in the staging slot</strong> immediately after the swap. The correct rollback is to <strong>swap again</strong> — swap production back to staging. This is instant (no warmup needed for already-warm instances) and restores the previous state atomically. Only redeploy if you have overwritten the staging slot with a third deployment since the original swap.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Auto-swap works on both Linux and Windows App Service plans"</div>
+          Auto-swap is a <strong>Windows-only</strong> feature. Linux App Service plans do not support auto-swap. If a question asks how to automatically promote a deployment to production on a Linux App Service, the correct approach is to use a CI/CD pipeline (e.g., GitHub Actions, Azure Pipelines) that performs the swap step, not the built-in auto-swap feature.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Traffic routing to a slot changes the slot's own configuration"</div>
+          Traffic routing only affects <strong>which slot receives incoming requests</strong> — it does not modify any slot's settings, code, or configuration. The routing percentage can be set without any swap taking place. Users are pinned to a slot via cookie, but both slots continue running their respective configurations independently. Routing is purely a load-distribution feature for A/B testing, not a deployment mechanism.
+        </div>
+      </div>
+
+      <div class="sec-lbl">⑥ Practice Q&amp;A</div>
+      <div class="qa-list">
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">Your App Service app on Standard S1 has a production slot and a staging slot. You swap staging to production. Five minutes later you discover a critical bug in the newly deployed code. What is the fastest way to restore the previous production version?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Perform another swap — swap production back to staging</div>
+            <div class="qa-body">
+              <strong>The previous production code is still running warm in the staging slot.</strong>
+              <ul>
+                <li>After the initial swap, staging contains the old production code (the good version).</li>
+                <li>Swapping again (production → staging) is near-instant because staging instances are already warm — no container restart or warmup cycle needed.</li>
+                <li>This is faster and safer than a redeployment, which requires a full pipeline run and a fresh warmup.</li>
+                <li>The swap is atomic — traffic is rerouted instantly with no downtime.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">A team wants to test a new feature with 10% of production users before full rollout, without performing a swap. The new feature is deployed to a "canary" slot. What Azure App Service feature enables this?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Traffic routing (percentage-based routing to a deployment slot)</div>
+            <div class="qa-body">
+              <strong>App Service supports routing a configurable percentage of traffic to any non-production slot.</strong>
+              <ul>
+                <li>Set routing for the canary slot to 10% — 90% of users continue to hit production, 10% hit canary.</li>
+                <li>Users are assigned via a session cookie (<code>x-ms-routing-name</code>), ensuring the same user consistently hits the same slot during their session.</li>
+                <li>This is configured in the portal (Deployment slots → Traffic routing) or via CLI: <code>az webapp traffic-routing set --distribution canary=10</code>.</li>
+                <li>When ready to go full production, remove the traffic routing and perform a swap.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">Your staging slot's warmup path (<code>/health</code>) is set via <code>WEBSITE_SWAP_WARMUP_PING_PATH</code>. During a swap, the staging app takes 2 minutes to warm up, but the swap fails after 90 seconds. What setting should you adjust?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Increase WEBSITE_SWAP_WARMUP_PING_WAIT beyond 90 seconds</div>
+            <div class="qa-body">
+              <strong>The default swap warmup timeout is 90 seconds — swaps abort if the warmup ping doesn't respond in time.</strong>
+              <ul>
+                <li>Set <code>WEBSITE_SWAP_WARMUP_PING_WAIT=180</code> (or higher) to give the app 3 minutes to warm up.</li>
+                <li>This setting is in seconds and should be set on the <strong>production slot</strong> (it controls the platform's wait behavior during swaps targeting production).</li>
+                <li>Also consider optimizing the app's startup time — loading large caches or initializing connections at startup is common cause of slow warmups.</li>
+                <li><code>WEBSITE_SWAP_WARMUP_PING_PATH</code> defines <em>what</em> to ping; <code>WEBSITE_SWAP_WARMUP_PING_WAIT</code> defines <em>how long</em> to wait for a response.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">A developer needs to deploy and test code in a staging environment before promoting to production. The web app runs on App Service Basic B2. They cannot find the deployment slots option in the portal. What is the root cause?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Basic tier does not support deployment slots — upgrade to Standard S1 minimum</div>
+            <div class="qa-body">
+              <strong>Deployment slots require Standard tier or above.</strong>
+              <ul>
+                <li>The Basic tier (B1–B3) provides dedicated VMs, custom SSL, and custom domains, but has <strong>zero deployment slots</strong>.</li>
+                <li>To enable staging slots, upgrade the plan to at least Standard S1.</li>
+                <li>Standard S1 provides 5 slots total (production + 4 staging/test slots).</li>
+                <li>This is a frequently tested boundary: Basic is not sufficient for slots despite being a dedicated-VM tier.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">Your production slot has <code>SENDGRID_API_KEY</code> marked as slot-sticky. Your staging slot does NOT have this setting defined at all. After a swap (staging → production), what value does <code>SENDGRID_API_KEY</code> have in the new production slot?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: The original production value — slot-sticky settings remain in production</div>
+            <div class="qa-body">
+              <strong>Slot-sticky settings are anchored to the slot, not the code.</strong>
+              <ul>
+                <li>The production slot's sticky <code>SENDGRID_API_KEY</code> does not move — it stays in production regardless of which code revision is running there.</li>
+                <li>The new production slot (previously staging code) inherits the production slot's sticky settings, including <code>SENDGRID_API_KEY</code>.</li>
+                <li>After the swap, the staging slot (now running old production code) does NOT have <code>SENDGRID_API_KEY</code> — it was only defined on the production slot as sticky, so it doesn't appear on staging.</li>
+                <li>This is intentional — it ensures production credentials are never exposed to the staging environment.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">You want every push to the staging slot to automatically deploy to production after a successful warmup. The app runs on a Linux App Service plan (Standard S2). Can you use the Auto-swap feature?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: No — Auto-swap is not supported on Linux App Service plans</div>
+            <div class="qa-body">
+              <strong>Auto-swap is a Windows-only App Service feature.</strong>
+              <ul>
+                <li>Linux App Service plans do not support the Auto-swap slot configuration.</li>
+                <li>The option is not visible in the portal and the CLI command will return an error for Linux plans.</li>
+                <li>Alternative for Linux: configure your CI/CD pipeline (GitHub Actions, Azure DevOps, etc.) to explicitly call <code>az webapp deployment slot swap</code> after a successful deployment to staging.</li>
+                <li>This achieves the same behavior (deploy → warmup → promote) with slightly more pipeline configuration, but is fully supported on Linux.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">You have a Standard S1 plan with production and three staging slots already created. A new requirement needs a fourth staging slot and also a load testing slot. What is the minimum action to accommodate both?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Upgrade the plan to Premium v3 (P1v3 or higher)</div>
+            <div class="qa-body">
+              <strong>Standard tier allows only 5 slots total (1 production + 4 non-production).</strong>
+              <ul>
+                <li>You currently have: 1 production + 3 staging = 4 total slots. Adding 2 more (staging4 + loadtest) requires 6 total slots.</li>
+                <li>Standard S1 cap is 5 — you can add one more, not two.</li>
+                <li>Upgrading to Premium v3 increases the limit to 20 slots — accommodates the fifth and sixth slot and any future needs.</li>
+                <li>The upgrade does not affect existing slots or require redeployment; it changes the plan SKU and available resources.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="nav-end">
+      <span></span>
+      <a href="learn-02-functions.html" class="btn-link fwd">Azure Functions →</a>
+    </div>
+  </main>
+</div>
+
+<script>
+
+(function(){
+  // Q&A accordion
+  document.querySelectorAll('.qa-q').forEach(function(q){
+    q.addEventListener('click',function(){
+      this.closest('.qa-item').classList.toggle('open');
+    });
+  });
+  // Sidebar scroll-spy
+  var links=document.querySelectorAll('.sb-link[data-m]');
+  var sections=document.querySelectorAll('.module[id]');
+  if(links.length&&sections.length){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var n=e.target.id.replace('m','');
+          links.forEach(function(l){l.classList.toggle('active',l.dataset.m===n);});
+        }
+      });
+    },{rootMargin:'-8% 0px -72% 0px'});
+    sections.forEach(function(s){obs.observe(s);});
+  }
+  // Sidebar click scroll
+  links.forEach(function(l){
+    l.addEventListener('click',function(e){
+      e.preventDefault();
+      var t=document.getElementById('m'+this.dataset.m);
+      if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+})();
+
+</script>
+</body>
+</html>

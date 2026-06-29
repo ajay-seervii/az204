@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Azure Functions — AZ-204 Study Notes</title>
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --azure:#0078D4;--azure-dark:#005a9e;--azure-light:#deecf9;
+  --bg:#f4f6f9;--surface:#fff;--nav-bg:#1a1f36;
+  --border:#d0d7de;--border-light:#e8ecf0;
+  --text:#1a1f36;--text-muted:#6b7280;--text-light:#9ca3af;
+  --ok-bg:#ecfdf5;--ok-bdr:#10b981;--ok-txt:#065f46;
+  --err-bg:#fef2f2;--err-bdr:#ef4444;--err-txt:#991b1b;
+  --warn-bg:#fffbeb;--warn-bdr:#fbbf24;--warn-txt:#92400e;
+  --r:10px;--rs:6px;
+  --sh:0 1px 3px rgba(0,0,0,.08);--shm:0 4px 12px rgba(0,0,0,.12);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--azure);text-decoration:none}
+a:hover{text-decoration:underline}
+#top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
+.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
+.nav-bc a{color:rgba(255,255,255,.75)}
+.nav-bc a:hover{color:#fff;text-decoration:none}
+.nav-bc span{color:rgba(255,255,255,.35)}
+.nav-bc strong{color:#fff}
+.nav-acts{display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
+.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.page-layout{display:flex;min-height:calc(100vh - 54px)}
+.sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
+.sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
+.sb-back:hover{color:var(--azure);text-decoration:none}
+.sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-light);padding:.5rem 1rem;margin-top:.25rem}
+.sb-link{display:flex;align-items:center;gap:8px;padding:.45rem 1rem;font-size:13px;color:var(--text-muted);border-left:3px solid transparent;cursor:pointer;transition:background .1s,color .1s,border-color .1s}
+.sb-link:hover{background:#f8fafc;color:var(--text)}
+.sb-link.active{border-left-color:var(--azure);color:var(--azure);background:#eff6ff;font-weight:600}
+.sb-num{font-size:10px;background:#f3f4f6;border:1px solid var(--border-light);padding:1px 6px;border-radius:20px;margin-left:auto;color:var(--text-light)}
+.sb-next{display:flex;align-items:center;gap:6px;padding:.45rem 1rem;font-size:12px;color:var(--text-muted);margin-top:.5rem;border-top:1px solid var(--border-light)}
+.sb-next:hover{color:var(--azure);text-decoration:none}
+.main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
+.topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
+.topic-header p{font-size:13px;color:var(--text-muted);margin:0}
+.topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
+.module{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem 1.75rem;margin-bottom:1.75rem;scroll-margin-top:70px}
+.module h2{font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--border-light)}
+.module h2 .mod-num{background:var(--azure);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--azure);margin-bottom:.5rem;margin-top:1.25rem;display:flex;align-items:center;gap:6px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--azure-light)}
+h3{font-size:14px;font-weight:700;color:var(--text);margin:.75rem 0 .4rem}
+p,li{font-size:13px;color:var(--text-muted);line-height:1.7}
+ul,ol{padding-left:1.4rem;margin:.4rem 0}
+li{margin-bottom:.25rem}
+strong{color:var(--text)}
+code{font-family:Consolas,'Cascadia Code','Courier New',monospace;font-size:.85em;background:#f3f4f6;padding:1px 5px;border-radius:4px;color:#1a1f36}
+pre{font-family:Consolas,'Cascadia Code','Courier New',monospace;background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:var(--rs);padding:1.1rem 1.25rem;overflow-x:auto;font-size:12.5px;line-height:1.65;margin:.6rem 0}
+pre code{background:none;padding:0;color:inherit}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--rs);margin:.6rem 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f8fafc;color:var(--text-muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.55rem .9rem;text-align:left;border-bottom:2px solid var(--border)}
+td{padding:.55rem .9rem;border-bottom:1px solid var(--border-light);color:var(--text-muted);vertical-align:top;line-height:1.5}
+td:first-child{color:var(--text);font-weight:500}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+.callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
+.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-body{flex:1}
+.callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
+.callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
+.callout.gotcha .callout-title{color:var(--err-txt)}
+.callout.tip{background:#eff6ff;border-left:3px solid var(--azure)}
+.callout.tip .callout-title{color:var(--azure-dark)}
+.callout.warn{background:var(--warn-bg);border-left:3px solid var(--warn-bdr)}
+.callout.warn .callout-title{color:var(--warn-txt)}
+.callout.success{background:var(--ok-bg);border-left:3px solid var(--ok-bdr)}
+.callout.success .callout-title{color:var(--ok-txt)}
+.qa-list{margin-top:.5rem}
+.qa-item{border:1px solid var(--border);border-radius:var(--rs);margin-bottom:.6rem;overflow:hidden}
+.qa-q{display:flex;align-items:flex-start;gap:.65rem;padding:.85rem 1rem;cursor:pointer;background:var(--surface);user-select:none}
+.qa-q:hover{background:#f8fafc}
+.qa-n{flex-shrink:0;width:20px;height:20px;background:var(--azure);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.qa-text{flex:1;font-size:13px;color:var(--text);line-height:1.5;font-weight:500}
+.qa-tog{flex-shrink:0;color:var(--text-light);transition:transform .2s;font-size:14px;margin-top:2px}
+.qa-item.open .qa-tog{transform:rotate(180deg)}
+.qa-ans{display:none;padding:.85rem 1rem 1rem;background:#f8fafc;border-top:1px solid var(--border-light)}
+.qa-item.open .qa-ans{display:block}
+.qa-correct{display:inline-flex;align-items:center;gap:5px;background:var(--ok-bg);color:var(--ok-txt);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-bottom:.6rem}
+.qa-body{font-size:12.5px;color:var(--text-muted);line-height:1.7}
+.qa-body ul{padding-left:1.25rem;margin:.4rem 0}
+.qa-body strong{color:var(--text)}
+.nav-end{display:flex;justify-content:space-between;padding:1.25rem 0;border-top:1px solid var(--border);margin-top:.5rem}
+.btn-link{display:inline-flex;align-items:center;gap:5px;padding:.4rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--text-muted)}
+.btn-link:hover{border-color:var(--azure);color:var(--azure);text-decoration:none}
+.btn-link.fwd{background:var(--azure);color:#fff;border-color:var(--azure)}
+.btn-link.fwd:hover{background:var(--azure-dark);text-decoration:none}
+@media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
+
+</style>
+</head>
+<body>
+
+<nav id="top-nav">
+  <div class="nav-brand">
+    <div class="nav-brand-icon">Az</div>
+    <div class="nav-bc">
+      <a href="learn.html">Study Notes</a>
+      <span>/</span>
+      <strong>Azure Functions</strong>
+    </div>
+  </div>
+  <div class="nav-acts">
+    <a href="learn.html" class="btn btn-ghost">← All Topics</a>
+    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <a href="learn.html" class="sb-back">← All Topics</a>
+    <div class="sb-label">Azure Functions</div>
+    <a href="#m1" class="sb-link" data-m="1">🔍 Explore Azure Functions<span class="sb-num">6 sections</span></a>
+    <a href="#m2" class="sb-link" data-m="2">💻 Develop Azure Functions<span class="sb-num">6 sections</span></a>
+    <a href="learn-03-blob-storage.html" class="sb-next">Next: Blob Storage →</a>
+  </aside>
+
+  <main class="main">
+    <div class="topic-header">
+      <div class="topic-icon-lg">⚡</div>
+      <div>
+        <h1>Azure Functions</h1>
+        <p>2 modules · Explore Azure Functions · Develop Azure Functions</p>
+      </div>
+      <div class="topic-num">Topic 02</div>
+    </div>
+
+    <!-- MODULE 1 -->
+    <section class="module" id="m1">
+      <h2><span class="mod-num">Module 1</span> Explore Azure Functions</h2>
+
+      <div class="sec-lbl">① Key Concepts</div>
+
+      <h3>Hosting Plans Comparison</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Plan</th>
+              <th>Scale Behavior</th>
+              <th>Cold Start</th>
+              <th>Timeout Default / Max</th>
+              <th>Max Instances</th>
+              <th>VNET</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Consumption</td>
+              <td>Scale to zero; scale controller manages scale-out automatically</td>
+              <td>Yes — can be seconds on first invocation</td>
+              <td>5 min / 10 min</td>
+              <td>200 (HTTP), 100 (non-HTTP)</td>
+              <td>No (outbound only via NAT gateway workaround)</td>
+            </tr>
+            <tr>
+              <td>Flex Consumption</td>
+              <td>Per-instance concurrency configurable; supports minimum instances; fast scale-out</td>
+              <td>Reduced — minimum instances eliminate cold start for baseline load</td>
+              <td>30 min / unlimited (configurable)</td>
+              <td>Configurable; high scale possible</td>
+              <td>Yes — VNET integration built-in</td>
+            </tr>
+            <tr>
+              <td>Premium (Elastic)</td>
+              <td>Pre-warmed instances; no scale-to-zero; elastic scale-out</td>
+              <td>None — pre-warmed workers always ready</td>
+              <td>30 min / unlimited</td>
+              <td>100</td>
+              <td>Yes — full VNET integration</td>
+            </tr>
+            <tr>
+              <td>Dedicated (App Service)</td>
+              <td>Manual or App Service autoscale rules; no automatic event-driven scale</td>
+              <td>None — always on (requires Always On setting enabled)</td>
+              <td>30 min / unlimited</td>
+              <td>Per App Service plan tier</td>
+              <td>Yes — same as App Service</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Consumption Instance Resources</div>
+          Each Consumption plan instance is allocated <strong>1.5 GB RAM</strong> and <strong>1 vCPU</strong>. You cannot configure these. If your function needs more memory or CPU, move to Premium or Dedicated.
+        </div>
+      </div>
+
+      <h3>Durable Functions — Function Roles</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Function Type</th>
+              <th>Trigger Attribute</th>
+              <th>Role</th>
+              <th>Key Constraint</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Orchestrator</td>
+              <td><code>[OrchestrationTrigger]</code></td>
+              <td>Defines the workflow logic; calls activity functions and waits for results</td>
+              <td>Must be <strong>deterministic</strong> — no I/O, no DateTime.Now, no random numbers directly</td>
+            </tr>
+            <tr>
+              <td>Activity</td>
+              <td><code>[ActivityTrigger]</code></td>
+              <td>Performs the actual work — I/O, database calls, HTTP calls, computations</td>
+              <td>Can be non-deterministic; called by orchestrators via <code>CallActivityAsync</code></td>
+            </tr>
+            <tr>
+              <td>Entity</td>
+              <td><code>[EntityTrigger]</code></td>
+              <td>Manages stateful entities (Durable Entities / Actor model)</td>
+              <td>State is persisted and can be read/written by orchestrators and clients</td>
+            </tr>
+            <tr>
+              <td>Client</td>
+              <td><code>[DurableClient]</code></td>
+              <td>Starts, queries, terminates, or sends events to orchestration instances</td>
+              <td>Entry point — triggered by HTTP, queue, timer, etc. to kick off an orchestration</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Durable Functions — Patterns</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Pattern</th>
+              <th>Description</th>
+              <th>Key API / Behavior</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Function Chaining</td>
+              <td>Execute a sequence of functions in order, passing output of one to the next</td>
+              <td><code>await context.CallActivityAsync()</code> called sequentially; simple linear flow</td>
+            </tr>
+            <tr>
+              <td>Fan-out / Fan-in</td>
+              <td>Execute multiple functions in parallel, then wait for all to complete before continuing</td>
+              <td><code>Task.WhenAll(tasks)</code> with multiple <code>CallActivityAsync</code> calls; parallelism via tasks list</td>
+            </tr>
+            <tr>
+              <td>Async HTTP API</td>
+              <td>Client kicks off long-running operation, polls a status endpoint until complete</td>
+              <td>Built-in HTTP management URLs; orchestrator exposes check-status URL automatically</td>
+            </tr>
+            <tr>
+              <td>Monitor</td>
+              <td>Flexible recurring process in a workflow; polls until a condition is true (replaces fixed timers)</td>
+              <td><code>context.CreateTimer()</code> with retry loop; durable timer waits without consuming compute</td>
+            </tr>
+            <tr>
+              <td>Human Interaction</td>
+              <td>Workflow pauses waiting for external event (approval, user input) with a timeout fallback</td>
+              <td><code>context.WaitForExternalEvent()</code> combined with <code>context.CreateTimer()</code> via <code>Task.WhenAny()</code></td>
+            </tr>
+            <tr>
+              <td>Aggregator</td>
+              <td>Accumulate event data over time into a stateful entity; replaces stateless event consumers</td>
+              <td>Uses Durable Entities; events are routed to a single entity that maintains running state</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Why Fan-out / Fan-in Uses Task.WhenAll</div>
+          In fan-out, you build a list of <code>Task&lt;T&gt;</code> objects by calling <code>CallActivityAsync</code> without awaiting each one, then await <code>Task.WhenAll(tasks)</code>. Awaiting inside the loop would serialize the calls into chaining, not parallelism.
+        </div>
+      </div>
+
+      <div class="sec-lbl">② Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Orchestrator Determinism — The Most Common Durable Functions Trap</div>
+          Orchestrator functions <strong>replay from the beginning</strong> every time they are resumed after an await. If your orchestrator calls <code>DateTime.Now</code>, <code>Guid.NewGuid()</code>, or makes a direct HTTP call, the replayed value will differ from the original, causing non-deterministic behavior and potential workflow corruption. Always delegate non-deterministic operations to Activity functions, and use <code>context.CurrentUtcDateTime</code> instead of <code>DateTime.UtcNow</code> inside orchestrators.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Changing Orchestrator Code While Instances Are Running</div>
+          If you deploy a new version of an orchestrator function while existing instances are mid-execution, those instances will fail on replay because the history no longer matches the new code path. The exam may describe this scenario as "orchestration instances failing after a deployment" — the correct mitigation is versioning strategies: use side-by-side deployment slots, wait for existing instances to complete, or implement versioning logic inside the orchestrator to handle both old and new code paths.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Dedicated Plan — "Always On" Is Not Automatic</div>
+          In a Dedicated (App Service) plan, Azure Functions will time out and unload if the app is idle — just like a regular App Service web app. You <strong>must</strong> enable the "Always On" setting in the App Service configuration to prevent this. Without Always On, timer-triggered functions on a Dedicated plan may silently miss scheduled executions because the host is not running.
+        </div>
+      </div>
+
+      <div class="sec-lbl">③ Key Numbers &amp; Limits</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+              <th>Exam Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Consumption — default timeout</td>
+              <td>5 minutes</td>
+              <td>Functions running longer than 5 min on Consumption will be terminated unless timeout is extended (max 10 min)</td>
+            </tr>
+            <tr>
+              <td>Consumption — maximum timeout</td>
+              <td>10 minutes</td>
+              <td>Hard ceiling on Consumption; to exceed this you must move to Premium or Dedicated plan</td>
+            </tr>
+            <tr>
+              <td>Premium / Dedicated — timeout</td>
+              <td>Unlimited (default 30 min)</td>
+              <td>The default in host.json is 30 min; set to -1 for truly unlimited on Premium/Dedicated</td>
+            </tr>
+            <tr>
+              <td>Consumption — max scale-out instances (HTTP)</td>
+              <td>200</td>
+              <td>HTTP-triggered functions can scale to 200 instances maximum on Consumption</td>
+            </tr>
+            <tr>
+              <td>Consumption — max scale-out instances (non-HTTP)</td>
+              <td>100</td>
+              <td>Queue, Service Bus, Event Hub triggers are capped at 100 instances on Consumption</td>
+            </tr>
+            <tr>
+              <td>Premium — max scale-out instances</td>
+              <td>100</td>
+              <td>Same 100-instance ceiling as non-HTTP Consumption; VNET and no cold start are the differentiators</td>
+            </tr>
+            <tr>
+              <td>Consumption — instance RAM</td>
+              <td>1.5 GB per instance</td>
+              <td>Fixed; cannot be changed; if function needs more, use Premium or Dedicated</td>
+            </tr>
+            <tr>
+              <td>Consumption — instance vCPU</td>
+              <td>1 vCPU per instance</td>
+              <td>Fixed; same constraint as RAM</td>
+            </tr>
+            <tr>
+              <td>Scale Controller polling interval</td>
+              <td>Every few seconds (adaptive)</td>
+              <td>Scale Controller monitors queue depth, event hub offsets etc. — it does NOT control Dedicated plan scaling</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">④ CLI / SDK Patterns</div>
+
+      <pre><code># Initialize a new Azure Functions project (Consumption plan, .NET isolated)
+func init MyFunctionApp --worker-runtime dotnet-isolated
+
+# Create a new function with a specific trigger template
+func new --name MyQueueFunction --template "Azure Queue Storage trigger"
+
+# Start local Functions host for testing
+func start
+
+# Deploy to Azure (after az login and resource group/storage exist)
+func azure functionapp publish &lt;FunctionAppName&gt;
+
+# Check logs in real time from deployed app
+func azure functionapp logstream &lt;FunctionAppName&gt;</code></pre>
+
+      <pre><code>// Durable Functions — Orchestrator (C# isolated worker)
+[Function("OrderOrchestrator")]
+public static async Task&lt;string&gt; RunOrchestrator(
+    [OrchestrationTrigger] TaskOrchestrationContext context)
+{
+    // CORRECT: use context.CurrentUtcDateTime, NOT DateTime.UtcNow
+    var deadline = context.CurrentUtcDateTime.AddMinutes(30);
+
+    // Fan-out: kick off parallel activity calls
+    var tasks = new List&lt;Task&lt;string&gt;&gt;();
+    foreach (var item in orderItems)
+    {
+        tasks.Add(context.CallActivityAsync&lt;string&gt;("ProcessItem", item));
+    }
+    // Fan-in: wait for all parallel tasks
+    string[] results = await Task.WhenAll(tasks);
+
+    // Human interaction: wait for external approval with timeout
+    using var cts = new CancellationTokenSource();
+    var approvalTask = context.WaitForExternalEvent&lt;bool&gt;("ApprovalReceived");
+    var timeoutTask = context.CreateTimer(deadline, cts.Token);
+    var winner = await Task.WhenAny(approvalTask, timeoutTask);
+    if (winner == approvalTask) { cts.Cancel(); /* approved */ }
+    else { /* timed out — escalate */ }
+
+    return string.Join(",", results);
+}</code></pre>
+
+      <pre><code>// Durable Functions — Activity (can do real I/O)
+[Function("ProcessItem")]
+public static async Task&lt;string&gt; ProcessItem(
+    [ActivityTrigger] string item,
+    FunctionContext executionContext)
+{
+    // Activities CAN call external services, use DateTime.UtcNow, etc.
+    var result = await callExternalService(item);
+    return result;
+}
+
+// Durable Functions — Client (starts orchestration from HTTP trigger)
+[Function("StartOrchestration")]
+public static async Task&lt;HttpResponseData&gt; HttpStart(
+    [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req,
+    [DurableClient] DurableTaskClient client,
+    FunctionContext executionContext)
+{
+    string instanceId = await client.ScheduleNewOrchestrationInstanceAsync("OrderOrchestrator");
+    // Returns built-in status polling URLs to the caller
+    return await client.CreateCheckStatusResponseAsync(req, instanceId);
+}</code></pre>
+
+      <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">🪤</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Use Consumption plan for a time-critical scheduled function that must fire exactly on schedule"</div>
+          <strong>Wrong.</strong> Consumption plan functions can experience cold starts — the host must spin up from zero before the timer trigger fires, which can delay execution by several seconds or more. For functions that must execute precisely on schedule (financial jobs, SLA-bound operations), use the <strong>Premium plan</strong> with pre-warmed instances, or the <strong>Dedicated plan</strong> with Always On enabled.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">🪤</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Durable orchestrators can call external HTTP APIs directly to avoid an extra function call"</div>
+          <strong>Wrong.</strong> Making direct HTTP calls (or any I/O) inside an orchestrator violates the determinism requirement. When the orchestrator replays, the HTTP call would fire again, potentially causing duplicate operations or returning a different result than the original run. Always wrap external calls in an Activity function and invoke it via <code>CallActivityAsync</code>.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">🪤</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "The Scale Controller manages scaling for all Azure Functions hosting plans"</div>
+          <strong>Wrong.</strong> The Scale Controller is specific to <strong>Consumption</strong> and <strong>Premium (Elastic)</strong> plans, where it monitors event sources (queue depth, event hub offset lag, etc.) and dynamically adds or removes worker instances. Functions on a <strong>Dedicated (App Service)</strong> plan are governed by standard <strong>App Service autoscale rules</strong> — the Scale Controller plays no role there.
+        </div>
+      </div>
+
+      <div class="sec-lbl">⑥ Practice Q&amp;A</div>
+      <div class="qa-list">
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">Your company runs a financial batch job as an Azure Function on the Consumption plan. The job has been running for 9 minutes and is approaching completion, but it occasionally takes 11 minutes. What is the most likely outcome, and what should you do?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: The function will be forcibly terminated at 10 minutes; migrate to Premium or Dedicated plan</div>
+            <div class="qa-body">
+              <strong>Explanation:</strong> The Consumption plan enforces a hard maximum timeout of <strong>10 minutes</strong> (600 seconds). A function that sometimes takes 11 minutes will be killed before completion. The default is 5 minutes but can be extended to 10 minutes in <code>host.json</code> — there is no way to exceed 10 minutes on Consumption.
+              <ul>
+                <li>Migrating to <strong>Premium</strong> gives unlimited timeout with pre-warmed instances (no cold start) — ideal for this scenario</li>
+                <li><strong>Dedicated</strong> also supports unlimited timeout but requires Always On to be enabled</li>
+                <li>Do not attempt to split the job into chained 9-minute functions — that adds complexity and still risks timing issues</li>
+                <li>The correct host.json setting to extend Consumption timeout: <code>"functionTimeout": "00:10:00"</code></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">A Durable orchestrator function calls DateTime.UtcNow to set a deadline for a human approval step. A developer reviews the code and flags it as a bug. Why is this a problem?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Orchestrators replay from history — DateTime.UtcNow returns a different value on replay, causing non-deterministic behavior</div>
+            <div class="qa-body">
+              <strong>Explanation:</strong> Durable Functions orchestrators save their execution history to Azure Storage. When an orchestrator resumes after an <code>await</code>, it <strong>replays the entire function from the beginning</strong> to reconstruct its in-memory state. During replay, <code>DateTime.UtcNow</code> returns the current wall-clock time — which is different from the original execution — making the deadline inconsistent.
+              <ul>
+                <li>The fix: use <code>context.CurrentUtcDateTime</code> (or <code>context.CurrentUtcDateTime</code> in the .NET SDK), which returns the deterministic, history-stamped time from the first execution</li>
+                <li>Same applies to <code>Guid.NewGuid()</code> — use <code>context.NewGuid()</code> instead</li>
+                <li>Same applies to any external HTTP or I/O call — delegate to Activity functions</li>
+                <li>The rule: if a value changes between runs of the same code, it cannot appear in an orchestrator</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">You need to process a large number of product catalog items in parallel, then send a summary notification only after all items are processed. Which Durable Functions pattern should you use, and what is the key API call?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Fan-out / Fan-in pattern using Task.WhenAll()</div>
+            <div class="qa-body">
+              <strong>Explanation:</strong> Fan-out / Fan-in parallelizes multiple activity calls and waits for all of them to complete before proceeding.
+              <ul>
+                <li>Build a <code>List&lt;Task&lt;T&gt;&gt;</code> by calling <code>context.CallActivityAsync&lt;T&gt;()</code> for each item <strong>without awaiting</strong> — this fires them all in parallel</li>
+                <li>Then <code>await Task.WhenAll(tasks)</code> — the orchestrator suspends until every task completes</li>
+                <li>Common mistake: awaiting inside the loop turns parallel fan-out into sequential chaining</li>
+                <li>After <code>Task.WhenAll</code> returns, you have all results and can call a final activity to send the summary</li>
+                <li>Fan-in is the "gather" half — collecting all outputs before the next step</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">An Azure Function needs to connect to resources inside a virtual network and must have no cold start. The function may run for up to 45 minutes. Which hosting plan should you choose?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Premium (Elastic) plan</div>
+            <div class="qa-body">
+              <strong>Explanation:</strong> This scenario has three requirements that eliminate other plans:
+              <ul>
+                <li><strong>VNET integration</strong> — eliminates Consumption plan (no native VNET integration)</li>
+                <li><strong>No cold start</strong> — eliminates Consumption plan; Premium provides pre-warmed worker instances</li>
+                <li><strong>45-minute runtime</strong> — eliminates Consumption plan (max 10 min); Premium supports unlimited timeout</li>
+                <li>Dedicated plan also supports VNET and unlimited timeout, but does NOT guarantee no cold start — it depends on Always On and App Service plan tier behavior; Premium is the explicit "no cold start" answer</li>
+                <li>Flex Consumption also supports VNET and can minimize cold starts via minimum instances, but Premium is the canonical "no cold start" plan in exam questions</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">A team deploys an updated Durable orchestrator function while 50 orchestration instances are mid-execution. Shortly after deployment, those instances begin failing with replay errors. What is the root cause?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: The orchestrator history no longer matches the new code path, causing replay failures</div>
+            <div class="qa-body">
+              <strong>Explanation:</strong> When an orchestrator resumes, it replays its history to reconstruct state. If the new version of the code has different logic (added/removed activity calls, changed branching), the replay path diverges from the recorded history — the runtime throws a non-determinism exception.
+              <ul>
+                <li><strong>Mitigation 1:</strong> Wait for all running instances to complete before deploying new code (drain approach)</li>
+                <li><strong>Mitigation 2:</strong> Use deployment slots — route new orchestrations to the new slot while the old slot drains existing instances</li>
+                <li><strong>Mitigation 3:</strong> Implement versioning logic inside the orchestrator (check a version parameter and branch accordingly)</li>
+                <li>This is a known operational challenge with Durable Functions — the exam tests whether you understand the replay mechanism as the root cause</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">You need a workflow that pauses and waits for a manager to approve an expense report. If no approval arrives within 48 hours, the request should be automatically escalated. Which Durable Functions pattern handles this, and what APIs are involved?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Human Interaction pattern using WaitForExternalEvent and CreateTimer with Task.WhenAny</div>
+            <div class="qa-body">
+              <strong>Explanation:</strong> The Human Interaction pattern is designed exactly for this: pause a workflow waiting for a person, with a timeout fallback.
+              <ul>
+                <li><code>context.WaitForExternalEvent&lt;bool&gt;("ApprovalReceived")</code> — creates a task that resolves when an external system raises the named event</li>
+                <li><code>context.CreateTimer(deadline, cancellationToken)</code> — creates a durable timer (no compute consumed while waiting)</li>
+                <li><code>await Task.WhenAny(approvalTask, timeoutTask)</code> — whichever resolves first wins</li>
+                <li>If the timer wins, escalate; if the approval task wins, cancel the timer via the <code>CancellationTokenSource</code></li>
+                <li>The external event is raised by a Client function calling <code>client.RaiseEventAsync(instanceId, "ApprovalReceived", true)</code></li>
+                <li>Key exam detail: Durable timers use Azure Storage, not thread sleep — the orchestrator host can recycle with zero resource waste during the wait</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">A function on the Consumption plan processes non-HTTP queue messages. The team observes that during peak load, the function only scales to 80 instances and seems to cap there. Is this expected behavior?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Yes — non-HTTP triggers on Consumption are limited to a maximum of 100 instances</div>
+            <div class="qa-body">
+              <strong>Explanation:</strong> Azure Functions Consumption plan differentiates between HTTP and non-HTTP triggered functions for maximum scale-out:
+              <ul>
+                <li><strong>HTTP triggers:</strong> can scale to 200 instances maximum</li>
+                <li><strong>Non-HTTP triggers</strong> (Queue, Service Bus, Event Hubs, Timer, etc.): maximum of 100 instances</li>
+                <li>80 instances during peak is below the 100 limit — this is normal; the Scale Controller adds instances adaptively based on queue depth and processing rate</li>
+                <li>If 100 instances are genuinely insufficient, move to the Premium plan (also 100 max, but with configurable per-instance concurrency) or Dedicated plan</li>
+                <li>Do not confuse the 200-instance HTTP limit with the 100-instance non-HTTP limit — the exam uses both numbers as distractors</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">8</div>
+            <div class="qa-text">Which Durable Functions pattern would you use to implement a price monitoring service that checks a stock price every 5 minutes and stops only when the price exceeds $150?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Monitor pattern</div>
+            <div class="qa-body">
+              <strong>Explanation:</strong> The Monitor pattern replaces rigid timer triggers with a flexible, stateful polling loop that can vary its interval and terminate based on a condition.
+              <ul>
+                <li>The orchestrator enters a loop: call an activity to check the price, evaluate the result, then call <code>context.CreateTimer()</code> to wait 5 minutes before checking again</li>
+                <li>The loop exits when the price exceeds $150 — no external signal needed</li>
+                <li>Contrast with a Timer trigger: that fires on a fixed schedule regardless of state, and has no built-in way to stop itself based on a condition without external coordination</li>
+                <li>Contrast with Human Interaction: that waits for an external event, not a polled condition</li>
+                <li>The Monitor pattern is resource-efficient: the durable timer suspends the orchestrator, consuming no compute between checks</li>
+                <li>Watch for: using <code>context.CurrentUtcDateTime.AddMinutes(5)</code> for the timer, NOT <code>DateTime.UtcNow.AddMinutes(5)</code></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /qa-list -->
+    </section>
+
+    <!-- MODULE 2 -->
+    <section class="module" id="m2">
+      <h2><span class="mod-num">Module 2</span> Develop Azure Functions</h2>
+
+      <div class="sec-lbl">① Key Concepts</div>
+
+      <h3>Triggers and Bindings</h3>
+      <p>Every Azure Function has <strong>exactly one trigger</strong>. Triggers cause the function to run and provide input data. Input bindings read additional data. Output bindings write data. A function can have multiple input and output bindings.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Binding Type</th>
+              <th>Direction</th>
+              <th>Purpose</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Trigger</td>
+              <td>In (causes invocation)</td>
+              <td>Defines what causes the function to run; exactly one per function</td>
+              <td>HTTP request, Queue message, Timer schedule, Blob creation, Event Hub event</td>
+            </tr>
+            <tr>
+              <td>Input binding</td>
+              <td>In (data only)</td>
+              <td>Reads data from an external source when the function runs; does not cause invocation</td>
+              <td>Read a Cosmos DB document by ID, read a Blob by name, read a Table entity</td>
+            </tr>
+            <tr>
+              <td>Output binding</td>
+              <td>Out (write data)</td>
+              <td>Writes data to an external service after function logic completes</td>
+              <td>Write to a Queue, write a Blob, insert a Cosmos DB document, send an HTTP response</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Binding Expressions</h3>
+      <p>Binding expressions resolve values from trigger metadata at runtime using <code>{paramName}</code> syntax. Common expression sources include trigger input (e.g., <code>{name}</code> from a queue message), app settings (<code>%AppSettingName%</code>), and system values like <code>{rand-guid}</code> or <code>{DateTime}</code>.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Expression</th>
+              <th>Resolved From</th>
+              <th>Example Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>{queueTrigger}</code></td>
+              <td>Queue message content (if plain string)</td>
+              <td>Use queue message value as Blob path for input binding</td>
+            </tr>
+            <tr>
+              <td><code>{rand-guid}</code></td>
+              <td>Generated GUID at runtime</td>
+              <td>Output blob name: <code>output/{rand-guid}.json</code> ensures unique file names</td>
+            </tr>
+            <tr>
+              <td><code>{DateTime}</code></td>
+              <td>Current UTC datetime</td>
+              <td>Output blob path: <code>logs/{DateTime}.log</code></td>
+            </tr>
+            <tr>
+              <td><code>%MyAppSetting%</code></td>
+              <td>App setting value (not binding connection)</td>
+              <td>Inject config values into binding path expressions</td>
+            </tr>
+            <tr>
+              <td><code>{blobTrigger}</code></td>
+              <td>Full path of the triggering blob</td>
+              <td>Log or route based on triggering blob's full path</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>In-Process vs. Isolated Worker Model</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Aspect</th>
+              <th>In-Process (.NET)</th>
+              <th>Isolated Worker (.NET)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Process model</td>
+              <td>Runs in the same process as the Functions host</td>
+              <td>Runs in a separate worker process; communicates via gRPC</td>
+            </tr>
+            <tr>
+              <td>Binding configuration</td>
+              <td><code>function.json</code> file per function</td>
+              <td>Attribute-based on method parameters; no <code>function.json</code> needed</td>
+            </tr>
+            <tr>
+              <td>Supported .NET versions</td>
+              <td>.NET 6 and below only (limited to host's runtime)</td>
+              <td>.NET 6, 7, 8, Framework 4.8 — decoupled from host</td>
+            </tr>
+            <tr>
+              <td>Startup configuration</td>
+              <td><code>FunctionsStartup</code> class</td>
+              <td><code>HostBuilder</code> with <code>ConfigureFunctionsWorkerDefaults()</code></td>
+            </tr>
+            <tr>
+              <td>Microsoft's direction</td>
+              <td>Legacy; no new feature investment</td>
+              <td>Recommended for all new .NET Functions development</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Configuration Files</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Purpose</th>
+              <th>Deployed to Azure?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>host.json</code></td>
+              <td>Runtime-wide settings: logging, extension bundles, concurrency, retry policies, timeout</td>
+              <td>Yes — deployed with function app</td>
+            </tr>
+            <tr>
+              <td><code>local.settings.json</code></td>
+              <td>Local development configuration: connection strings, app settings, runtime version. Also configures local runtime behavior.</td>
+              <td><strong>No</strong> — local dev only; typically in .gitignore; secrets stay local</td>
+            </tr>
+            <tr>
+              <td><code>function.json</code></td>
+              <td>Binding configuration per function (in-process model only); defines trigger, input, output binding types and their properties</td>
+              <td>Yes (in-process); auto-generated in isolated worker model</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Connection Property = App Setting Name, Not the Value</div>
+          In <code>function.json</code> (and in binding attributes), the <code>"connection"</code> property must contain the <strong>name of an app setting</strong> that holds the connection string — not the connection string itself. For example: <code>"connection": "MyStorageAccount"</code> tells the runtime to look up the app setting named <code>MyStorageAccount</code> and use its value as the connection string. Writing the actual connection string in the <code>"connection"</code> field will cause the binding to fail.
+        </div>
+      </div>
+
+      <h3>Retry Policies</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Policy</th>
+              <th>Behavior</th>
+              <th>Configuration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fixed delay</td>
+              <td>Waits a fixed interval between each retry attempt</td>
+              <td><code>"retryStrategy": "fixedDelay"</code>, <code>"delayInterval": "00:00:05"</code></td>
+            </tr>
+            <tr>
+              <td>Exponential backoff</td>
+              <td>Doubles the wait interval after each retry, up to a maximum; reduces thundering herd on dependent services</td>
+              <td><code>"retryStrategy": "exponentialBackoff"</code>, <code>"minimumInterval"</code>, <code>"maximumInterval"</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Maximum retry count for both strategies is <strong>10 retries</strong>. Set <code>"maxRetryCount": -1</code> for unlimited retries (use with caution).</p>
+
+      <div class="sec-lbl">② Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">The "connection" Property Holds an App Setting Name — Not the Connection String</div>
+          This is one of the most common exam traps for binding configuration. A question shows <code>function.json</code> with something like: <code>"connection": "DefaultEndpointsProtocol=https;AccountName=..."</code> — a real connection string inline in the binding configuration. This is <strong>incorrect</strong>. The runtime looks up an app setting by the value in <code>"connection"</code>. The app setting itself holds the connection string. If you put the literal connection string in <code>"connection"</code>, Azure cannot resolve it and the binding fails. The correct pattern: store <code>MyStorageConnection=DefaultEndpointsProtocol=https;...;</code> in App Settings, then use <code>"connection": "MyStorageConnection"</code> in the binding.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">local.settings.json Is Never Deployed to Azure</div>
+          Developers often assume that <code>local.settings.json</code> is deployed with <code>func azure functionapp publish</code>. It is not. This file is intentionally excluded from deployment — it is for local development only and is listed in <code>.gitignore</code> by default. Any connection strings or app settings in <code>local.settings.json</code> must be separately configured as Application Settings in the Azure portal, ARM template, or via Azure CLI. Forgetting this causes "works locally, fails in Azure" bugs — a scenario the exam specifically tests.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">HTTP Trigger Timeout Is Capped at 230 Seconds by Azure Load Balancer</div>
+          Even on Premium or Dedicated plans where Functions support unlimited timeout, HTTP-triggered functions face a hard 230-second (~3.8 minute) timeout enforced by the Azure load balancer upstream. The load balancer will close the connection after 230 seconds regardless of the Functions runtime timeout setting. For long-running HTTP-initiated work, use the <strong>Async HTTP API (Durable Functions)</strong> pattern: return a 202 Accepted with a polling URL immediately, process the work asynchronously, and let the client poll for completion.
+        </div>
+      </div>
+
+      <div class="sec-lbl">③ Key Numbers &amp; Limits</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+              <th>Exam Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>HTTP trigger timeout (all plans)</td>
+              <td>230 seconds (~3.8 min)</td>
+              <td>Hard limit enforced by Azure load balancer; not configurable; use Durable Async HTTP pattern for longer work</td>
+            </tr>
+            <tr>
+              <td>Max concurrent HTTP requests per instance</td>
+              <td>100 (default)</td>
+              <td>Configurable in <code>host.json</code> under <code>http.maxConcurrentRequests</code>; increase for high-throughput scenarios</td>
+            </tr>
+            <tr>
+              <td>Retry policy — max retries</td>
+              <td>10</td>
+              <td>Default max; set to -1 for unlimited; applies to both fixed delay and exponential backoff strategies</td>
+            </tr>
+            <tr>
+              <td>host.json default timeout (Premium/Dedicated)</td>
+              <td>30 minutes</td>
+              <td>Set <code>"functionTimeout": "-1"</code> in host.json for truly unlimited runtime on Premium/Dedicated</td>
+            </tr>
+            <tr>
+              <td>Queue message max dequeue count</td>
+              <td>5 (default before poison queue)</td>
+              <td>After 5 failed dequeues, Azure Storage Queue trigger moves message to <code>&lt;queue-name&gt;-poison</code> queue</td>
+            </tr>
+            <tr>
+              <td>Function app Storage requirement</td>
+              <td>1 Storage Account (required)</td>
+              <td>Every Function app requires an Azure Storage account for state management (keys, triggers, logging) — cannot run without it</td>
+            </tr>
+            <tr>
+              <td>Isolated worker — gRPC communication overhead</td>
+              <td>Small but non-zero</td>
+              <td>Isolated worker adds slight latency vs. in-process; exam may present this as a trade-off for compatibility/flexibility</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">④ CLI / SDK Patterns</div>
+
+      <pre><code># Initialize project for .NET isolated worker (recommended)
+func init MyApp --worker-runtime dotnet-isolated
+
+# Initialize project for .NET in-process (legacy)
+func init MyApp --worker-runtime dotnet
+
+# Create a new HTTP trigger function
+func new --name HttpExample --template "HTTP trigger" --authlevel "function"
+
+# Create a Blob trigger function
+func new --name BlobProcessor --template "Azure Blob Storage trigger"
+
+# Run locally with verbose logging
+func start --verbose
+
+# List available templates
+func templates list</code></pre>
+
+      <pre><code>// Isolated worker — HostBuilder startup (Program.cs)
+var host = new HostBuilder()
+    .ConfigureFunctionsWorkerDefaults()           // configure Functions middleware pipeline
+    .ConfigureServices(services =>
+    {
+        // Register DI services — same pattern as ASP.NET Core
+        services.AddSingleton&lt;IMyService, MyService&gt;();
+    })
+    .Build();
+
+await host.RunAsync();</code></pre>
+
+      <pre><code>// function.json example (in-process model)
+// CRITICAL: "connection" is the APP SETTING NAME, not the value
+{
+  "bindings": [
+    {
+      "type": "queueTrigger",        // trigger type
+      "direction": "in",
+      "name": "myQueueItem",         // parameter name in function signature
+      "queueName": "orders-queue",
+      "connection": "AzureWebJobsStorage"  // NAME of app setting holding conn string
+    },
+    {
+      "type": "blob",
+      "direction": "out",            // output binding — writes a blob
+      "name": "outputBlob",
+      "path": "processed/{rand-guid}.json",  // binding expression for unique name
+      "connection": "AzureWebJobsStorage"
+    }
+  ]
+}</code></pre>
+
+      <pre><code>// Attribute-based binding — .NET isolated worker
+// No function.json needed; bindings declared as method parameters
+[Function("ProcessOrder")]
+[BlobOutput("processed/{rand-guid}.json",          // output binding attribute
+    Connection = "AzureWebJobsStorage")]            // app setting NAME, not value
+public static string Run(
+    [QueueTrigger("orders-queue",                   // trigger attribute
+        Connection = "AzureWebJobsStorage")]        // app setting NAME
+    string myQueueItem,
+    [BlobInput("config/settings.json",              // input binding attribute
+        Connection = "AzureWebJobsStorage")]
+    string configJson,
+    FunctionContext context)
+{
+    var logger = context.GetLogger("ProcessOrder");
+    logger.LogInformation($"Processing: {myQueueItem}");
+    return JsonSerializer.Serialize(new { item = myQueueItem });
+    // Return value becomes the output blob content (BlobOutput attribute)
+}</code></pre>
+
+      <pre><code>// host.json — runtime-wide configuration
+{
+  "version": "2.0",
+  "functionTimeout": "00:10:00",          // max 00:10:00 on Consumption; -1 on Premium/Dedicated
+  "logging": {
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "maxTelemetryItemsPerSecond": 20
+      }
+    }
+  },
+  "extensions": {
+    "queues": {
+      "maxPollingInterval": "00:00:02",   // poll queues every 2 seconds max
+      "batchSize": 16,                    // messages fetched per poll
+      "maxDequeueCount": 5,               // move to poison queue after 5 failures
+      "newBatchThreshold": 8              // fetch new batch when &lt; 8 messages remain
+    },
+    "http": {
+      "maxConcurrentRequests": 100,       // concurrent HTTP requests per instance
+      "maxOutstandingRequests": 200       // queue depth before 429 responses
+    }
+  },
+  "retry": {
+    "strategy": "exponentialBackoff",
+    "maxRetryCount": 5,
+    "minimumInterval": "00:00:05",
+    "maximumInterval": "00:05:00"
+  }
+}</code></pre>
+
+      <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">🪤</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Put the connection string directly in the 'connection' field of function.json to simplify configuration"</div>
+          <strong>Wrong.</strong> The <code>"connection"</code> property in <code>function.json</code> or binding attributes is resolved as an <strong>application setting name</strong>. The runtime calls <code>Environment.GetEnvironmentVariable("YourConnectionName")</code> and uses the result as the actual connection string. Placing a raw connection string directly in the <code>"connection"</code> field means the runtime tries to look up an environment variable with that entire connection string as its name — which does not exist — and the binding fails at startup.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">🪤</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Configure the function's local connection strings in local.settings.json and they will be available after deployment"</div>
+          <strong>Wrong.</strong> <code>local.settings.json</code> is a local development tool only. The Azure Functions Core Tools explicitly excludes it from the <code>func azure functionapp publish</code> deployment package. You must separately configure all required Application Settings in Azure — through the Azure portal, Azure CLI (<code>az functionapp config appsettings set</code>), ARM template, or Bicep. A function that works locally but fails in Azure almost always has this root cause.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">🪤</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "For a function that takes 10 minutes via HTTP trigger, set the host.json timeout to 00:10:00 on the Premium plan"</div>
+          <strong>Wrong — or incomplete at best.</strong> Even with a generous <code>functionTimeout</code> in <code>host.json</code>, the HTTP trigger is hard-capped at <strong>230 seconds</strong> by the Azure infrastructure load balancer. No host.json setting overrides this. The correct architectural response is to use the <strong>Async HTTP API (Durable Functions)</strong> pattern: the HTTP trigger immediately returns 202 Accepted with a polling URL, the long-running logic executes in an orchestrator/activity, and the client polls for completion. The exam will offer increasing the host.json timeout as a plausible distractor.
+        </div>
+      </div>
+
+      <div class="sec-lbl">⑥ Practice Q&amp;A</div>
+      <div class="qa-list">
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">A developer writes the following in function.json: <code>"connection": "DefaultEndpointsProtocol=https;AccountName=myaccount;AccountKey=abc123=="</code>. The function fails to start with a binding error. What is wrong, and how should it be fixed?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: The "connection" property must contain an app setting NAME, not the connection string value itself</div>
+            <div class="qa-body">
+              <strong>Explanation:</strong> The runtime interprets <code>"connection"</code> as the name of an environment variable (App Setting). It calls <code>Environment.GetEnvironmentVariable("DefaultEndpointsProtocol=https;...")</code> — which returns null because no such env var exists.
+              <ul>
+                <li><strong>Fix step 1:</strong> Add an App Setting named <code>MyStorageConn</code> with the value <code>DefaultEndpointsProtocol=https;AccountName=myaccount;AccountKey=abc123==</code></li>
+                <li><strong>Fix step 2:</strong> Change function.json to <code>"connection": "MyStorageConn"</code></li>
+                <li>In local dev: add <code>"MyStorageConn": "DefaultEndpointsProtocol=..."</code> to the <code>Values</code> section of <code>local.settings.json</code></li>
+                <li>This pattern applies to ALL bindings: Storage, Service Bus, Cosmos DB, Event Hubs — the connection property is always an app setting name</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">A function runs perfectly locally but fails immediately after deployment to Azure with a "connection string not found" error. The developer confirms the code is identical. What is the most likely cause?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: The connection strings defined in local.settings.json were not deployed; they must be added as Application Settings in Azure</div>
+            <div class="qa-body">
+              <strong>Explanation:</strong> <code>local.settings.json</code> is deliberately excluded from deployment. This is by design — it often contains secrets that should not be in source control or deployment packages.
+              <ul>
+                <li>The developer must recreate each setting from <code>local.settings.json</code> as an Application Setting in the Azure Function App (Configuration blade in portal)</li>
+                <li>Via CLI: <code>az functionapp config appsettings set --name &lt;appname&gt; --resource-group &lt;rg&gt; --settings MyConn="value"</code></li>
+                <li>For sensitive values, store in Azure Key Vault and reference via Key Vault reference syntax: <code>@Microsoft.KeyVault(SecretUri=...)</code></li>
+                <li>The <code>func azure functionapp publish</code> command publishes code, not settings — settings must be managed separately</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">You are building a new Azure Functions project in .NET 8. Should you use the in-process model or the isolated worker model, and why?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Isolated worker model — it supports .NET 8, is decoupled from the host runtime, and is Microsoft's recommended approach for all new development</div>
+            <div class="qa-body">
+              <strong>Explanation:</strong> The in-process model is limited to .NET versions that the Functions host itself targets — as of Functions v4, that is .NET 6. It cannot run .NET 8 in-process.
+              <ul>
+                <li>Isolated worker model runs .NET 8 (or later) in a separate process, communicating with the host via gRPC — no .NET version coupling</li>
+                <li>Isolated worker also supports .NET Framework 4.8 (for legacy migration scenarios)</li>
+                <li>Microsoft has announced the in-process model will be retired — no new features are being added</li>
+                <li>Trade-off: isolated worker has slightly higher cold start overhead and per-call latency due to gRPC marshaling — negligible for most workloads</li>
+                <li>Startup: use <code>HostBuilder</code> with <code>ConfigureFunctionsWorkerDefaults()</code> — same DI model as ASP.NET Core</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">An output binding writes a blob. The developer wants each output blob to have a unique name derived from a GUID generated at runtime. How should the blob path be configured in function.json?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Use the {rand-guid} binding expression: "path": "output/{rand-guid}.json"</div>
+            <div class="qa-body">
+              <strong>Explanation:</strong> Binding expressions allow dynamic values in binding configuration without code changes.
+              <ul>
+                <li><code>{rand-guid}</code> is a built-in binding expression that generates a new GUID for each function invocation</li>
+                <li>Configured in function.json: <code>"path": "output/{rand-guid}.json"</code></li>
+                <li>In attribute-based (isolated): <code>[BlobOutput("output/{rand-guid}.json", Connection = "...")]</code></li>
+                <li>Other useful expressions: <code>{DateTime}</code> for timestamp-based names, <code>{queueTrigger}</code> to use queue message content as part of the path</li>
+                <li>Do not generate the GUID in code and try to pass it to the binding — binding paths are evaluated by the runtime before the function runs; code-generated values belong in the output object's path property if using SDK-style bindings</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">A developer wants the Azure Functions runtime to automatically retry a queue-triggered function on transient errors, waiting progressively longer between attempts. Which configuration in host.json achieves this?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Set retry strategy to "exponentialBackoff" in host.json with minimumInterval and maximumInterval</div>
+            <div class="qa-body">
+              <strong>Explanation:</strong> Azure Functions supports host-level retry policies in <code>host.json</code>:
+              <ul>
+                <li><strong>Fixed delay:</strong> waits the same interval every time — good for predictable transient faults</li>
+                <li><strong>Exponential backoff:</strong> doubles the interval after each retry up to <code>maximumInterval</code> — good for reducing load on a recovering downstream service (avoids thundering herd)</li>
+                <li>Config: <code>"strategy": "exponentialBackoff"</code>, <code>"maxRetryCount": 5</code>, <code>"minimumInterval": "00:00:02"</code>, <code>"maximumInterval": "00:02:00"</code></li>
+                <li>Maximum supported retries: 10 (set <code>"maxRetryCount": -1</code> for unlimited)</li>
+                <li>Note: queue trigger has its own <code>maxDequeueCount</code> (default 5) — after that many dequeues without success, the message is moved to the poison queue regardless of the host retry policy</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">A user submits a request via HTTP to an Azure Function that triggers a video transcoding job expected to take 20 minutes. The function is on the Premium plan. After 4 minutes, the user receives a timeout error. What is happening and what is the correct architectural fix?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: The 230-second Azure load balancer timeout is closing the HTTP connection; use the Durable Functions Async HTTP API pattern</div>
+            <div class="qa-body">
+              <strong>Explanation:</strong> The Azure infrastructure load balancer enforces a 230-second (~3.8 minute) idle/request timeout on HTTP connections, independent of the Functions runtime timeout setting. Moving to Premium or increasing <code>functionTimeout</code> in <code>host.json</code> does not change this.
+              <ul>
+                <li><strong>Fix:</strong> Implement the <strong>Async HTTP API pattern</strong> using Durable Functions</li>
+                <li>Step 1: HTTP trigger receives request, starts a Durable orchestration, immediately returns <code>202 Accepted</code> with a <code>statusQueryGetUri</code> polling URL (built-in, returned by <code>client.CreateCheckStatusResponseAsync()</code>)</li>
+                <li>Step 2: Orchestration calls activity functions to perform the transcoding asynchronously</li>
+                <li>Step 3: Client polls the status URL every N seconds until it receives <code>200 OK</code> with the result</li>
+                <li>This is the canonical exam answer for any HTTP-initiated long-running operation — always Durable Async HTTP API</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">What is the purpose of the "host.json" file vs. "local.settings.json" in an Azure Functions project, and which one is deployed to Azure?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: host.json controls runtime-wide behavior and IS deployed; local.settings.json holds local dev config and is NOT deployed</div>
+            <div class="qa-body">
+              <strong>Explanation:</strong>
+              <ul>
+                <li><strong>host.json:</strong> controls the Functions host runtime globally — timeout, logging, concurrency, retry policies, extension settings. Checked into source control and deployed with the app. Same file used locally and in Azure.</li>
+                <li><strong>local.settings.json:</strong> provides local equivalents of Azure App Settings and connection strings. Only read by the local Functions host (<code>func start</code>). Not deployed. Listed in <code>.gitignore</code> by default. The <code>AzureWebJobsStorage</code> entry here points to a local emulator (e.g., Azurite) or a dev storage account — it must be separately configured as an App Setting in Azure.</li>
+                <li>A common exam distractor: "To change the logging level in production, update local.settings.json" — wrong. Update <code>host.json</code> (which is deployed) or use Application Insights configuration in the portal.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">8</div>
+            <div class="qa-text">A function uses a Queue trigger input binding and a Blob Storage output binding. The developer wants the output blob's name to match the content of the queue message. How should the blob path be configured?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Correct Answer: Use the {queueTrigger} binding expression in the blob output path</div>
+            <div class="qa-body">
+              <strong>Explanation:</strong> The <code>{queueTrigger}</code> binding expression resolves to the string content of the incoming queue message at runtime.
+              <ul>
+                <li>Example function.json blob output path: <code>"path": "results/{queueTrigger}.json"</code> — if the queue message is <code>order-12345</code>, the blob will be named <code>results/order-12345.json</code></li>
+                <li>This avoids any custom code to construct the blob path — the binding engine handles the resolution</li>
+                <li>In attribute syntax: <code>[BlobOutput("results/{queueTrigger}.json", Connection = "...")]</code></li>
+                <li>Binding expressions can be chained: <code>"results/{queueTrigger}/{DateTime}.json"</code> combines queue content and timestamp</li>
+                <li>Important: the queue message must be a plain string for <code>{queueTrigger}</code> to work as the full value; for JSON messages, use trigger metadata properties like <code>{queueTrigger.orderId}</code></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /qa-list -->
+    </section>
+
+    <div class="nav-end">
+      <a href="learn-01-app-service.html" class="btn-link">← App Service</a>
+      <a href="learn-03-blob-storage.html" class="btn-link fwd">Blob Storage →</a>
+    </div>
+  </main>
+</div>
+
+<script>
+
+(function(){
+  // Q&A accordion
+  document.querySelectorAll('.qa-q').forEach(function(q){
+    q.addEventListener('click',function(){
+      this.closest('.qa-item').classList.toggle('open');
+    });
+  });
+  // Sidebar scroll-spy
+  var links=document.querySelectorAll('.sb-link[data-m]');
+  var sections=document.querySelectorAll('.module[id]');
+  if(links.length&&sections.length){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var n=e.target.id.replace('m','');
+          links.forEach(function(l){l.classList.toggle('active',l.dataset.m===n);});
+        }
+      });
+    },{rootMargin:'-8% 0px -72% 0px'});
+    sections.forEach(function(s){obs.observe(s);});
+  }
+  // Sidebar click scroll
+  links.forEach(function(l){
+    l.addEventListener('click',function(e){
+      e.preventDefault();
+      var t=document.getElementById('m'+this.dataset.m);
+      if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+})();
+
+</script>
+</body>
+</html>

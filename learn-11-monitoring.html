@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monitoring & Logging — AZ-204 Study Notes</title>
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --azure:#0078D4;--azure-dark:#005a9e;--azure-light:#deecf9;
+  --bg:#f4f6f9;--surface:#fff;--nav-bg:#1a1f36;
+  --border:#d0d7de;--border-light:#e8ecf0;
+  --text:#1a1f36;--text-muted:#6b7280;--text-light:#9ca3af;
+  --ok-bg:#ecfdf5;--ok-bdr:#10b981;--ok-txt:#065f46;
+  --err-bg:#fef2f2;--err-bdr:#ef4444;--err-txt:#991b1b;
+  --warn-bg:#fffbeb;--warn-bdr:#fbbf24;--warn-txt:#92400e;
+  --r:10px;--rs:6px;
+  --sh:0 1px 3px rgba(0,0,0,.08);--shm:0 4px 12px rgba(0,0,0,.12);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--azure);text-decoration:none}
+a:hover{text-decoration:underline}
+#top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
+.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
+.nav-bc a{color:rgba(255,255,255,.75)}
+.nav-bc a:hover{color:#fff;text-decoration:none}
+.nav-bc span{color:rgba(255,255,255,.35)}
+.nav-bc strong{color:#fff}
+.nav-acts{display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
+.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.page-layout{display:flex;min-height:calc(100vh - 54px)}
+.sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
+.sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
+.sb-back:hover{color:var(--azure);text-decoration:none}
+.sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-light);padding:.5rem 1rem;margin-top:.25rem}
+.sb-link{display:flex;align-items:center;gap:8px;padding:.45rem 1rem;font-size:13px;color:var(--text-muted);border-left:3px solid transparent;cursor:pointer;transition:background .1s,color .1s,border-color .1s}
+.sb-link:hover{background:#f8fafc;color:var(--text)}
+.sb-link.active{border-left-color:var(--azure);color:var(--azure);background:#eff6ff;font-weight:600}
+.sb-num{font-size:10px;background:#f3f4f6;border:1px solid var(--border-light);padding:1px 6px;border-radius:20px;margin-left:auto;color:var(--text-light)}
+.sb-next{display:flex;align-items:center;gap:6px;padding:.45rem 1rem;font-size:12px;color:var(--text-muted);margin-top:.5rem;border-top:1px solid var(--border-light)}
+.sb-next:hover{color:var(--azure);text-decoration:none}
+.main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
+.topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
+.topic-header p{font-size:13px;color:var(--text-muted);margin:0}
+.topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
+.module{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem 1.75rem;margin-bottom:1.75rem;scroll-margin-top:70px}
+.module h2{font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--border-light)}
+.module h2 .mod-num{background:var(--azure);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--azure);margin-bottom:.5rem;margin-top:1.25rem;display:flex;align-items:center;gap:6px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--azure-light)}
+h3{font-size:14px;font-weight:700;color:var(--text);margin:.75rem 0 .4rem}
+p,li{font-size:13px;color:var(--text-muted);line-height:1.7}
+ul,ol{padding-left:1.4rem;margin:.4rem 0}
+li{margin-bottom:.25rem}
+strong{color:var(--text)}
+code{font-family:Consolas,'Cascadia Code','Courier New',monospace;font-size:.85em;background:#f3f4f6;padding:1px 5px;border-radius:4px;color:#1a1f36}
+pre{font-family:Consolas,'Cascadia Code','Courier New',monospace;background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:var(--rs);padding:1.1rem 1.25rem;overflow-x:auto;font-size:12.5px;line-height:1.65;margin:.6rem 0}
+pre code{background:none;padding:0;color:inherit}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--rs);margin:.6rem 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f8fafc;color:var(--text-muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.55rem .9rem;text-align:left;border-bottom:2px solid var(--border)}
+td{padding:.55rem .9rem;border-bottom:1px solid var(--border-light);color:var(--text-muted);vertical-align:top;line-height:1.5}
+td:first-child{color:var(--text);font-weight:500}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+.callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
+.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-body{flex:1}
+.callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
+.callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
+.callout.gotcha .callout-title{color:var(--err-txt)}
+.callout.tip{background:#eff6ff;border-left:3px solid var(--azure)}
+.callout.tip .callout-title{color:var(--azure-dark)}
+.callout.warn{background:var(--warn-bg);border-left:3px solid var(--warn-bdr)}
+.callout.warn .callout-title{color:var(--warn-txt)}
+.callout.success{background:var(--ok-bg);border-left:3px solid var(--ok-bdr)}
+.callout.success .callout-title{color:var(--ok-txt)}
+.qa-list{margin-top:.5rem}
+.qa-item{border:1px solid var(--border);border-radius:var(--rs);margin-bottom:.6rem;overflow:hidden}
+.qa-q{display:flex;align-items:flex-start;gap:.65rem;padding:.85rem 1rem;cursor:pointer;background:var(--surface);user-select:none}
+.qa-q:hover{background:#f8fafc}
+.qa-n{flex-shrink:0;width:20px;height:20px;background:var(--azure);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.qa-text{flex:1;font-size:13px;color:var(--text);line-height:1.5;font-weight:500}
+.qa-tog{flex-shrink:0;color:var(--text-light);transition:transform .2s;font-size:14px;margin-top:2px}
+.qa-item.open .qa-tog{transform:rotate(180deg)}
+.qa-ans{display:none;padding:.85rem 1rem 1rem;background:#f8fafc;border-top:1px solid var(--border-light)}
+.qa-item.open .qa-ans{display:block}
+.qa-correct{display:inline-flex;align-items:center;gap:5px;background:var(--ok-bg);color:var(--ok-txt);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-bottom:.6rem}
+.qa-body{font-size:12.5px;color:var(--text-muted);line-height:1.7}
+.qa-body ul{padding-left:1.25rem;margin:.4rem 0}
+.qa-body strong{color:var(--text)}
+.nav-end{display:flex;justify-content:space-between;padding:1.25rem 0;border-top:1px solid var(--border);margin-top:.5rem}
+.btn-link{display:inline-flex;align-items:center;gap:5px;padding:.4rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--text-muted)}
+.btn-link:hover{border-color:var(--azure);color:var(--azure);text-decoration:none}
+.btn-link.fwd{background:var(--azure);color:#fff;border-color:var(--azure)}
+.btn-link.fwd:hover{background:var(--azure-dark);text-decoration:none}
+@media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
+
+</style>
+</head>
+<body>
+
+<nav id="top-nav">
+  <div class="nav-brand">
+    <div class="nav-brand-icon">Az</div>
+    <div class="nav-bc">
+      <a href="learn.html">Study Notes</a>
+      <span>/</span>
+      <strong>Monitoring &amp; Logging</strong>
+    </div>
+  </div>
+  <div class="nav-acts">
+    <a href="learn.html" class="btn btn-ghost">&#8592; All Topics</a>
+    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <a href="learn.html" class="sb-back">&#8592; All Topics</a>
+    <div class="sb-label">Monitoring &amp; Logging</div>
+    <a href="#m1" class="sb-link" data-m="1">&#128200; Application Insights &amp; Azure Monitor<span class="sb-num">6 sections</span></a>
+  </aside>
+
+  <main class="main">
+    <div class="topic-header">
+      <div class="topic-icon-lg">&#128202;</div>
+      <div>
+        <h1>Monitoring &amp; Logging</h1>
+        <p>1 module &middot; Application Insights &amp; Azure Monitor</p>
+      </div>
+      <div class="topic-num">Topic 11</div>
+    </div>
+
+    <!-- MODULE 1 -->
+    <section class="module" id="m1">
+      <h2><span class="mod-num">1</span> Application Insights &amp; Azure Monitor</h2>
+
+      <!-- SECTION 1: Key Concepts -->
+      <div class="sec-lbl">&#9312; Key Concepts</div>
+
+      <h3>What is Application Insights?</h3>
+      <p>Application Insights (AI) is an Application Performance Management (APM) service built on top of Azure Monitor. It collects telemetry from your application, stores it in a Log Analytics Workspace (workspace-based mode) or its own proprietary data store (classic mode), and provides querying, dashboards, alerting, and smart detection on top of that data.</p>
+
+      <div class="callout tip">
+        <div class="callout-icon">&#128161;</div>
+        <div class="callout-body">
+          <div class="callout-title">Workspace-based vs Classic — always choose workspace-based for new resources</div>
+          Workspace-based AI (released 2020) stores all telemetry in a Log Analytics Workspace you own, so you can cross-query AI data with other Azure logs. Classic AI uses an isolated data store that you cannot cross-query and is being deprecated. The exam increasingly tests workspace-based behaviour.
+        </div>
+      </div>
+
+      <h3>Workspace-based vs Classic Application Insights</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Feature</th><th>Workspace-based</th><th>Classic (Legacy)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Data storage</td><td>Log Analytics Workspace you designate</td><td>AI-managed proprietary store</td></tr>
+            <tr><td>Cross-resource queries</td><td>Yes — join with VM logs, Container Insights, etc.</td><td>No — isolated silo</td></tr>
+            <tr><td>RBAC on data</td><td>Workspace-level RBAC applies</td><td>AI resource-level only</td></tr>
+            <tr><td>Customer-managed keys</td><td>Supported via workspace CMK</td><td>Not supported</td></tr>
+            <tr><td>Default retention</td><td>Inherited from workspace (default 30 days, configurable)</td><td>90 days (configurable 30–730)</td></tr>
+            <tr><td>Recommended for new apps</td><td>Yes</td><td>No — migrate to workspace-based</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Instrumentation Modes</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Mode</th><th>How it works</th><th>When to use</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Auto-instrumentation (codeless)</td><td>Agent-based; no code changes. Enable in App Service / AKS / VMs via Azure portal or ARM template.</td><td>Existing apps you cannot modify; fast onboarding</td></tr>
+            <tr><td>SDK-based (manual)</td><td>Add <code>Microsoft.ApplicationInsights</code> NuGet package, register with DI, set connection string.</td><td>Full control over telemetry; custom events, metrics, dependencies</td></tr>
+            <tr><td>OpenTelemetry (preview/GA)</td><td>OTLP exporter sends to Azure Monitor. Use <code>Azure.Monitor.OpenTelemetry.Exporter</code>.</td><td>Multi-vendor portability; new greenfield services</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Telemetry Types</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Type</th><th>Track Method</th><th>Table in KQL</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Requests</td><td>Auto (SDK/agent)</td><td><code>requests</code></td><td>Incoming HTTP calls to your app. Includes duration, response code, success flag.</td></tr>
+            <tr><td>Dependencies</td><td>Auto + <code>TrackDependency()</code></td><td><code>dependencies</code></td><td>Outgoing calls: HTTP, SQL, Redis, Service Bus, etc.</td></tr>
+            <tr><td>Exceptions</td><td>Auto + <code>TrackException()</code></td><td><code>exceptions</code></td><td>Unhandled and handled exceptions with full stack trace.</td></tr>
+            <tr><td>Traces</td><td><code>TrackTrace()</code> / ILogger</td><td><code>traces</code></td><td>Custom log messages (replaces Console.WriteLine for telemetry).</td></tr>
+            <tr><td>Custom Events</td><td><code>TrackEvent()</code></td><td><code>customEvents</code></td><td>Named business events: "UserSignedUp", "OrderPlaced".</td></tr>
+            <tr><td>Custom Metrics</td><td><code>TrackMetric()</code> / <code>GetMetric()</code></td><td><code>customMetrics</code></td><td>Numeric measurements. <code>GetMetric()</code> pre-aggregates to reduce cost.</td></tr>
+            <tr><td>Availability</td><td>Portal test / <code>TrackAvailability()</code></td><td><code>availabilityResults</code></td><td>External URL probe results; pass/fail + response time.</td></tr>
+            <tr><td>Page Views</td><td>JavaScript snippet</td><td><code>pageViews</code></td><td>Browser-side page load telemetry.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Availability Test Types</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Test Type</th><th>What it does</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>URL ping test</td><td>Basic HTTP GET from up to 5 global locations; checks status code and optional content match.</td><td>Simplest. Cannot handle auth. Deprecated in favour of Standard test.</td></tr>
+            <tr><td>Standard test</td><td>Single-step HTTPS check with SSL certificate validity, response code, content match, and custom request headers.</td><td>Recommended replacement for URL ping.</td></tr>
+            <tr><td>Multi-step web test</td><td>Recorded sequence of HTTP requests (Visual Studio .webtest file).</td><td>Deprecated. Migrate to custom <code>TrackAvailability()</code>.</td></tr>
+            <tr><td>Custom TrackAvailability()</td><td>Code-based test; call from Azure Function or any compute. Full control over logic, auth, complex flows.</td><td>Most flexible. Runs wherever you deploy it.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Distributed Tracing &amp; Correlation</h3>
+      <p>When a request spans multiple services (e.g. API Gateway → Microservice A → Microservice B), Application Insights correlates all telemetry items using an <strong>Operation Id</strong> (a trace ID). This is propagated via HTTP headers:</p>
+      <ul>
+        <li><strong>W3C Trace Context</strong> (default, recommended): <code>traceparent</code> header. Format: <code>00-{traceId}-{parentId}-{flags}</code></li>
+        <li><strong>AI Correlation headers</strong> (legacy): <code>Request-Id</code> and <code>Correlation-Context</code> headers. Used by older AI SDK versions.</li>
+      </ul>
+      <p>The SDK automatically reads and writes these headers for outgoing HTTP and Azure SDK calls. For custom dependencies (e.g. a message queue consumer), you must manually start/stop an <code>Activity</code> or call <code>TelemetryClient.StartOperation()</code> to maintain the correlation chain.</p>
+
+      <div class="callout tip">
+        <div class="callout-icon">&#128279;</div>
+        <div class="callout-body">
+          <div class="callout-title">Application Map requires dependency tracking</div>
+          The Application Map is built automatically from dependency telemetry. Every call from Service A to Service B that is captured as a dependency item with the correct Operation Id appears as an edge in the map. If dependency tracking is disabled (e.g. you set <code>EnableDependencyTrackingTelemetryModule = false</code>), the Application Map will not show inter-service connections.
+        </div>
+      </div>
+
+      <h3>Sampling Types</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Sampling Type</th><th>Where it runs</th><th>How it works</th><th>Exam consideration</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Adaptive sampling</td><td>SDK (in-process)</td><td>Automatically adjusts rate to keep volume near a target (default ~5 req/s). Enabled by default in ASP.NET Core SDK.</td><td>Default behaviour; counts in portal are <em>estimated</em>, not exact.</td></tr>
+            <tr><td>Fixed-rate sampling</td><td>SDK (in-process)</td><td>Both client and server sample at the same deterministic percentage, keyed on Operation Id. Keeps correlated items together.</td><td>Use when you need consistent cross-service sampling (e.g. 10% on both client and server).</td></tr>
+            <tr><td>Ingestion sampling</td><td>AI ingestion endpoint</td><td>Applied after data leaves the app, at the AI service. Excess data is dropped before storage.</td><td>Least preferred — bandwidth is still consumed. Use only as a cost backstop.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">&#128200;</div>
+        <div class="callout-body">
+          <div class="callout-title">Sampled counts are estimated — this is heavily tested</div>
+          When adaptive or fixed-rate sampling is active, the SDK sends a <code>itemCount</code> property with each telemetry item. A <code>requests</code> row with <code>itemCount = 10</code> and <code>success = false</code> represents 10 actual failures, not 1. KQL aggregation functions like <code>sum(itemCount)</code> give you the estimated real count. Using <code>count()</code> alone gives you the sampled count, which is lower than reality.
+        </div>
+      </div>
+
+      <h3>Live Metrics Stream</h3>
+      <p>Live Metrics provides a real-time (1-second) stream of telemetry directly from your running application. Key characteristics the exam tests:</p>
+      <ul>
+        <li><strong>No sampling applied</strong> — every item is streamed (but not persisted to storage).</li>
+        <li><strong>No storage</strong> — data is not written to the Log Analytics Workspace. It disappears when you close the Live Metrics blade.</li>
+        <li><strong>Minimal overhead</strong> — the stream only activates when someone is watching; SDK polls the AI endpoint for a listener first.</li>
+        <li><strong>Use case</strong>: immediate validation after a deployment, not historical analysis.</li>
+      </ul>
+
+      <h3>Smart Detection</h3>
+      <p>Smart Detection proactively analyses your telemetry for anomalies and auto-creates alert rules. Detection algorithms include:</p>
+      <ul>
+        <li><strong>Failure anomalies</strong>: unusual spike in failed requests or dependency calls.</li>
+        <li><strong>Performance degradation</strong>: response time for a specific operation slows significantly vs historical baseline.</li>
+        <li><strong>Memory leak</strong>: gradual increase in memory usage correlated with requests.</li>
+        <li><strong>Security detection</strong>: potential issues like insecure URL patterns.</li>
+      </ul>
+      <p>Smart Detection does not require any configuration — it learns from your telemetry automatically. It sends email alerts and creates entries in the Azure Monitor Alerts blade.</p>
+
+      <h3>Snapshot Debugger</h3>
+      <p>When an exception is thrown, the Snapshot Debugger automatically captures a <strong>debug snapshot</strong>: the call stack and the values of local variables and parameters at the moment of the exception. Snapshots are stored in an Azure Storage account you configure. You can inspect them in Visual Studio or the Azure portal without needing to reproduce the issue. The Snapshot Debugger requires the <code>Microsoft.ApplicationInsights.SnapshotCollector</code> NuGet package and a small performance overhead (it uses a forked process to capture snapshots without blocking the main thread).</p>
+
+      <h3>Key KQL Queries for the Exam</h3>
+      <pre><code>// Failed requests in the last hour, grouped by hour
+requests
+| where success == false
+| summarize count() by bin(timestamp, 1h)
+
+// Slow dependency calls (over 1 second)
+dependencies
+| where duration &gt; 1000  // duration is in milliseconds
+| order by duration desc
+
+// Exception counts grouped by type
+exceptions
+| summarize count() by type
+
+// Custom events by name
+customEvents
+| where name == "OrderPlaced"
+| summarize count() by bin(timestamp, 1d)
+
+// Estimated failure count accounting for sampling
+requests
+| where success == false
+| summarize estimatedCount = sum(itemCount) by bin(timestamp, 1h)
+
+// p95 response time per operation
+requests
+| summarize percentile(duration, 95) by name
+| order by percentile_duration_95 desc
+
+// Availability test failures by location
+availabilityResults
+| where success == false
+| summarize count() by location, name</code></pre>
+
+      <div class="callout tip">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Connection string vs instrumentation key</div>
+          Microsoft recommends using the <strong>connection string</strong> (<code>APPLICATIONINSIGHTS_CONNECTION_STRING</code>) rather than the instrumentation key for new applications. The connection string includes the endpoint override, enabling sovereign cloud support and future endpoint changes. The instrumentation key is still supported but flagged as legacy in newer SDK versions. The exam is starting to test this distinction.
+        </div>
+      </div>
+
+      <!-- SECTION 2: Exam Gotchas -->
+      <div class="sec-lbl">&#9313; Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#128680;</div>
+        <div class="callout-body">
+          <div class="callout-title">Gotcha: Adaptive sampling is ON by default — your counts in the portal are estimates</div>
+          The AZ-204 exam frequently presents a scenario where a developer queries Application Insights and gets a count of, say, 50 failed requests, but the actual failure count is much higher. This is because adaptive sampling is enabled by default in the ASP.NET Core Application Insights SDK. When the request rate exceeds roughly 5 requests per second, the SDK begins dropping telemetry items and attaches an <code>itemCount</code> property to each retained item indicating how many real events it represents. A developer who uses <code>requests | where success == false | count()</code> will see the sampled count. To see the estimated real count, use <code>sum(itemCount)</code>. To get exact counts: either disable sampling entirely (not recommended for high-traffic apps) or use fixed-rate sampling with a known rate and account for it mathematically.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#128680;</div>
+        <div class="callout-body">
+          <div class="callout-title">Gotcha: SQL query text is NOT captured by default — you must opt in</div>
+          Application Insights dependency tracking will automatically track SQL calls (via SqlClient instrumentation) and record duration, success, and target database. However, the actual SQL command text (the query string) is NOT captured by default. This is a deliberate privacy decision to avoid logging sensitive data like PII in query parameters. To enable SQL text capture, you must explicitly set <code>EnableSqlCommandTextInstrumentation = true</code> on the <code>DependencyTrackingTelemetryModule</code>. The exam tests this — a scenario where you see dependency entries for SQL but the "data" field is blank or shows only the stored procedure name, and asks why the full query is missing.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#128680;</div>
+        <div class="callout-body">
+          <div class="callout-title">Gotcha: Live Metrics does NOT persist data — it cannot be used for historical analysis</div>
+          Live Metrics streams telemetry directly from the app in real-time with no storage and no sampling. This means: (1) if you close the Live Metrics blade, that data is gone forever — it was never written to the workspace; (2) you cannot query Live Metrics data with KQL; (3) you cannot set alerts based on Live Metrics. The exam presents scenarios like "your team needs to monitor CPU and request rate during a load test and review the data afterwards" — Live Metrics is wrong here because there is no "afterwards". Use Azure Monitor Metrics or Application Insights telemetry (requests table) for post-hoc analysis.
+        </div>
+      </div>
+
+      <!-- SECTION 3: Key Numbers & Limits -->
+      <div class="sec-lbl">&#9314; Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Metric</th><th>Value</th><th>Exam Note</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Default data retention (Classic AI)</td><td>90 days</td><td>Configurable 30–730 days. Beyond 730 days requires archival to Azure Monitor Logs.</td></tr>
+            <tr><td>Default data retention (Workspace-based)</td><td>Inherits workspace default (30 days interactive)</td><td>Workspace can be configured up to 730 days interactive, 7 years archive.</td></tr>
+            <tr><td>Adaptive sampling trigger threshold</td><td>~5 requests/second</td><td>Below this, all telemetry is kept (100% sampling). Above it, rate adjusts automatically.</td></tr>
+            <tr><td>Daily data cap (default)</td><td>No cap (unlimited)</td><td>You must explicitly set a cap. Once hit, NEW telemetry is dropped for the rest of the calendar day (UTC reset).</td></tr>
+            <tr><td>Availability test locations</td><td>Up to 16 geographic locations</td><td>URL ping and Standard tests both support up to 16 locations. Minimum recommended: 5 for alert reliability.</td></tr>
+            <tr><td>Availability test alert threshold</td><td>Configurable (default: alert if &gt;1 location fails)</td><td>Set to 3+ locations failing to reduce false positives from transient regional issues.</td></tr>
+            <tr><td>Snapshot Debugger — snapshots per exception type per day</td><td>5 snapshots</td><td>After 5 snapshots for a given exception type, no more are collected for that day. Avoids storage bloat on exceptions that fire in a loop.</td></tr>
+            <tr><td>Snapshot Debugger — storage retention</td><td>15 days</td><td>Snapshots are deleted from the configured storage account after 15 days.</td></tr>
+            <tr><td>Telemetry item size limit</td><td>64 KB per item</td><td>Items larger than 64 KB are truncated. Relevant for trace messages or exception stack traces with huge payloads.</td></tr>
+            <tr><td>Metric dimension cardinality limit</td><td>10 dimension values per custom metric dimension</td><td>High-cardinality dimensions (e.g. UserId) should not be used as metric dimensions — use custom events instead.</td></tr>
+            <tr><td>Connection string vs instrumentation key</td><td>Connection string recommended (2023+)</td><td>Instrumentation key still works but is legacy. Connection string supports sovereign clouds and future endpoint changes.</td></tr>
+            <tr><td>Smart Detection learning period</td><td>~7 days</td><td>Smart Detection needs ~7 days of baseline data before it can reliably detect anomalies. No alerts during this warm-up.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SECTION 4: CLI / SDK Patterns -->
+      <div class="sec-lbl">&#9315; CLI / SDK Patterns</div>
+
+      <h3>Registering Application Insights in ASP.NET Core</h3>
+      <pre><code>// Program.cs — recommended pattern (connection string, not ikey)
+builder.Services.AddApplicationInsightsTelemetry(options =&gt;
+{
+    // Use connection string from config (env var: APPLICATIONINSIGHTS_CONNECTION_STRING)
+    options.ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+
+    // Disable adaptive sampling to get exact counts (use with caution on high-traffic apps)
+    // options.EnableAdaptiveSampling = false;
+});
+
+// For worker services / background jobs
+builder.Services.AddApplicationInsightsTelemetryWorkerService(options =&gt;
+{
+    options.ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+});</code></pre>
+
+      <h3>TelemetryClient — Core Track Methods</h3>
+      <pre><code>// Inject via DI
+public class OrderService
+{
+    private readonly TelemetryClient _telemetry;
+
+    public OrderService(TelemetryClient telemetry)
+    {
+        _telemetry = telemetry;
+    }
+
+    public async Task PlaceOrder(Order order)
+    {
+        // Custom event — appears in customEvents table
+        _telemetry.TrackEvent("OrderPlaced",
+            properties: new Dictionary&lt;string, string&gt;
+            {
+                ["OrderId"] = order.Id.ToString(),
+                ["CustomerId"] = order.CustomerId
+            },
+            metrics: new Dictionary&lt;string, double&gt;
+            {
+                ["OrderValue"] = order.TotalAmount
+            });
+
+        // Custom metric — appears in customMetrics table
+        _telemetry.TrackMetric("OrderValue", order.TotalAmount);
+
+        // Preferred: GetMetric() pre-aggregates locally, reduces telemetry volume
+        _telemetry.GetMetric("OrderValue").TrackValue(order.TotalAmount);
+
+        // Custom trace (structured log message) — appears in traces table
+        _telemetry.TrackTrace($"Processing order {order.Id}",
+            SeverityLevel.Information,
+            new Dictionary&lt;string, string&gt; { ["OrderId"] = order.Id.ToString() });
+
+        // Manual dependency tracking (e.g. calling a third-party payment API)
+        var startTime = DateTimeOffset.UtcNow;
+        var timer = System.Diagnostics.Stopwatch.StartNew();
+        bool success = false;
+        try
+        {
+            await _paymentGateway.ChargeAsync(order);
+            success = true;
+        }
+        finally
+        {
+            timer.Stop();
+            // Appears in dependencies table
+            _telemetry.TrackDependency(
+                dependencyTypeName: "HTTP",     // shown in Application Map
+                target: "payment-gateway.example.com",
+                dependencyName: "POST /charge",
+                data: "/charge",               // SQL text / URL path — not captured by default for SQL
+                startTime: startTime,
+                duration: timer.Elapsed,
+                resultCode: success ? "200" : "500",
+                success: success);
+        }
+    }
+}</code></pre>
+
+      <h3>Configuring Sampling</h3>
+      <pre><code>// Fixed-rate sampling — both client and server must use the same percentage
+// This ensures correlated requests are consistently included or excluded
+builder.Services.Configure&lt;TelemetryConfiguration&gt;(config =&gt;
+{
+    var fixedSampling = new FixedRateSamplingTelemetryProcessor(config.DefaultTelemetrySink.TelemetryProcessorChain.Last);
+    fixedSampling.SamplingPercentage = 25; // keep 25% of telemetry
+    config.TelemetryProcessorChainBuilder
+        .Use(next =&gt; fixedSampling)
+        .Build();
+});
+
+// Adaptive sampling — fine-tune the target (default is 5/sec)
+builder.Services.Configure&lt;TelemetryConfiguration&gt;(config =&gt;
+{
+    var adaptive = new AdaptiveSamplingTelemetryProcessor
+    {
+        MaxTelemetryItemsPerSecond = 10, // allow up to 10/sec before sampling kicks in
+        ExcludedTypes = "Exception"      // never sample exceptions — always capture all
+    };
+});</code></pre>
+
+      <h3>Distributed Tracing — Manual Operation Correlation</h3>
+      <pre><code>// When processing a message from a queue, the trace context must be
+// manually restored to link this telemetry to the original HTTP request
+
+using var operation = _telemetry.StartOperation&lt;RequestTelemetry&gt;("ProcessQueueMessage");
+operation.Telemetry.Properties["MessageId"] = message.MessageId;
+
+try
+{
+    // All telemetry tracked inside this using block will share the same Operation Id
+    await ProcessMessageAsync(message);
+    operation.Telemetry.Success = true;
+}
+catch (Exception ex)
+{
+    operation.Telemetry.Success = false;
+    _telemetry.TrackException(ex);
+    throw;
+}
+// operation.Dispose() called here — sends the RequestTelemetry item</code></pre>
+
+      <h3>Azure CLI — Common Operations</h3>
+      <pre><code># Create a workspace-based Application Insights resource
+az monitor app-insights component create \
+  --app myapp-ai \
+  --location eastus \
+  --resource-group myRG \
+  --workspace /subscriptions/{subId}/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace
+  # Note: --workspace flag makes it workspace-based; omitting it creates classic (legacy)
+
+# Get the connection string (recommended over instrumentation key)
+az monitor app-insights component show \
+  --app myapp-ai \
+  --resource-group myRG \
+  --query connectionString \
+  --output tsv
+
+# Set a daily data cap (in GB)
+az monitor app-insights component billing update \
+  --app myapp-ai \
+  --resource-group myRG \
+  --cap 1.5  # stop accepting new data after 1.5 GB/day
+
+# Query Application Insights via CLI (useful for scripting)
+az monitor app-insights query \
+  --app myapp-ai \
+  --resource-group myRG \
+  --analytics-query "requests | where success == false | count"</code></pre>
+
+      <h3>Custom TrackAvailability Test (from Azure Function)</h3>
+      <pre><code>// Azure Function running on a timer — sends availability result to AI
+[FunctionName("AvailabilityTest")]
+public async Task Run([TimerTrigger("0 */5 * * * *")] TimerInfo timer)
+{
+    var testName = "MyAPIHealthCheck";
+    var runLocation = "East US";
+    var startTime = DateTimeOffset.UtcNow;
+    var stopwatch = Stopwatch.StartNew();
+    bool isSuccess = false;
+    string message = "";
+
+    try
+    {
+        var response = await _httpClient.GetAsync("https://myapi.example.com/health");
+        isSuccess = response.IsSuccessStatusCode;
+        message = response.StatusCode.ToString();
+    }
+    catch (Exception ex)
+    {
+        message = ex.Message;
+    }
+    finally
+    {
+        stopwatch.Stop();
+        // This appears in availabilityResults table in Application Insights
+        _telemetry.TrackAvailability(
+            name: testName,
+            timeStamp: startTime,
+            duration: stopwatch.Elapsed,
+            runLocation: runLocation,
+            success: isSuccess,
+            message: message);
+        _telemetry.Flush(); // important in serverless — ensure data is sent before function exits
+    }
+}</code></pre>
+
+      <!-- SECTION 5: Wrong-Answer Traps -->
+      <div class="sec-lbl">&#9316; Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Application Insights stores telemetry in the same storage account as the application"</div>
+          FALSE. Application Insights has its own backend storage, completely separate from any storage account your application uses. In workspace-based mode, data is stored in a Log Analytics Workspace. In classic mode, it is stored in AI's proprietary data store. Your app's Azure Storage account (for blobs, queues, tables) has nothing to do with where AI telemetry is persisted. Choosing "configure the same storage account for Application Insights" on an exam question is always wrong.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Setting a daily cap prevents data loss because all telemetry is buffered and sent the next day"</div>
+          FALSE. When the daily data cap is reached, Application Insights immediately stops accepting NEW telemetry for the remainder of that UTC calendar day. The telemetry that was not sent is NOT buffered anywhere — it is dropped at the client SDK or at the AI ingestion endpoint (for ingestion sampling). There is no catch-up the next day. This creates a monitoring blind spot. Microsoft recommends: set the cap well above your expected daily volume, and configure a cap alert so you are notified when you are approaching the limit (e.g. at 80% of cap). Do not rely on the cap as the primary cost control — use sampling instead.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Use ingestion sampling to ensure correlated telemetry items are always sampled together"</div>
+          FALSE. Ingestion sampling is the worst sampling type for correlation consistency. It runs at the Application Insights ingestion endpoint, after the data has already been transmitted from your app. At that point, items from the same operation that were sent in separate HTTP batches may be independently sampled, potentially dropping the Request item but keeping the Dependency items, or vice versa. The result is orphaned telemetry — dependency calls with no parent request. For consistent cross-service correlation, use fixed-rate sampling in the SDK (same percentage, same Operation Id–based hash on both client and server).
+        </div>
+      </div>
+
+      <!-- SECTION 6: Practice Q&A -->
+      <div class="sec-lbl">&#9317; Practice Q&amp;A</div>
+
+      <div class="qa-list">
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">Your ASP.NET Core application uses the Application Insights SDK with default configuration. A KQL query against the <code>requests</code> table shows 120 failed requests in the last hour. Your on-call engineer insists there were over 1,000 failures — the error rate was clearly visible in server logs. What is the most likely explanation?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">&#10003; Adaptive sampling is dropping telemetry items</span>
+            <div class="qa-body">
+              <strong>The default Application Insights SDK enables adaptive sampling</strong>, which automatically reduces the volume of telemetry sent when request rates are high. With adaptive sampling active:<br><br>
+              <ul>
+                <li>Each retained telemetry item carries an <code>itemCount</code> property representing how many real events it represents (e.g. <code>itemCount = 10</code> means one row = 10 real requests).</li>
+                <li>Using <code>requests | where success == false | count()</code> counts sampled rows — not real events.</li>
+                <li>The correct query is <code>requests | where success == false | summarize sum(itemCount)</code> to get the estimated real count.</li>
+                <li>To get exact counts, disable adaptive sampling (<code>EnableAdaptiveSampling = false</code>) or switch to fixed-rate sampling and document the rate.</li>
+              </ul>
+              Other options like "the instrumentation key is wrong" or "the AI resource has a daily cap" would result in zero data or a cutoff, not a fraction of the real count.
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">A development team wants to trace requests across three microservices: API Gateway, Order Service, and Payment Service. All three use Application Insights. After deployment, the Application Map shows the API Gateway but does NOT show any connections to the Order Service or Payment Service. What is the most likely cause?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">&#10003; Dependency tracking is not enabled in the downstream services</span>
+            <div class="qa-body">
+              <strong>The Application Map is built from dependency telemetry</strong>. For a connection to appear between two services:<br><br>
+              <ul>
+                <li>The calling service must record an outgoing dependency call (either via auto-instrumentation or <code>TrackDependency()</code>).</li>
+                <li>The called service must record an incoming request with the same <code>operationId</code> (trace ID), which is propagated via the <code>traceparent</code> W3C header.</li>
+                <li>Both services must send telemetry to the same Application Insights resource (or to linked resources in the same workspace).</li>
+              </ul>
+              Possible fixes: ensure the <code>DependencyTrackingTelemetryModule</code> is not disabled; verify the SDK is initialized in all three services with a valid connection string; check that HTTP headers are not being stripped by a proxy or load balancer. Note: if the services report to different AI resources in different workspaces with no cross-workspace queries configured, they will appear as separate maps.
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">You need to monitor your application's availability from 8 geographic regions and receive an alert only when at least 3 locations simultaneously report failures — to avoid false positives from transient regional outages. You also need to validate an HTTPS SSL certificate expiry alongside the HTTP response. Which availability test type should you use?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">&#10003; Standard test with a multi-location alert rule configured for 3+ failures</span>
+            <div class="qa-body">
+              <strong>The Standard availability test</strong> is the correct choice because:<br><br>
+              <ul>
+                <li>It supports SSL/TLS certificate validity checking as a built-in feature (checks certificate expiry, not just HTTPS connectivity).</li>
+                <li>It supports content match and custom request headers in a single-step check.</li>
+                <li>You can configure it to probe from up to 16 geographic locations.</li>
+                <li>The associated alert rule can be set to trigger when X out of N locations report failure — set threshold to 3 to avoid single-region false positives.</li>
+              </ul>
+              URL ping tests do not include SSL certificate validation. Multi-step web tests are deprecated and use Visual Studio .webtest files. Custom <code>TrackAvailability()</code> via Azure Functions would work but requires more code and cannot directly use the built-in SSL check. Standard test is the simplest fit here.
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">Your team is investigating a production bug where an unhandled exception is thrown on roughly 0.1% of requests. The exception is intermittent and cannot be reproduced in dev. You want to automatically capture the local variable values and call stack at the moment the exception occurs, without modifying the core business logic. What should you configure?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">&#10003; Application Insights Snapshot Debugger</span>
+            <div class="qa-body">
+              <strong>The Snapshot Debugger</strong> is designed exactly for this scenario:<br><br>
+              <ul>
+                <li>Install <code>Microsoft.ApplicationInsights.SnapshotCollector</code> NuGet package and configure the storage account in <code>appsettings.json</code>.</li>
+                <li>When an exception is thrown, the SDK captures a debug snapshot (mini-dump) containing the call stack and local variable values at that instant.</li>
+                <li>Snapshots are uploaded to Azure Blob Storage and linked to the exception telemetry in Application Insights.</li>
+                <li>View snapshots in the Azure portal's Application Insights exceptions blade or download and open in Visual Studio.</li>
+                <li>Limit: 5 snapshots per exception type per day. After that, the exception continues to be logged but no new snapshots are captured until the next UTC day.</li>
+              </ul>
+              This does not require modifying business logic — only adding the package and configuring it. It does NOT use Live Metrics (which has no storage) and is NOT the same as adding <code>TrackException()</code> manually (which captures the stack trace but not local variable values).
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">A developer creates an Application Insights resource via the Azure portal without specifying a Log Analytics Workspace. They then try to run a cross-workspace KQL query joining Application Insights data with Azure Firewall logs. The query fails. What is the most direct fix?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">&#10003; Migrate the Application Insights resource to workspace-based mode by linking it to a Log Analytics Workspace</span>
+            <div class="qa-body">
+              <strong>Classic Application Insights uses an isolated proprietary data store</strong> that cannot participate in cross-workspace KQL queries. To fix this:<br><br>
+              <ul>
+                <li>In the Azure portal, open the Application Insights resource and go to <strong>Properties</strong>. Use the "Migrate to workspace-based" option to link it to a Log Analytics Workspace.</li>
+                <li>After migration, all new telemetry is written to the workspace and can be joined with any other data source in the same workspace (Firewall, VM, Container Insights, etc.).</li>
+                <li>Historical data from the classic store is NOT automatically migrated — it remains in the classic store with a read-only retention window.</li>
+                <li>Cross-workspace queries use the syntax: <code>workspace("myWorkspace").requests | ...</code> or simply query the workspace directly.</li>
+              </ul>
+              Creating a second Application Insights resource would not fix the problem. Changing the query syntax alone cannot cross the data store boundary of classic AI.
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">You are reviewing Application Insights telemetry for a service that calls an Azure SQL Database. The <code>dependencies</code> table shows entries for SQL calls with correct durations and success values, but the <code>data</code> column is empty for all SQL dependency items. Your manager wants the full SQL query text in the telemetry for query performance analysis. What must you do?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">&#10003; Set EnableSqlCommandTextInstrumentation = true on the DependencyTrackingTelemetryModule</span>
+            <div class="qa-body">
+              <strong>SQL command text is intentionally not captured by default</strong> to protect potentially sensitive data (PII in WHERE clauses, etc.):<br><br>
+              <ul>
+                <li>Enable it explicitly in <code>Program.cs</code>: configure the <code>DependencyTrackingTelemetryModule</code> and set <code>EnableSqlCommandTextInstrumentation = true</code>.</li>
+                <li>Once enabled, the <code>data</code> field in the <code>dependencies</code> table will contain the full SQL text for SqlClient calls.</li>
+                <li>This applies to parameterized queries — the parameter VALUES are still not captured (you see <code>@param1</code>, not the actual value). This is by design.</li>
+                <li>Be aware of compliance implications: if queries contain PII patterns, capturing SQL text may violate GDPR or data residency requirements.</li>
+              </ul>
+              This is distinct from stored procedure calls, where the procedure name IS captured in the <code>name</code> field by default — it is the inline query text that requires opt-in.
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">Your high-traffic application uses Application Insights with adaptive sampling. You need distributed tracing to work correctly across your frontend (React SPA) and backend (ASP.NET Core API). Both use the same Application Insights resource. After enabling fixed-rate sampling at 10% on the backend, traces from the frontend sometimes do not show up linked to the backend trace for the same user action. What is the most likely cause?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">&#10003; The JavaScript SDK is still using adaptive sampling — both client and server must use the same fixed-rate sampling percentage and key</span>
+            <div class="qa-body">
+              <strong>Fixed-rate sampling only works for correlation if both ends sample the same items</strong>. Fixed-rate sampling is deterministic — it uses the Operation Id (trace ID) as the hash key, so a given trace is either always included or always excluded. But this only works if:<br><br>
+              <ul>
+                <li>Both the JavaScript snippet (frontend) and the ASP.NET Core SDK (backend) use fixed-rate sampling at the same percentage (10%).</li>
+                <li>Both are keyed on the same Operation Id, which is propagated via the <code>traceparent</code> header.</li>
+                <li>If the frontend uses adaptive sampling (or no sampling configuration), it may send traces that the backend discards, or vice versa, breaking the correlation chain.</li>
+              </ul>
+              Fix: in the JavaScript snippet configuration, explicitly set <code>samplingPercentage: 10</code> to match the backend. The hash-based algorithm ensures that the same Operation Id maps to the same sampling decision on both sides. Never mix adaptive sampling on one end with fixed-rate on the other if correlation matters.
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">8</div>
+            <div class="qa-text">An operator sets a daily data cap of 2 GB on an Application Insights resource. At 14:30 UTC, the cap is reached. What happens to telemetry generated by the application between 14:30 UTC and midnight UTC?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">&#10003; All new telemetry is dropped and not stored — there is a monitoring blind spot until midnight UTC</span>
+            <div class="qa-body">
+              <strong>When the daily cap is hit, the AI endpoint immediately stops accepting new data</strong> until the cap resets at midnight UTC:<br><br>
+              <ul>
+                <li>Telemetry generated after the cap is reached is NOT buffered or queued — it is permanently lost.</li>
+                <li>The Application Insights resource sends a "DailyCapReached" alert (if configured) and shows a warning in the portal.</li>
+                <li>The cap resets at midnight UTC — NOT midnight in the resource's region or the user's time zone.</li>
+                <li>Best practice: configure a metric alert on the <code>DailyDataCapExceeded</code> metric to be notified when approaching the cap (e.g. 80% threshold), not after it has been hit.</li>
+                <li>Better cost control: use adaptive or fixed-rate sampling in the SDK to reduce volume before data reaches the ingestion endpoint, rather than relying on the daily cap as the primary cost lever.</li>
+              </ul>
+              The cap does NOT cause a graceful degradation where some telemetry is kept — it is a hard stop. Any critical monitoring (e.g. error rate alerts, availability alerts) will stop firing for the rest of that UTC day if the cap is hit.
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- end qa-list -->
+
+    </section>
+    <!-- end module 1 -->
+
+    <div class="nav-end">
+      <a href="learn-10-messaging.html" class="btn-link">&#8592; Messaging</a>
+      <a href="learn.html" class="btn-link fwd">All Topics &#8594;</a>
+    </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  // Q&A accordion
+  document.querySelectorAll('.qa-q').forEach(function(q){
+    q.addEventListener('click',function(){
+      this.closest('.qa-item').classList.toggle('open');
+    });
+  });
+  // Sidebar scroll-spy
+  var links=document.querySelectorAll('.sb-link[data-m]');
+  var sections=document.querySelectorAll('.module[id]');
+  if(links.length&&sections.length){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var n=e.target.id.replace('m','');
+          links.forEach(function(l){l.classList.toggle('active',l.dataset.m===n);});
+        }
+      });
+    },{rootMargin:'-8% 0px -72% 0px'});
+    sections.forEach(function(s){obs.observe(s);});
+  }
+  // Sidebar click scroll
+  links.forEach(function(l){
+    l.addEventListener('click',function(e){
+      e.preventDefault();
+      var t=document.getElementById('m'+this.dataset.m);
+      if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+})();
+</script>
+</body>
+</html>

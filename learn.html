@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZ-204 Study Notes — Exam-Depth Reference</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --azure:#0078D4;--azure-dark:#005a9e;--azure-xdark:#003f73;--azure-light:#deecf9;
+  --bg:#f4f6f9;--surface:#fff;--nav-bg:#1a1f36;--border:#d0d7de;--border-light:#e8ecf0;
+  --text:#1a1f36;--text-muted:#6b7280;--text-light:#9ca3af;
+  --ok-bg:#ecfdf5;--ok-bdr:#10b981;--ok-txt:#065f46;
+  --err-bg:#fef2f2;--err-bdr:#ef4444;--err-txt:#991b1b;
+  --warn-bg:#fffbeb;--warn-bdr:#fbbf24;--warn-txt:#92400e;
+  --purple:#7c3aed;--teal:#0d9488;
+  --r:10px;--rs:6px;
+  --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+  --shm:0 4px 12px rgba(0,0,0,.12);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--azure);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ── NAV ─────────────────────────────────────────────────────── */
+#top-nav{
+  background:var(--nav-bg);padding:0 1.5rem;height:54px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 8px rgba(0,0,0,.35)
+}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
+.nav-brand-icon{
+  width:30px;height:30px;background:var(--azure);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:900;color:#fff;letter-spacing:-.5px
+}
+.nav-badge{background:rgba(255,255,255,.15);color:#e2e8f0;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.btn-nav{
+  padding:.4rem 1rem;border-radius:var(--rs);font-size:13px;font-weight:500;
+  cursor:pointer;font-family:inherit;text-decoration:none;
+  display:inline-flex;align-items:center;gap:6px
+}
+.btn-nav-outline{background:transparent;color:#e2e8f0;border:1px solid rgba(255,255,255,.25)}
+.btn-nav-outline:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-nav-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-nav-primary:hover{background:var(--azure-dark);text-decoration:none}
+
+/* ── PAGE BODY ───────────────────────────────────────────────── */
+.page{max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem 5rem}
+
+/* ── HERO ────────────────────────────────────────────────────── */
+.hero{
+  background:linear-gradient(135deg,var(--nav-bg) 0%,#2d3561 100%);
+  border-radius:var(--r);padding:2.5rem 2rem;margin-bottom:2.5rem;
+  color:#fff;position:relative;overflow:hidden
+}
+.hero::before{
+  content:'AZ-204';position:absolute;right:-8px;top:50%;transform:translateY(-50%);
+  font-size:110px;font-weight:900;color:rgba(255,255,255,.04);
+  letter-spacing:-4px;pointer-events:none;line-height:1
+}
+.hero h1{font-size:28px;font-weight:800;margin-bottom:6px;line-height:1.2}
+.hero .sub{color:rgba(255,255,255,.7);font-size:14px;margin-bottom:2rem;max-width:560px;line-height:1.6}
+.hero-stats{display:flex;gap:2.5rem;flex-wrap:wrap}
+.hstat .n{font-size:34px;font-weight:800;color:var(--azure-light);display:block;line-height:1}
+.hstat .l{font-size:11px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+
+/* ── SECTION TITLE ───────────────────────────────────────────── */
+.sec-head{
+  font-size:18px;font-weight:700;display:flex;align-items:center;gap:12px;
+  margin-bottom:1.25rem;color:var(--text)
+}
+.sec-head::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── TOPIC GRID ──────────────────────────────────────────────── */
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px;margin-bottom:3rem}
+.topic-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:1.25rem;text-decoration:none;display:block;color:inherit;
+  transition:transform .15s,box-shadow .15s,border-color .15s
+}
+.topic-card:hover{transform:translateY(-2px);box-shadow:var(--shm);border-color:var(--azure);text-decoration:none}
+.tc-icon{font-size:28px;display:block;line-height:1;margin-bottom:10px}
+.tc-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.tc-meta{font-size:11px;color:var(--text-muted);margin-bottom:8px}
+.tc-badge{
+  display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;
+  border-radius:20px;background:#eff6ff;color:var(--azure);
+  border:1px solid var(--azure-light)
+}
+.tc-subs{font-size:11px;color:var(--text-light);margin-top:6px;line-height:1.5}
+
+/* ── HOW IT WORKS CARD ───────────────────────────────────────── */
+.how-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:1.5rem 2rem;margin-bottom:2.5rem;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1.25rem
+}
+.how-item{display:flex;gap:10px;align-items:flex-start}
+.how-num{
+  flex-shrink:0;width:24px;height:24px;background:var(--azure);color:#fff;
+  border-radius:50%;font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;margin-top:1px
+}
+.how-text strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.how-text span{font-size:12px;color:var(--text-muted);line-height:1.5}
+
+/* ── QUICK REFERENCE TABLE ───────────────────────────────────── */
+.ref-table{width:100%;border-collapse:collapse;font-size:13px;margin:0}
+.ref-table th{
+  background:#f8fafc;color:var(--text-muted);font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;padding:.6rem 1rem;
+  text-align:left;border-bottom:2px solid var(--border)
+}
+.ref-table td{
+  padding:.65rem 1rem;border-bottom:1px solid var(--border-light);
+  color:var(--text-muted);vertical-align:top
+}
+.ref-table td:first-child{color:var(--text);font-weight:500}
+.ref-table tr:last-child td{border-bottom:none}
+.ref-table tr:hover td{background:#f8fafc}
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:2.5rem}
+
+/* ── FOOTER ──────────────────────────────────────────────────── */
+.footer{text-align:center;padding:2rem 0;color:var(--text-light);font-size:13px;border-top:1px solid var(--border)}
+.footer a{color:var(--azure)}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
+@media(max-width:640px){
+  .hero{padding:1.75rem 1.25rem}
+  .hero h1{font-size:22px}
+  .hero-stats{gap:1.5rem}
+  .hstat .n{font-size:26px}
+  .page{padding:1.5rem 1rem 4rem}
+  .how-card{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ── TOP NAV ──────────────────────────────────────────────────── -->
+<nav id="top-nav">
+  <div class="nav-brand">
+    <div class="nav-brand-icon">Az</div>
+    <span>AZ-204 Study Notes</span>
+    <span class="nav-badge">AZ-204</span>
+  </div>
+  <div class="nav-actions">
+    <a href="index.html" class="btn-nav btn-nav-outline">Practice Tests</a>
+    <a href="index.html" class="btn-nav btn-nav-primary">Launch Exam Prep →</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- ── HERO ─────────────────────────────────────────────────── -->
+  <div class="hero">
+    <h1>AZ-204 Exam Study Notes</h1>
+    <p class="sub">Developing Solutions for Microsoft Azure — Exam-depth reference with gotchas, key numbers, CLI patterns, wrong-answer traps, and scenario Q&amp;A. Not basic Learn path summaries.</p>
+    <div class="hero-stats">
+      <div class="hstat"><span class="n">11</span><div class="l">Topics</div></div>
+      <div class="hstat"><span class="n">27</span><div class="l">Modules</div></div>
+      <div class="hstat"><span class="n">6</span><div class="l">Sections / Module</div></div>
+      <div class="hstat"><span class="n">~300</span><div class="l">Q&amp;A Pairs</div></div>
+    </div>
+  </div>
+
+  <!-- ── HOW EACH PAGE IS STRUCTURED ─────────────────────────── -->
+  <h2 class="sec-head">What's Inside Each Topic Page</h2>
+  <div class="how-card">
+    <div class="how-item">
+      <div class="how-num">①</div>
+      <div class="how-text"><strong>Key Concepts</strong><span>Comparison tables, tier breakdown, decision matrix</span></div>
+    </div>
+    <div class="how-item">
+      <div class="how-num">②</div>
+      <div class="how-text"><strong>Exam Gotchas</strong><span>Tricky distinctions the exam specifically tests</span></div>
+    </div>
+    <div class="how-item">
+      <div class="how-num">③</div>
+      <div class="how-text"><strong>Key Numbers</strong><span>Limits, timeouts, thresholds — quick-reference table</span></div>
+    </div>
+    <div class="how-item">
+      <div class="how-num">④</div>
+      <div class="how-text"><strong>CLI / SDK Patterns</strong><span>Code the exam expects you to recognise</span></div>
+    </div>
+    <div class="how-item">
+      <div class="how-num">⑤</div>
+      <div class="how-text"><strong>Wrong-Answer Traps</strong><span>Common misconceptions framed as what-not-to-pick</span></div>
+    </div>
+    <div class="how-item">
+      <div class="how-num">⑥</div>
+      <div class="how-text"><strong>Practice Q&amp;A</strong><span>5–10 hard scenario questions, expandable answers</span></div>
+    </div>
+  </div>
+
+  <!-- ── 11 TOPIC CARDS ─────────────────────────────────────── -->
+  <h2 class="sec-head">Learning Paths</h2>
+  <div class="topic-grid">
+
+    <a href="learn-01-app-service.html" class="topic-card">
+      <span class="tc-icon">⚙️</span>
+      <div class="tc-title">App Service Web Apps</div>
+      <div class="tc-meta">4 modules</div>
+      <span class="tc-badge">~15% exam weight</span>
+      <div class="tc-subs">Plans &amp; tiers · Deployment slots · Autoscale · Networking &amp; hybrid</div>
+    </a>
+
+    <a href="learn-02-functions.html" class="topic-card">
+      <span class="tc-icon">⚡</span>
+      <div class="tc-title">Azure Functions</div>
+      <div class="tc-meta">2 modules</div>
+      <span class="tc-badge">~10% exam weight</span>
+      <div class="tc-subs">Hosting plans · Triggers &amp; bindings · Durable patterns · Cold start</div>
+    </a>
+
+    <a href="learn-03-blob-storage.html" class="topic-card">
+      <span class="tc-icon">🗄️</span>
+      <div class="tc-title">Blob Storage</div>
+      <div class="tc-meta">3 modules</div>
+      <span class="tc-badge">~10% exam weight</span>
+      <div class="tc-subs">Account types · Access tiers · Lifecycle policies · SAS &amp; security</div>
+    </a>
+
+    <a href="learn-04-cosmos-db.html" class="topic-card">
+      <span class="tc-icon">🌐</span>
+      <div class="tc-title">Cosmos DB</div>
+      <div class="tc-meta">2 modules</div>
+      <span class="tc-badge">~10% exam weight</span>
+      <div class="tc-subs">APIs &amp; consistency · RU/s &amp; partitions · Change feed · SDK patterns</div>
+    </a>
+
+    <a href="learn-05-containers.html" class="topic-card">
+      <span class="tc-icon">🐳</span>
+      <div class="tc-title">Containerised Solutions</div>
+      <div class="tc-meta">3 modules</div>
+      <span class="tc-badge">~10% exam weight</span>
+      <div class="tc-subs">Container Registry · Container Instances · Container Apps &amp; DAPR</div>
+    </a>
+
+    <a href="learn-06-auth.html" class="topic-card">
+      <span class="tc-icon">🔑</span>
+      <div class="tc-title">Authentication &amp; Authorisation</div>
+      <div class="tc-meta">4 modules</div>
+      <span class="tc-badge">~15% exam weight</span>
+      <div class="tc-subs">Identity platform · MSAL flows · SAS tokens · Microsoft Graph</div>
+    </a>
+
+    <a href="learn-07-security.html" class="topic-card">
+      <span class="tc-icon">🔐</span>
+      <div class="tc-title">Secure Cloud Solutions</div>
+      <div class="tc-meta">3 modules</div>
+      <span class="tc-badge">~10% exam weight</span>
+      <div class="tc-subs">Key Vault · Managed Identity · App Configuration &amp; feature flags</div>
+    </a>
+
+    <a href="learn-08-api-management.html" class="topic-card">
+      <span class="tc-icon">🔀</span>
+      <div class="tc-title">API Management</div>
+      <div class="tc-meta">1 module</div>
+      <span class="tc-badge">~10% exam weight</span>
+      <div class="tc-subs">Policies · Products &amp; subscriptions · Gateway tiers · Named values</div>
+    </a>
+
+    <a href="learn-09-events.html" class="topic-card">
+      <span class="tc-icon">📡</span>
+      <div class="tc-title">Event-based Solutions</div>
+      <div class="tc-meta">2 modules</div>
+      <span class="tc-badge">~10% exam weight</span>
+      <div class="tc-subs">Event Grid topics &amp; routing · Event Hubs partitions &amp; capture</div>
+    </a>
+
+    <a href="learn-10-messaging.html" class="topic-card">
+      <span class="tc-icon">📨</span>
+      <div class="tc-title">Message-based Solutions</div>
+      <div class="tc-meta">1 module</div>
+      <span class="tc-badge">~5% exam weight</span>
+      <div class="tc-subs">Storage Queue vs Service Bus · Sessions · Dead-letter · Topics</div>
+    </a>
+
+    <a href="learn-11-monitoring.html" class="topic-card">
+      <span class="tc-icon">📊</span>
+      <div class="tc-title">Monitoring &amp; Logging</div>
+      <div class="tc-meta">1 module</div>
+      <span class="tc-badge">~5% exam weight</span>
+      <div class="tc-subs">Application Insights · Sampling · Kusto queries · Distributed tracing</div>
+    </a>
+
+  </div><!-- /topic-grid -->
+
+  <!-- ── QUICK REFERENCE: KEY NUMBERS ─────────────────────────── -->
+  <h2 class="sec-head">Quick Reference — Commonly Tested Limits</h2>
+  <div class="table-wrap">
+    <table class="ref-table">
+      <thead>
+        <tr><th>Service</th><th>Metric</th><th>Value</th><th>Exam Note</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>App Service</td><td>Deployment slots (Standard)</td><td>5 incl. production</td><td>Basic has 0 slots — most tested trap</td></tr>
+        <tr><td>App Service</td><td>Deployment slots (Premium/Isolated)</td><td>20 incl. production</td><td>Standard → 5, Premium → 20</td></tr>
+        <tr><td>App Service</td><td>Scale-out max (Isolated ASE)</td><td>100 instances</td><td>Standard max is 10</td></tr>
+        <tr><td>Azure Functions</td><td>Consumption plan timeout default</td><td>5 min (max 10 min)</td><td>Premium/Dedicated can go unlimited</td></tr>
+        <tr><td>Azure Functions</td><td>Max message size (Service Bus trigger)</td><td>256 KB (Standard), 100 MB (Premium)</td><td>Tier-dependent — traps on large message sizes</td></tr>
+        <tr><td>Blob Storage</td><td>Block blob max size</td><td>~4.77 TB (50,000 × 100 MB blocks)</td><td>Single Put Blob limit is 5,000 MB</td></tr>
+        <tr><td>Blob Storage</td><td>Lifecycle policy archive tier cool-off</td><td>180 days minimum in cool before archive</td><td>Moving from hot → archive skips cooldown</td></tr>
+        <tr><td>Blob Storage</td><td>SAS token validity max (user delegation)</td><td>7 days</td><td>Account SAS can be longer; user-delegation capped at 7d</td></tr>
+        <tr><td>Cosmos DB</td><td>Max item size</td><td>2 MB</td><td>Partition key + id must be &lt; 2 MB</td></tr>
+        <tr><td>Cosmos DB</td><td>Logical partition size limit</td><td>20 GB</td><td>Exceeding causes 429; choose high-cardinality keys</td></tr>
+        <tr><td>Cosmos DB</td><td>Strong consistency — read staleness</td><td>0 (always current)</td><td>Only supports single/multi region read-your-writes</td></tr>
+        <tr><td>Service Bus</td><td>Standard max message size</td><td>256 KB</td><td>Premium supports up to 100 MB</td></tr>
+        <tr><td>Service Bus</td><td>Max TTL (default)</td><td>14 days</td><td>Configurable; dead-letter queue also has TTL</td></tr>
+        <tr><td>Event Hubs</td><td>Default retention (Standard)</td><td>1 day (max 7 days)</td><td>Premium/Dedicated can hold 90 days</td></tr>
+        <tr><td>Event Grid</td><td>Event max size</td><td>1 MB</td><td>Batch max is also 1 MB total</td></tr>
+        <tr><td>Key Vault</td><td>Soft-delete retention</td><td>90 days default (min 7, max 90)</td><td>Once purge protection is on, can't be disabled</td></tr>
+        <tr><td>APIM</td><td>Request size limit (default)</td><td>102,400 bytes (100 KB)</td><td>Override with set-body policy</td></tr>
+        <tr><td>Storage Queue</td><td>Max message size</td><td>64 KB</td><td>Service Bus handles larger; common swap-in-the-exam trap</td></tr>
+        <tr><td>Storage Queue</td><td>Max TTL</td><td>7 days default (max 7 days)</td><td>Service Bus default TTL is 14 days</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────────── -->
+  <div class="footer">
+    <p>AZ-204 Study Notes &nbsp;·&nbsp; <a href="index.html">Practice Tests &amp; Drills</a> &nbsp;·&nbsp; <a href="https://learn.microsoft.com/en-us/credentials/certifications/exams/az-204/" target="_blank" rel="noopener">Official Exam Page ↗</a></p>
+    <p style="margin-top:6px">Content is exam-focused and scenario-based. Always verify against official MS Learn documentation.</p>
+  </div>
+
+</div><!-- /page -->
+
+</body>
+</html>

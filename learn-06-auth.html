@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Authentication &amp; Authorisation — AZ-204 Study Notes</title>
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --azure:#0078D4;--azure-dark:#005a9e;--azure-light:#deecf9;
+  --bg:#f4f6f9;--surface:#fff;--nav-bg:#1a1f36;
+  --border:#d0d7de;--border-light:#e8ecf0;
+  --text:#1a1f36;--text-muted:#6b7280;--text-light:#9ca3af;
+  --ok-bg:#ecfdf5;--ok-bdr:#10b981;--ok-txt:#065f46;
+  --err-bg:#fef2f2;--err-bdr:#ef4444;--err-txt:#991b1b;
+  --warn-bg:#fffbeb;--warn-bdr:#fbbf24;--warn-txt:#92400e;
+  --r:10px;--rs:6px;
+  --sh:0 1px 3px rgba(0,0,0,.08);--shm:0 4px 12px rgba(0,0,0,.12);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--azure);text-decoration:none}
+a:hover{text-decoration:underline}
+#top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
+.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
+.nav-bc a{color:rgba(255,255,255,.75)}
+.nav-bc a:hover{color:#fff;text-decoration:none}
+.nav-bc span{color:rgba(255,255,255,.35)}
+.nav-bc strong{color:#fff}
+.nav-acts{display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
+.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.page-layout{display:flex;min-height:calc(100vh - 54px)}
+.sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
+.sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
+.sb-back:hover{color:var(--azure);text-decoration:none}
+.sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-light);padding:.5rem 1rem;margin-top:.25rem}
+.sb-link{display:flex;align-items:center;gap:8px;padding:.45rem 1rem;font-size:13px;color:var(--text-muted);border-left:3px solid transparent;cursor:pointer;transition:background .1s,color .1s,border-color .1s}
+.sb-link:hover{background:#f8fafc;color:var(--text)}
+.sb-link.active{border-left-color:var(--azure);color:var(--azure);background:#eff6ff;font-weight:600}
+.sb-num{font-size:10px;background:#f3f4f6;border:1px solid var(--border-light);padding:1px 6px;border-radius:20px;margin-left:auto;color:var(--text-light)}
+.sb-next{display:flex;align-items:center;gap:6px;padding:.45rem 1rem;font-size:12px;color:var(--text-muted);margin-top:.5rem;border-top:1px solid var(--border-light)}
+.sb-next:hover{color:var(--azure);text-decoration:none}
+.main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
+.topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
+.topic-header p{font-size:13px;color:var(--text-muted);margin:0}
+.topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
+.module{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem 1.75rem;margin-bottom:1.75rem;scroll-margin-top:70px}
+.module h2{font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--border-light)}
+.module h2 .mod-num{background:var(--azure);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--azure);margin-bottom:.5rem;margin-top:1.25rem;display:flex;align-items:center;gap:6px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--azure-light)}
+h3{font-size:14px;font-weight:700;color:var(--text);margin:.75rem 0 .4rem}
+p,li{font-size:13px;color:var(--text-muted);line-height:1.7}
+ul,ol{padding-left:1.4rem;margin:.4rem 0}
+li{margin-bottom:.25rem}
+strong{color:var(--text)}
+code{font-family:Consolas,'Cascadia Code','Courier New',monospace;font-size:.85em;background:#f3f4f6;padding:1px 5px;border-radius:4px;color:#1a1f36}
+pre{font-family:Consolas,'Cascadia Code','Courier New',monospace;background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:var(--rs);padding:1.1rem 1.25rem;overflow-x:auto;font-size:12.5px;line-height:1.65;margin:.6rem 0}
+pre code{background:none;padding:0;color:inherit}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--rs);margin:.6rem 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f8fafc;color:var(--text-muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.55rem .9rem;text-align:left;border-bottom:2px solid var(--border)}
+td{padding:.55rem .9rem;border-bottom:1px solid var(--border-light);color:var(--text-muted);vertical-align:top;line-height:1.5}
+td:first-child{color:var(--text);font-weight:500}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+.callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
+.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-body{flex:1}
+.callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
+.callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
+.callout.gotcha .callout-title{color:var(--err-txt)}
+.callout.tip{background:#eff6ff;border-left:3px solid var(--azure)}
+.callout.tip .callout-title{color:var(--azure-dark)}
+.callout.warn{background:var(--warn-bg);border-left:3px solid var(--warn-bdr)}
+.callout.warn .callout-title{color:var(--warn-txt)}
+.callout.success{background:var(--ok-bg);border-left:3px solid var(--ok-bdr)}
+.callout.success .callout-title{color:var(--ok-txt)}
+.qa-list{margin-top:.5rem}
+.qa-item{border:1px solid var(--border);border-radius:var(--rs);margin-bottom:.6rem;overflow:hidden}
+.qa-q{display:flex;align-items:flex-start;gap:.65rem;padding:.85rem 1rem;cursor:pointer;background:var(--surface);user-select:none}
+.qa-q:hover{background:#f8fafc}
+.qa-n{flex-shrink:0;width:20px;height:20px;background:var(--azure);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.qa-text{flex:1;font-size:13px;color:var(--text);line-height:1.5;font-weight:500}
+.qa-tog{flex-shrink:0;color:var(--text-light);transition:transform .2s;font-size:14px;margin-top:2px}
+.qa-item.open .qa-tog{transform:rotate(180deg)}
+.qa-ans{display:none;padding:.85rem 1rem 1rem;background:#f8fafc;border-top:1px solid var(--border-light)}
+.qa-item.open .qa-ans{display:block}
+.qa-correct{display:inline-flex;align-items:center;gap:5px;background:var(--ok-bg);color:var(--ok-txt);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-bottom:.6rem}
+.qa-body{font-size:12.5px;color:var(--text-muted);line-height:1.7}
+.qa-body ul{padding-left:1.25rem;margin:.4rem 0}
+.qa-body strong{color:var(--text)}
+.nav-end{display:flex;justify-content:space-between;padding:1.25rem 0;border-top:1px solid var(--border);margin-top:.5rem}
+.btn-link{display:inline-flex;align-items:center;gap:5px;padding:.4rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--text-muted)}
+.btn-link:hover{border-color:var(--azure);color:var(--azure);text-decoration:none}
+.btn-link.fwd{background:var(--azure);color:#fff;border-color:var(--azure)}
+.btn-link.fwd:hover{background:var(--azure-dark);text-decoration:none}
+@media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
+
+</style>
+</head>
+<body>
+
+<nav id="top-nav">
+  <div class="nav-brand">
+    <div class="nav-brand-icon">Az</div>
+    <div class="nav-bc">
+      <a href="learn.html">Study Notes</a>
+      <span>/</span>
+      <strong>Authentication &amp; Authorisation</strong>
+    </div>
+  </div>
+  <div class="nav-acts">
+    <a href="learn.html" class="btn btn-ghost">&#8592; All Topics</a>
+    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <a href="learn.html" class="sb-back">&#8592; All Topics</a>
+    <div class="sb-label">Authentication &amp; Authorisation</div>
+    <a href="#m1" class="sb-link" data-m="1">&#127962; Microsoft Identity Platform<span class="sb-num">6 sections</span></a>
+    <a href="#m2" class="sb-link" data-m="2">&#128272; Microsoft Authentication Library (MSAL)<span class="sb-num">6 sections</span></a>
+    <a href="#m3" class="sb-link" data-m="3">&#128271; Shared Access Signatures (SAS)<span class="sb-num">6 sections</span></a>
+    <a href="#m4" class="sb-link" data-m="4">&#128202; Microsoft Graph<span class="sb-num">6 sections</span></a>
+    <a href="learn-07-security.html" class="sb-next">Next: Security &#8594;</a>
+  </aside>
+
+  <main class="main">
+    <div class="topic-header">
+      <div class="topic-icon-lg">&#128273;</div>
+      <div>
+        <h1>Authentication &amp; Authorisation</h1>
+        <p>4 modules &middot; Microsoft Identity Platform &middot; Microsoft Authentication Library (MSAL) &middot; Shared Access Signatures (SAS) &middot; Microsoft Graph</p>
+      </div>
+      <div class="topic-num">Topic 06</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ MODULE 1 -->
+    <section class="module" id="m1">
+      <h2><span class="mod-num">01</span> Microsoft Identity Platform</h2>
+
+      <div class="sec-lbl">&#9312; Key Concepts</div>
+
+      <h3>Protocols: OAuth 2.0 and OpenID Connect</h3>
+      <p>The Microsoft Identity Platform is built on <strong>OAuth 2.0</strong> (authorisation — grants access to resources) and <strong>OpenID Connect (OIDC)</strong> (authentication — proves who the user is, adds ID token on top of OAuth). Every AZ-204 auth question eventually maps back to one of these two protocols.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Protocol</th><th>Purpose</th><th>Token Produced</th><th>Endpoint Used</th></tr></thead>
+          <tbody>
+            <tr><td>OAuth 2.0</td><td>Authorisation — delegate access to APIs</td><td>Access token, Refresh token</td><td>/oauth2/v2.0/token</td></tr>
+            <tr><td>OpenID Connect</td><td>Authentication — verify user identity</td><td>ID token (JWT)</td><td>/oauth2/v2.0/authorize + /token</td></tr>
+            <tr><td>OIDC Discovery</td><td>Read platform metadata</td><td>—</td><td>/.well-known/openid-configuration</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>App Registration: Application Object vs Service Principal</h3>
+      <p>When you register an app in Azure AD you create two distinct objects — the exam tests whether you know the difference.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Concept</th><th>Where it lives</th><th>What it is</th><th>Analogy</th></tr></thead>
+          <tbody>
+            <tr><td>Application Object</td><td>Home tenant only (where you registered)</td><td>Global blueprint / definition of the app — contains credentials, redirect URIs, API permissions list</td><td>The class definition</td></tr>
+            <tr><td>Service Principal</td><td>Every tenant that uses the app</td><td>Local instance created when a user/admin consents in that tenant — used for RBAC assignments and sign-in logs</td><td>An instance of the class</td></tr>
+            <tr><td>Managed Identity SP</td><td>Resource's home tenant</td><td>System-assigned or user-assigned; no credentials; automatically rotated</td><td>A service account with auto-password</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">&#128161;</div>
+        <div class="callout-body">
+          <div class="callout-title">Single-tenant vs Multi-tenant registration</div>
+          Single-tenant: <code>signInAudience = AzureADMyOrg</code> — only users in your tenant can sign in. Multi-tenant: <code>AzureADMultipleOrgs</code> — any Azure AD org. Personal + work accounts: <code>AzureADandPersonalMicrosoftAccount</code>. The authority URL changes accordingly: <code>https://login.microsoftonline.com/{tenantId}</code> for single-tenant vs <code>https://login.microsoftonline.com/common</code> or <code>/organizations</code> for multi-tenant.
+        </div>
+      </div>
+
+      <h3>Permission Types</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Type</th><th>Requires signed-in user?</th><th>Consent required from</th><th>Token claim</th><th>Example scope</th></tr></thead>
+          <tbody>
+            <tr><td>Delegated</td><td>Yes</td><td>User (or admin if high-privilege)</td><td><code>scp</code></td><td>User.Read, Mail.Send</td></tr>
+            <tr><td>Application</td><td>No</td><td>Admin only (always)</td><td><code>roles</code></td><td>User.Read.All, Mail.ReadWrite</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Token Types</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Token</th><th>Used for</th><th>Default lifetime</th><th>Who receives it</th></tr></thead>
+          <tbody>
+            <tr><td>Access token</td><td>Calling protected APIs — sent in Authorization: Bearer header</td><td>1 hour (configurable via TokenLifetimePolicy)</td><td>Client app, presented to resource server</td></tr>
+            <tr><td>ID token</td><td>Authenticating the user in the client app (OIDC)</td><td>1 hour</td><td>Client app only — do not send to APIs</td></tr>
+            <tr><td>Refresh token</td><td>Obtaining new access tokens without re-prompting user</td><td>24 h (session) / 90 days sliding window (persistent)</td><td>Client app — never send to APIs</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Common JWT Claims</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Claim</th><th>Meaning</th><th>Example value</th></tr></thead>
+          <tbody>
+            <tr><td><code>aud</code></td><td>Audience — who the token is for (resource URI or client ID)</td><td>https://graph.microsoft.com</td></tr>
+            <tr><td><code>iss</code></td><td>Issuer — the STS that issued the token</td><td>https://login.microsoftonline.com/{tenantId}/v2.0</td></tr>
+            <tr><td><code>sub</code></td><td>Subject — unique identifier for the user (per-app)</td><td>AbCdEf123...</td></tr>
+            <tr><td><code>scp</code></td><td>Scopes granted (delegated permissions)</td><td>User.Read Mail.Send</td></tr>
+            <tr><td><code>roles</code></td><td>App roles / application permissions granted</td><td>["User.Read.All"]</td></tr>
+            <tr><td><code>oid</code></td><td>Object ID of the user across apps in a tenant</td><td>GUID</td></tr>
+            <tr><td><code>tid</code></td><td>Tenant ID</td><td>GUID</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>OAuth 2.0 Flows</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Flow</th><th>App type</th><th>Has client secret?</th><th>User interaction?</th><th>AZ-204 verdict</th></tr></thead>
+          <tbody>
+            <tr><td>Authorization Code</td><td>Web app with server side</td><td>Yes</td><td>Yes (browser redirect)</td><td>Standard choice for web apps</td></tr>
+            <tr><td>Auth Code + PKCE</td><td>SPA, mobile, desktop</td><td>No</td><td>Yes (browser redirect)</td><td>Current best practice for public clients</td></tr>
+            <tr><td>Client Credentials</td><td>Daemon / service-to-service</td><td>Yes (or cert)</td><td>No</td><td>Use for background jobs, no user context</td></tr>
+            <tr><td>Device Code</td><td>Input-constrained (IoT, CLI)</td><td>No</td><td>User goes to URL on another device</td><td>Use when no browser available</td></tr>
+            <tr><td>On-Behalf-Of (OBO)</td><td>Web API calling downstream API</td><td>Yes</td><td>Propagates user identity</td><td>Middle-tier service scenarios</td></tr>
+            <tr><td>Implicit</td><td>Legacy SPA</td><td>No</td><td>Yes</td><td>DEPRECATED — do not use, tokens exposed in URL</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">&#128161;</div>
+        <div class="callout-body">
+          <div class="callout-title">The .default scope shortcut</div>
+          Requesting <code>https://graph.microsoft.com/.default</code> tells the platform to issue an access token with all the permissions that have been pre-configured on the app registration — useful in client credentials flow where you cannot prompt for incremental consent. For delegated flows you can also request individual scopes like <code>User.Read</code>.
+        </div>
+      </div>
+
+      <div class="sec-lbl">&#9313; Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Application permissions always require admin consent — even low-privilege ones</div>
+          A user can consent to delegated permissions like <code>User.Read</code> themselves (subject to tenant policy). But <strong>any application permission</strong> (roles claim) requires an admin to grant consent — even if the permission seems innocuous. Exam scenario: "A developer registers an app and requests <code>User.Read.All</code> as an application permission. A regular user tries to consent. What happens?" Answer: The consent fails — admin consent is required for all application permissions.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Service Principal &#8800; Application Object — cross-tenant scenarios</div>
+          When a multi-tenant app is used in a different tenant, only a <strong>Service Principal</strong> is created in that tenant — the Application Object stays in the home tenant. If an admin deletes the Service Principal in their tenant, users in that tenant lose access — but the app registration in the home tenant is unaffected. Exam tests: "You need to revoke access for all users in Contoso tenant. What do you delete?" Answer: the Service Principal in the Contoso tenant.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">scp vs roles — which claim proves delegated vs application permission?</div>
+          Access tokens carry <code>scp</code> for delegated permissions (there is a signed-in user) and <code>roles</code> for application permissions (no user). If your API receives a token and needs to decide whether a user or a daemon is calling, check which claim is present. A daemon app using client credentials will have <code>roles</code> but no <code>scp</code>. A signed-in user app will have <code>scp</code>. Both can be in the same token if the app has both types configured, but that is unusual.
+        </div>
+      </div>
+
+      <div class="sec-lbl">&#9314; Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Metric</th><th>Value</th><th>Exam Note</th></tr></thead>
+          <tbody>
+            <tr><td>Access token default lifetime</td><td>1 hour (3600 s)</td><td>Configurable via TokenLifetimePolicy (min 10 min, max 1 day for access tokens)</td></tr>
+            <tr><td>Refresh token — single-session</td><td>24 hours</td><td>Non-persistent session; token expires if unused for 24 h</td></tr>
+            <tr><td>Refresh token — persistent (sliding)</td><td>90 days max</td><td>Each use resets the 24 h window; hard cap of 90 days total</td></tr>
+            <tr><td>ID token lifetime</td><td>1 hour</td><td>Not configurable for ID tokens; clients should re-auth after expiry</td></tr>
+            <tr><td>App registrations per tenant (default)</td><td>250</td><td>Soft limit, can be raised via support request</td></tr>
+            <tr><td>Redirect URIs per app registration</td><td>256 (web) / 100 (SPA/public)</td><td>Each URI must be exact match; wildcards not allowed</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">&#9315; CLI / SDK Patterns</div>
+
+      <pre><code># Register an application (single-tenant)
+az ad app create \
+  --display-name "MyApp" \
+  --sign-in-audience "AzureADMyOrg"   # single-tenant
+
+# Register multi-tenant
+az ad app create \
+  --display-name "MyMultiApp" \
+  --sign-in-audience "AzureADMultipleOrgs"
+
+# Create a service principal for the app (required before RBAC assignments)
+az ad sp create --id &lt;appId&gt;
+
+# Add API permission (delegated User.Read to Graph)
+az ad app permission add \
+  --id &lt;appId&gt; \
+  --api 00000003-0000-0000-c000-000000000000 \  # Graph resource appId
+  --api-permissions e1fe6dd8-ba31-4d61-89e7-88639da4683d=Scope   # User.Read delegated
+
+# Add application permission (User.Read.All — requires admin consent)
+az ad app permission add \
+  --id &lt;appId&gt; \
+  --api 00000003-0000-0000-c000-000000000000 \
+  --api-permissions df021288-bdef-4463-88db-98f22de89214=Role    # Role = application permission
+
+# Grant admin consent
+az ad app permission admin-consent --id &lt;appId&gt;
+
+# Create client secret (returned once — store immediately)
+az ad app credential reset \
+  --id &lt;appId&gt; \
+  --years 1</code></pre>
+
+      <pre><code>// C# — build a token request using MSAL with Authorization Code flow
+var app = ConfidentialClientApplicationBuilder
+    .Create(clientId)
+    .WithClientSecret(clientSecret)
+    .WithAuthority(new Uri($"https://login.microsoftonline.com/{tenantId}"))
+    .WithRedirectUri("https://myapp.azurewebsites.net/auth/callback")
+    .Build();
+
+// Exchange auth code for tokens (server side after redirect)
+var result = await app.AcquireTokenByAuthorizationCode(
+    scopes: new[] { "https://graph.microsoft.com/.default" },
+    authorizationCode: code)
+    .ExecuteAsync();</code></pre>
+
+      <div class="sec-lbl">&#9316; Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Use Implicit flow for SPAs — it's simpler and doesn't need PKCE"</div>
+          Implicit flow is <strong>deprecated</strong> for SPAs since 2019. Microsoft's recommendation is Auth Code + PKCE for all public clients including SPAs and mobile apps. Implicit flow exposes tokens in URL fragments (browser history, referrer headers) and does not support refresh tokens in all scenarios. Exam will present this as a distractor — always choose Auth Code + PKCE for SPAs.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "The Application Object in Azure AD represents the app running in a specific tenant"</div>
+          The Application Object lives only in the <strong>home tenant</strong> (where you registered the app) and is the global definition. What lives in each tenant where the app is used is the <strong>Service Principal</strong>. The exam may swap these definitions as distractors. Remember: Application Object = global blueprint in home tenant; Service Principal = local instance in each consuming tenant.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "A regular user can grant admin consent if they own the app registration"</div>
+          App ownership in Azure AD gives you permission to manage the application object (add redirect URIs, manage credentials) but does <strong>not</strong> give you the ability to grant admin consent. Admin consent requires the Global Administrator, Application Administrator, or Cloud Application Administrator role. Being the app's owner is irrelevant to consent authority.
+        </div>
+      </div>
+
+      <div class="sec-lbl">&#9317; Practice Q&amp;A</div>
+
+      <div class="qa-list">
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">A background service needs to read all users in Azure AD without any user signing in. Which OAuth 2.0 flow and permission type should you use?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Client Credentials flow + Application permissions</div>
+            <div class="qa-body">
+              <strong>Client Credentials flow</strong> is the correct choice for daemon/service scenarios with no user context.
+              <ul>
+                <li>Client Credentials uses a client secret or certificate — no user interaction at all.</li>
+                <li>Application permissions (not delegated) are required because there is no signed-in user to delegate on behalf of.</li>
+                <li>The token will contain the <code>roles</code> claim (e.g., <code>User.Read.All</code>), not <code>scp</code>.</li>
+                <li>Admin must pre-consent to all application permissions before the daemon can run.</li>
+                <li>Wrong answers: Authorization Code (requires user), Device Code (requires user interaction on another device), Implicit (deprecated, requires user).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">Your app is registered in Tenant A. A user in Tenant B tries to sign in. Azure AD creates an object in Tenant B. What type of object is created?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Service Principal</div>
+            <div class="qa-body">
+              A <strong>Service Principal</strong> is created in Tenant B when a user or admin from that tenant first consents to the application.
+              <ul>
+                <li>The Application Object remains only in the home tenant (Tenant A) — it is never replicated.</li>
+                <li>The Service Principal in Tenant B holds the consent records, RBAC assignments, and sign-in policies for that tenant.</li>
+                <li>Deleting the Service Principal in Tenant B revokes access for all users in Tenant B without affecting Tenant A.</li>
+                <li>The app must be registered as multi-tenant (<code>AzureADMultipleOrgs</code>) for this to work.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">An access token for Microsoft Graph contains a <code>scp</code> claim with value "User.Read Mail.Send". What does this tell you about how the token was obtained?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Delegated permissions — a signed-in user is present</div>
+            <div class="qa-body">
+              The <code>scp</code> (scopes) claim is only present in tokens obtained via <strong>delegated permission flows</strong> (Auth Code, Auth Code + PKCE, On-Behalf-Of, Device Code).
+              <ul>
+                <li>Presence of <code>scp</code> means there was a signed-in user who consented to those scopes.</li>
+                <li>Application permission tokens carry a <code>roles</code> claim instead of <code>scp</code>.</li>
+                <li>Your API can use this distinction to enforce whether a user or daemon is calling: check for <code>scp</code> vs <code>roles</code>.</li>
+                <li>Note: both <code>scp</code> and <code>roles</code> can theoretically coexist if the app has both types, but this is rare in practice.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">A developer wants to shorten the access token lifetime to 15 minutes for a high-security API. What is the correct approach?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Create a TokenLifetimePolicy and assign it to the app or service principal</div>
+            <div class="qa-body">
+              <strong>TokenLifetimePolicy</strong> is the Azure AD policy object that controls token lifetimes.
+              <ul>
+                <li>Create the policy: <code>az ad policy token-issuance create</code> or via Microsoft Graph API with a <code>tokenLifetimePolicy</code> resource.</li>
+                <li>Assign it to a service principal or application using a policy assignment.</li>
+                <li>Access token minimum is 10 minutes; maximum is 1 day for access tokens.</li>
+                <li>Wrong approach: You cannot change token lifetime in the MSAL configuration on the client side — the client can only accept what the server issues.</li>
+                <li>Refresh token lifetimes use a separate Continuous Access Evaluation (CAE) approach in modern tenants.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">A single-page application (SPA) needs to authenticate users and call Microsoft Graph. Which OAuth 2.0 flow is currently recommended by Microsoft?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Authorization Code flow with PKCE</div>
+            <div class="qa-body">
+              <strong>Auth Code + PKCE</strong> (Proof Key for Code Exchange) is the current Microsoft recommendation for SPAs and all public clients.
+              <ul>
+                <li>PKCE adds a code verifier/challenge to prevent authorization code interception — no client secret needed.</li>
+                <li>Unlike Implicit flow, Auth Code + PKCE returns tokens from the <code>/token</code> endpoint (not URL fragment) — not exposed in browser history.</li>
+                <li>Supports refresh tokens (Implicit flow in browsers does not get long-lived refresh tokens).</li>
+                <li>In MSAL.js v2+, <code>PublicClientApplication</code> uses Auth Code + PKCE by default for SPAs.</li>
+                <li>Implicit flow answer is always wrong for SPAs in modern scenarios — it was deprecated in 2019.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">Your web API (API A) receives a request from a client with a delegated access token. API A needs to call another API (API B) on behalf of the original user. Which OAuth 2.0 flow should API A use?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; On-Behalf-Of (OBO) flow</div>
+            <div class="qa-body">
+              The <strong>On-Behalf-Of flow</strong> allows a middle-tier web API to propagate the user's identity downstream to another API.
+              <ul>
+                <li>API A presents its incoming user access token + its own client credentials to the identity platform.</li>
+                <li>The platform issues a new access token for API B, scoped to API B's permissions, but still representing the original user (<code>scp</code> present, user identity preserved).</li>
+                <li>API A must be a confidential client (has client secret or cert) to use OBO.</li>
+                <li>The user must have consented to the scopes that API A is requesting for API B.</li>
+                <li>Wrong answer: Client Credentials flow — this would lose the user context and produce an app-only token.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">An Azure CLI tool runs on an IoT device with no browser available. The user must authenticate. Which OAuth 2.0 flow is appropriate?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Device Code flow</div>
+            <div class="qa-body">
+              <strong>Device Code flow</strong> is designed for input-constrained devices (smart TVs, IoT devices, CLIs without a browser).
+              <ul>
+                <li>The device calls the <code>/devicecode</code> endpoint and receives a <code>device_code</code> and a short URL + user code.</li>
+                <li>It displays the URL and code to the user, who then goes to that URL on a browser-capable device and enters the code.</li>
+                <li>The device polls the token endpoint until the user completes sign-in.</li>
+                <li>This is a delegated flow — a real user authenticates, so the resulting token has <code>scp</code> claims.</li>
+                <li>Wrong answer: Client Credentials — that would not involve a real user and would need application permissions.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">8</div>
+            <div class="qa-text">A developer calls <code>az ad app permission add --api-permissions &lt;guid&gt;=Role</code>. Does this grant the permission immediately?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; No — it only adds the permission to the required permissions list; admin consent must be granted separately</div>
+            <div class="qa-body">
+              Adding a permission via CLI (or portal "Add a permission") only <strong>declares</strong> that the app needs it — it does not grant it.
+              <ul>
+                <li>For <strong>application permissions</strong> (<code>=Role</code>): you must additionally run <code>az ad app permission admin-consent --id &lt;appId&gt;</code> or grant consent in the portal.</li>
+                <li>For <strong>delegated permissions</strong> (<code>=Scope</code>): consent is granted at runtime when the user (or admin) signs in and approves the permissions prompt.</li>
+                <li>Until consent is granted, the token will not include the permission in <code>scp</code> or <code>roles</code>.</li>
+                <li>This is a common cause of "insufficient_scope" or "403 Forbidden" errors in freshly configured apps.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END MODULE 1 -->

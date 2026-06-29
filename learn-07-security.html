@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Cloud Solutions — AZ-204 Study Notes</title>
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --azure:#0078D4;--azure-dark:#005a9e;--azure-light:#deecf9;
+  --bg:#f4f6f9;--surface:#fff;--nav-bg:#1a1f36;
+  --border:#d0d7de;--border-light:#e8ecf0;
+  --text:#1a1f36;--text-muted:#6b7280;--text-light:#9ca3af;
+  --ok-bg:#ecfdf5;--ok-bdr:#10b981;--ok-txt:#065f46;
+  --err-bg:#fef2f2;--err-bdr:#ef4444;--err-txt:#991b1b;
+  --warn-bg:#fffbeb;--warn-bdr:#fbbf24;--warn-txt:#92400e;
+  --r:10px;--rs:6px;
+  --sh:0 1px 3px rgba(0,0,0,.08);--shm:0 4px 12px rgba(0,0,0,.12);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--azure);text-decoration:none}
+a:hover{text-decoration:underline}
+#top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
+.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
+.nav-bc a{color:rgba(255,255,255,.75)}
+.nav-bc a:hover{color:#fff;text-decoration:none}
+.nav-bc span{color:rgba(255,255,255,.35)}
+.nav-bc strong{color:#fff}
+.nav-acts{display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
+.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.page-layout{display:flex;min-height:calc(100vh - 54px)}
+.sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
+.sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
+.sb-back:hover{color:var(--azure);text-decoration:none}
+.sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-light);padding:.5rem 1rem;margin-top:.25rem}
+.sb-link{display:flex;align-items:center;gap:8px;padding:.45rem 1rem;font-size:13px;color:var(--text-muted);border-left:3px solid transparent;cursor:pointer;transition:background .1s,color .1s,border-color .1s}
+.sb-link:hover{background:#f8fafc;color:var(--text)}
+.sb-link.active{border-left-color:var(--azure);color:var(--azure);background:#eff6ff;font-weight:600}
+.sb-num{font-size:10px;background:#f3f4f6;border:1px solid var(--border-light);padding:1px 6px;border-radius:20px;margin-left:auto;color:var(--text-light)}
+.sb-next{display:flex;align-items:center;gap:6px;padding:.45rem 1rem;font-size:12px;color:var(--text-muted);margin-top:.5rem;border-top:1px solid var(--border-light)}
+.sb-next:hover{color:var(--azure);text-decoration:none}
+.main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
+.topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
+.topic-header p{font-size:13px;color:var(--text-muted);margin:0}
+.topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
+.module{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem 1.75rem;margin-bottom:1.75rem;scroll-margin-top:70px}
+.module h2{font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--border-light)}
+.module h2 .mod-num{background:var(--azure);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--azure);margin-bottom:.5rem;margin-top:1.25rem;display:flex;align-items:center;gap:6px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--azure-light)}
+h3{font-size:14px;font-weight:700;color:var(--text);margin:.75rem 0 .4rem}
+p,li{font-size:13px;color:var(--text-muted);line-height:1.7}
+ul,ol{padding-left:1.4rem;margin:.4rem 0}
+li{margin-bottom:.25rem}
+strong{color:var(--text)}
+code{font-family:Consolas,'Cascadia Code','Courier New',monospace;font-size:.85em;background:#f3f4f6;padding:1px 5px;border-radius:4px;color:#1a1f36}
+pre{font-family:Consolas,'Cascadia Code','Courier New',monospace;background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:var(--rs);padding:1.1rem 1.25rem;overflow-x:auto;font-size:12.5px;line-height:1.65;margin:.6rem 0}
+pre code{background:none;padding:0;color:inherit}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--rs);margin:.6rem 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f8fafc;color:var(--text-muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.55rem .9rem;text-align:left;border-bottom:2px solid var(--border)}
+td{padding:.55rem .9rem;border-bottom:1px solid var(--border-light);color:var(--text-muted);vertical-align:top;line-height:1.5}
+td:first-child{color:var(--text);font-weight:500}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+.callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
+.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-body{flex:1}
+.callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
+.callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
+.callout.gotcha .callout-title{color:var(--err-txt)}
+.callout.tip{background:#eff6ff;border-left:3px solid var(--azure)}
+.callout.tip .callout-title{color:var(--azure-dark)}
+.callout.warn{background:var(--warn-bg);border-left:3px solid var(--warn-bdr)}
+.callout.warn .callout-title{color:var(--warn-txt)}
+.callout.success{background:var(--ok-bg);border-left:3px solid var(--ok-bdr)}
+.callout.success .callout-title{color:var(--ok-txt)}
+.qa-list{margin-top:.5rem}
+.qa-item{border:1px solid var(--border);border-radius:var(--rs);margin-bottom:.6rem;overflow:hidden}
+.qa-q{display:flex;align-items:flex-start;gap:.65rem;padding:.85rem 1rem;cursor:pointer;background:var(--surface);user-select:none}
+.qa-q:hover{background:#f8fafc}
+.qa-n{flex-shrink:0;width:20px;height:20px;background:var(--azure);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.qa-text{flex:1;font-size:13px;color:var(--text);line-height:1.5;font-weight:500}
+.qa-tog{flex-shrink:0;color:var(--text-light);transition:transform .2s;font-size:14px;margin-top:2px}
+.qa-item.open .qa-tog{transform:rotate(180deg)}
+.qa-ans{display:none;padding:.85rem 1rem 1rem;background:#f8fafc;border-top:1px solid var(--border-light)}
+.qa-item.open .qa-ans{display:block}
+.qa-correct{display:inline-flex;align-items:center;gap:5px;background:var(--ok-bg);color:var(--ok-txt);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-bottom:.6rem}
+.qa-body{font-size:12.5px;color:var(--text-muted);line-height:1.7}
+.qa-body ul{padding-left:1.25rem;margin:.4rem 0}
+.qa-body strong{color:var(--text)}
+.nav-end{display:flex;justify-content:space-between;padding:1.25rem 0;border-top:1px solid var(--border);margin-top:.5rem}
+.btn-link{display:inline-flex;align-items:center;gap:5px;padding:.4rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--text-muted)}
+.btn-link:hover{border-color:var(--azure);color:var(--azure);text-decoration:none}
+.btn-link.fwd{background:var(--azure);color:#fff;border-color:var(--azure)}
+.btn-link.fwd:hover{background:var(--azure-dark);text-decoration:none}
+@media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
+
+</style>
+</head>
+<body>
+
+<nav id="top-nav">
+  <div class="nav-brand">
+    <div class="nav-brand-icon">Az</div>
+    <div class="nav-bc">
+      <a href="learn.html">Study Notes</a>
+      <span>/</span>
+      <strong>Secure Cloud Solutions</strong>
+    </div>
+  </div>
+  <div class="nav-acts">
+    <a href="learn.html" class="btn btn-ghost">← All Topics</a>
+    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <a href="learn.html" class="sb-back">← All Topics</a>
+    <div class="sb-label">Secure Cloud Solutions</div>
+    <a href="#m1" class="sb-link" data-m="1">🔑 Azure Key Vault<span class="sb-num">6 sections</span></a>
+    <a href="#m2" class="sb-link" data-m="2">🤖 Managed Identities<span class="sb-num">6 sections</span></a>
+    <a href="#m3" class="sb-link" data-m="3">⚙️ Azure App Configuration<span class="sb-num">6 sections</span></a>
+    <a href="learn-08-api-management.html" class="sb-next">Next: API Management →</a>
+  </aside>
+
+  <main class="main">
+    <div class="topic-header">
+      <div class="topic-icon-lg">🔐</div>
+      <div>
+        <h1>Secure Cloud Solutions</h1>
+        <p>3 modules · Azure Key Vault · Managed Identities · Azure App Configuration</p>
+      </div>
+      <div class="topic-num">Topic 07</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         MODULE 1 — Azure Key Vault
+    ═══════════════════════════════════════════════════════════ -->
+    <section class="module" id="m1">
+      <h2><span class="mod-num">01</span> Azure Key Vault</h2>
+
+      <div class="sec-lbl">① Key Concepts</div>
+
+      <h3>Object Types</h3>
+      <p>Key Vault stores three distinct object types. Each has its own permissions, versioning, and lifecycle management.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Object Type</th><th>What It Stores</th><th>Key Details</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Secrets</td>
+              <td>Arbitrary strings — connection strings, passwords, API keys</td>
+              <td>Max 25 KB per value. Versioned automatically on update. Can set activation/expiry dates.</td>
+            </tr>
+            <tr>
+              <td>Keys</td>
+              <td>RSA (2048/3072/4096) or EC (P-256/P-384/P-521) cryptographic keys</td>
+              <td>Software-protected (Standard SKU) or HSM-backed (Premium SKU). HSM keys never leave the hardware; only operations are performed inside the HSM.</td>
+            </tr>
+            <tr>
+              <td>Certificates</td>
+              <td>X.509 certificates with auto-renewal support</td>
+              <td>Can be self-signed or issued by integrated CAs (DigiCert, GlobalSign). The associated private key is stored as a Key object. Import via PFX or PEM.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Access Models: Vault Access Policy vs Azure RBAC</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Feature</th><th>Vault Access Policy (legacy)</th><th>Azure RBAC (recommended)</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Granularity</td>
+              <td>Per object-type (all secrets, all keys, all certificates) — cannot restrict to a single secret</td>
+              <td>Per individual object (e.g., only secret named "db-password")</td>
+            </tr>
+            <tr>
+              <td>Assignment scope</td>
+              <td>Vault-level only</td>
+              <td>Management group, subscription, resource group, vault, or individual secret/key/cert</td>
+            </tr>
+            <tr>
+              <td>Audit trail</td>
+              <td>Vault diagnostic logs</td>
+              <td>Azure Activity Log + diagnostic logs</td>
+            </tr>
+            <tr>
+              <td>Max principals</td>
+              <td>1024 access policies per vault</td>
+              <td>Azure RBAC limits (2000 role assignments per subscription)</td>
+            </tr>
+            <tr>
+              <td>Inheritance</td>
+              <td>No — policy must be set on each vault</td>
+              <td>Yes — role assignments inherit down the scope hierarchy</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Key Operations (for Key objects)</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Operation</th><th>Purpose</th><th>Common Use Case</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Encrypt / Decrypt</td>
+              <td>Use the vault key to encrypt or decrypt data</td>
+              <td>Small payloads; note: for large data, use Wrap/Unwrap with a data-encryption key instead</td>
+            </tr>
+            <tr>
+              <td>Sign / Verify</td>
+              <td>Generate or verify a cryptographic signature</td>
+              <td>Code signing, JWT signing, document integrity</td>
+            </tr>
+            <tr>
+              <td>Wrap / Unwrap</td>
+              <td>Encrypt/decrypt another key (key encryption key pattern)</td>
+              <td>Envelope encryption: generate a random AES key locally, wrap it with the KV key, store the wrapped key alongside the ciphertext</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Soft Delete and Purge Protection</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Feature</th><th>Behaviour</th><th>Default</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Soft Delete</td>
+              <td>Deleted objects move to a "deleted" state and are retained for the retention period. Can be recovered with <code>az keyvault secret recover</code>.</td>
+              <td>Enabled by default on all new vaults (cannot be disabled on new vaults). Retention: 7–90 days, default 90.</td>
+            </tr>
+            <tr>
+              <td>Purge Protection</td>
+              <td>Prevents permanent deletion (purging) of soft-deleted objects and the vault itself until the retention period expires. Even vault owners and the service cannot purge.</td>
+              <td>Disabled by default. Once enabled, it CANNOT be disabled — this is permanent and irreversible.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Exam tip: Purge protection is required for CMK with Azure Storage and Disk Encryption</div>
+          When you use a customer-managed key (CMK) in Key Vault to encrypt Azure Storage accounts or Azure Managed Disks, Azure requires purge protection to be enabled on the vault. If you try to configure CMK encryption without purge protection, the operation will fail. This is a common scenario in exam questions.
+        </div>
+      </div>
+
+      <div class="sec-lbl">② Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Key Vault Contributor does NOT grant secret read access</div>
+          <strong>Key Vault Contributor</strong> is a management-plane role. It lets you create vaults, configure access policies, and view vault properties. It does <strong>not</strong> allow reading, writing, or listing secrets, keys, or certificates. To read a secret you need either: (a) <strong>Key Vault Secrets User</strong> (RBAC model) — provides Get + List on secrets only, or (b) the <strong>Get</strong> permission in a Vault Access Policy. Exam questions frequently offer "Key Vault Contributor" as a tempting wrong answer when asking how to give an app access to secrets.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">HSM-backed keys require the Premium SKU — not Standard</div>
+          Software-protected keys (stored encrypted in Azure storage) are available on both Standard and Premium SKUs. <strong>HSM-backed keys require Premium SKU</strong>. When you run <code>az keyvault key create --protection HSM</code> against a Standard SKU vault, the call will succeed but Azure silently downgrades the key to software protection — the <code>--protection</code> flag is ignored. To truly guarantee HSM protection, you must create a Premium SKU vault first. BYOK (Bring Your Own Key) also requires Premium.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Access policy and RBAC models cannot be mixed for the same scope</div>
+          A vault is configured in either <strong>Vault Access Policy mode</strong> or <strong>Azure RBAC mode</strong>, set via the <code>--enable-rbac-authorization</code> flag. When RBAC mode is active, vault access policies are ignored entirely — assigning a vault access policy has no effect. When you migrate a vault from access policy to RBAC, all existing access policies stop working immediately. Exam questions may describe both an RBAC role assignment and an access policy on the same vault and ask which takes effect.
+        </div>
+      </div>
+
+      <div class="sec-lbl">③ Key Numbers &amp; Limits</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Metric</th><th>Value</th><th>Exam Note</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Soft delete retention period</td><td>7–90 days (default 90)</td><td>Configurable per vault at creation time; cannot be shortened after creation</td></tr>
+            <tr><td>Max secret size</td><td>25 KB</td><td>For larger data use Blob Storage and store the SAS URL as a secret</td></tr>
+            <tr><td>Max RSA key size</td><td>4096 bits</td><td>EC keys go up to P-521 (~521 bits); EC is faster for sign/verify</td></tr>
+            <tr><td>Software key transactions</td><td>2000 per 10 seconds per vault</td><td>Per-vault limit, not per-key</td></tr>
+            <tr><td>HSM key transactions</td><td>1000 per 10 seconds per vault</td><td>HSM is slower due to hardware operations</td></tr>
+            <tr><td>Secret transactions</td><td>4000 per 10 seconds per vault</td><td>Secrets have a higher TPS limit than keys</td></tr>
+            <tr><td>Max access policies per vault</td><td>1024</td><td>Use Azure RBAC for large organizations to avoid this ceiling</td></tr>
+            <tr><td>Certificate auto-renewal trigger</td><td>Configurable % of lifetime (e.g., at 80%)</td><td>Or fixed number of days before expiry; default is at 80% of lifetime</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">④ CLI / SDK Patterns</div>
+
+      <pre><code># Create a vault with RBAC authorization model (recommended)
+az keyvault create \
+  --name myVault \
+  --resource-group myRG \
+  --location eastus \
+  --sku Standard \                          # Standard or Premium (Premium required for HSM)
+  --enable-rbac-authorization true \        # Use Azure RBAC instead of access policies
+  --enable-purge-protection true \          # WARNING: irreversible once set
+  --retention-days 90                       # Soft delete retention (7-90)
+
+# Set a secret
+az keyvault secret set \
+  --vault-name myVault \
+  --name "DbConnectionString" \
+  --value "Server=myserver;..."
+
+# Read a secret (requires Key Vault Secrets User role or Get access policy)
+az keyvault secret show \
+  --vault-name myVault \
+  --name "DbConnectionString"
+
+# Create an HSM-backed key (Premium SKU vault required)
+az keyvault key create \
+  --vault-name myVaultPremium \
+  --name "MasterKey" \
+  --protection HSM \                        # Silently ignored on Standard SKU!
+  --kty RSA-HSM \                           # Key type: RSA-HSM or EC-HSM for HSM-backed
+  --size 2048
+
+# Import a certificate (PFX format)
+az keyvault certificate import \
+  --vault-name myVault \
+  --name "MyCert" \
+  --file ./mycert.pfx \
+  --password "pfxpassword"
+
+# Recover a soft-deleted secret
+az keyvault secret recover \
+  --vault-name myVault \
+  --name "DbConnectionString"
+
+# Purge a soft-deleted secret (only works if purge protection is NOT enabled)
+az keyvault secret purge \
+  --vault-name myVault \
+  --name "DbConnectionString"</code></pre>
+
+      <pre><code>// C# SDK: Read a secret using DefaultAzureCredential
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+
+var client = new SecretClient(
+    new Uri("https://myVault.vault.azure.net/"),
+    new DefaultAzureCredential()              // Uses MI in Azure, CLI locally
+);
+
+KeyVaultSecret secret = await client.GetSecretAsync("DbConnectionString");
+string connectionString = secret.Value.Value;
+
+// C# SDK: Encrypt data using a vault key
+using Azure.Security.KeyVault.Keys;
+using Azure.Security.KeyVault.Keys.Cryptography;
+
+var keyClient = new KeyVaultClient(new Uri("https://myVault.vault.azure.net/"), new DefaultAzureCredential());
+KeyVaultKey key = await keyClient.GetKeyAsync("MasterKey");
+
+var cryptoClient = new CryptographyClient(key.Id, new DefaultAzureCredential());
+EncryptResult result = await cryptoClient.EncryptAsync(EncryptionAlgorithm.RsaOaep, dataBytes);</code></pre>
+
+      <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Enable purge protection, then disable it to urgently delete a secret"</div>
+          <strong>FALSE.</strong> Purge protection is a one-way door. Once enabled on a vault, it cannot be disabled by anyone — including subscription owners and Microsoft support. You must wait for the full soft-delete retention period (up to 90 days) to expire before the vault or its objects can be permanently deleted. There is no override, no support ticket, and no ARM property that undoes it.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Assign Key Vault Contributor to the app's service principal so it can read secrets at runtime"</div>
+          <strong>FALSE.</strong> Key Vault Contributor grants management-plane access only (create/update/delete vaults, manage policies). It has zero data-plane permissions. At runtime, to read a secret value, the identity needs <strong>Key Vault Secrets User</strong> (RBAC mode) or the <strong>Get</strong> permission on secrets in an access policy. Giving Contributor to an application service principal is both insecure and non-functional for secret retrieval.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Use the Encrypt key operation to protect a 50 MB file with a vault key"</div>
+          <strong>FALSE — and impractical.</strong> The Encrypt operation on a Key Vault key is designed for small payloads (limited to the key size minus padding overhead; for RSA-2048 with OAEP that is about 214 bytes of plaintext). For large data, use <strong>envelope encryption</strong>: generate a random symmetric key (AES-256) locally, encrypt the file with it, then use Key Vault's <strong>Wrap</strong> operation to encrypt the symmetric key. Store the wrapped key alongside the ciphertext.
+        </div>
+      </div>
+
+      <div class="sec-lbl">⑥ Practice Q&amp;A</div>
+      <div class="qa-list">
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">A developer is assigned the <strong>Key Vault Contributor</strong> role on a vault. They run <code>az keyvault secret show</code> and receive a 403 Forbidden error. What is the most likely cause?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Key Vault Contributor is management-plane only</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> Key Vault Contributor does not grant any data-plane permissions. The developer can manage vault configuration (create vaults, set access policies, view vault metadata) but cannot read, write, or list secrets, keys, or certificates.<br><br>
+              <ul>
+                <li>To read secret values, the developer needs <strong>Key Vault Secrets User</strong> (Azure RBAC mode) or the <strong>Get</strong> permission in a Vault Access Policy.</li>
+                <li>To read and list, they need <strong>Key Vault Secrets User</strong> (Get + List) or both permissions in the access policy.</li>
+                <li>This is the single most common Key Vault exam trap — do not confuse management-plane roles with data-plane access.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">Your organization requires that deleted Key Vault secrets cannot be permanently destroyed for at least 30 days after deletion, even by global administrators. Which combination of vault properties must be configured?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Soft Delete enabled + Purge Protection enabled</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> Both <strong>soft delete</strong> (set retention days to 30 or more) and <strong>purge protection</strong> must be enabled.<br><br>
+              <ul>
+                <li>Soft delete alone retains objects in a "deleted" state, but an administrator with the correct permissions can still purge (permanently delete) them immediately.</li>
+                <li>Purge protection prevents the purge operation from executing until the retention period expires — no one can bypass this, including subscription owners.</li>
+                <li>Set <code>--retention-days 30</code> (or higher) to ensure the 30-day minimum.</li>
+                <li>Once purge protection is enabled, it cannot be disabled. The vault must be explicitly created with this setting in mind.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">A vault uses the <strong>Azure RBAC authorization model</strong>. An operator creates a Vault Access Policy granting a service principal Get and List on secrets. The service principal still receives 403 errors when calling <code>GetSecret</code>. Why?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ RBAC mode overrides access policies entirely</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> When a vault has <code>--enable-rbac-authorization true</code>, vault access policies are <strong>completely ignored</strong>. The two models do not coexist — RBAC mode takes exclusive control of data-plane authorization.<br><br>
+              <ul>
+                <li>Creating an access policy on an RBAC-enabled vault will not produce an error, but the policy has no effect.</li>
+                <li>The fix is to assign an Azure RBAC role instead: <strong>Key Vault Secrets User</strong> for read access, or <strong>Key Vault Secrets Officer</strong> for read/write.</li>
+                <li>The role assignment can be scoped to the vault or down to an individual secret URI.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">You need to create a key that is guaranteed to never exist in software — all cryptographic operations must occur inside hardware. What is required?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Premium SKU vault + --kty RSA-HSM or EC-HSM</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> A <strong>Premium SKU</strong> Key Vault is required for HSM-backed keys. On a Standard SKU vault, specifying <code>--protection HSM</code> is silently ignored and the key is created as software-protected.<br><br>
+              <ul>
+                <li>Use <code>--kty RSA-HSM</code> or <code>--kty EC-HSM</code> when creating the key to explicitly request HSM protection.</li>
+                <li>HSM-backed keys support the BYOK (Bring Your Own Key) workflow — generate the key material in your own HSM, wrap it, and import it so it is only ever unwrapped inside Azure's HSM.</li>
+                <li>With HSM keys, <code>key.managed</code> will be <code>null</code> (or false) and <code>key.keyType</code> will show <code>RSA-HSM</code> in the response.</li>
+                <li>HSM keys have a lower transaction limit (1000/10s vs 2000/10s for software keys).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">A certificate stored in Key Vault is approaching its expiration date. You want Azure to automatically renew it with no manual steps. Which certificate issuer type supports fully automated renewal via Key Vault's built-in integration?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Integrated CAs: DigiCert or GlobalSign</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> Key Vault supports fully automated certificate lifecycle management (issuance and renewal without any manual step) only when using <strong>DigiCert</strong> or <strong>GlobalSign</strong> as the certificate authority through the integrated CA partnership.<br><br>
+              <ul>
+                <li>For self-signed certificates, Key Vault can generate and auto-renew them automatically using its own self-signed issuer.</li>
+                <li>For other third-party CAs, Key Vault generates a CSR that must be manually submitted to the CA — this is a semi-automated flow, not fully automated.</li>
+                <li>Renewal can be triggered at a configurable percentage of the certificate lifetime (e.g., 80%) or a fixed number of days before expiry.</li>
+                <li>Renewal events fire to Event Grid, allowing downstream automation (e.g., update an App Service binding).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">An application needs to encrypt 1 GB of data using a key stored in Key Vault. The security requirement is that the key never leaves Key Vault. Which approach is correct?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Envelope encryption — Wrap/Unwrap pattern</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> Use <strong>envelope encryption</strong>: generate a random AES-256 key locally (or in memory), encrypt the 1 GB payload with AES locally, then call Key Vault's <strong>WrapKey</strong> operation to encrypt the AES key using the vault key. Store the wrapped key alongside the ciphertext.<br><br>
+              <ul>
+                <li>The vault key (key encryption key, or KEK) never leaves the vault — only the WrapKey and UnwrapKey operations are called against it.</li>
+                <li>The Encrypt/Decrypt operations on vault keys are limited to tiny payloads (the key size minus padding, e.g., ~214 bytes for RSA-2048 with OAEP).</li>
+                <li>To decrypt: call UnwrapKey to recover the AES key, then decrypt the payload locally.</li>
+                <li>This is exactly how Azure Storage Service Encryption with CMK works internally.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">After deleting a secret from a Key Vault that has soft delete with a 90-day retention period and purge protection enabled, a compliance audit requires the secret to be recoverable for 90 days. An administrator wants to release the secret name for reuse immediately. What can they do?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Nothing — the name is locked until the retention period expires</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> With purge protection enabled, the deleted secret name cannot be purged or reused until the 90-day retention period expires. There is no workaround.<br><br>
+              <ul>
+                <li>Soft-deleted secrets occupy their name in the vault's deleted state — you cannot create a new secret with the same name while the deleted one is in retention.</li>
+                <li>Purge protection prevents the purge operation (which would free the name) from executing before retention expires.</li>
+                <li>No one — not the vault owner, not a subscription admin, not Microsoft Support — can bypass purge protection.</li>
+                <li>Best practice: design secret names to include a version or date suffix (e.g., <code>db-password-v2</code>) if you anticipate needing to cycle names quickly.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">8</div>
+            <div class="qa-text">You want to grant a team of developers read-only access to all secrets in a specific Key Vault (RBAC mode) but ensure they cannot access keys or certificates. Which built-in role should you assign?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Key Vault Secrets User</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> <strong>Key Vault Secrets User</strong> grants <code>get</code> and <code>list</code> on secrets only. It has no permissions for keys or certificates.<br><br>
+              <ul>
+                <li><strong>Key Vault Secrets Officer</strong> — get, list, set, delete, recover, backup, restore on secrets. Too broad for read-only.</li>
+                <li><strong>Key Vault Reader</strong> — management-plane read (vault metadata, policies) but NO data-plane access to secret values.</li>
+                <li><strong>Key Vault Administrator</strong> — full data-plane access to all object types. Never assign this to developers.</li>
+                <li>Assign the role at the vault scope to cover all secrets, or narrow to an individual secret resource ID for per-secret access control.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end qa-list -->
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         MODULE 2 — Managed Identities
+    ═══════════════════════════════════════════════════════════ -->
+    <section class="module" id="m2">
+      <h2><span class="mod-num">02</span> Managed Identities</h2>
+
+      <div class="sec-lbl">① Key Concepts</div>
+
+      <h3>System-Assigned vs User-Assigned Identity</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Property</th><th>System-Assigned</th><th>User-Assigned</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Lifecycle</td>
+              <td>Tied to the Azure resource. Automatically deleted when the resource is deleted.</td>
+              <td>Independent. Persists until explicitly deleted. Survives resource deletion.</td>
+            </tr>
+            <tr>
+              <td>Sharing</td>
+              <td>One identity per resource. Cannot be shared across resources.</td>
+              <td>Can be assigned to multiple resources simultaneously (e.g., 50 VMs all sharing one identity).</td>
+            </tr>
+            <tr>
+              <td>Service Principal</td>
+              <td>Created automatically in AAD when enabled. Deleted automatically with the resource.</td>
+              <td>Created when the user-assigned identity is created. Must be manually deleted.</td>
+            </tr>
+            <tr>
+              <td>Role assignments</td>
+              <td>Must be re-created each time the resource is recreated.</td>
+              <td>Role assignments persist on the user-assigned identity across resource recreations.</td>
+            </tr>
+            <tr>
+              <td>Best for</td>
+              <td>Workloads with unique permissions; single resource accessing its own resources.</td>
+              <td>Workloads requiring pre-authorization before the resource exists; shared identity across resource sets.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>How Managed Identity Works — Token Acquisition Flow</h3>
+      <ol>
+        <li>Enable managed identity on the Azure resource (App Service, VM, Function App, etc.)</li>
+        <li>Grant RBAC roles or access policies to the identity's service principal on target resources (e.g., Key Vault Secrets User on a vault).</li>
+        <li>Application code calls the <strong>Instance Metadata Service (IMDS)</strong> endpoint to retrieve a bearer token. The IMDS endpoint is always <code>http://169.254.169.254</code> — a link-local address only reachable from inside the Azure resource.</li>
+        <li>IMDS returns a signed JWT access token valid for the target resource (e.g., <code>https://vault.azure.net</code>).</li>
+        <li>The application presents the token as a Bearer Authorization header when calling the Azure resource's REST API.</li>
+      </ol>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>IMDS Token Request Detail</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Endpoint URL</td><td><code>http://169.254.169.254/metadata/identity/oauth2/token</code></td></tr>
+            <tr><td>Required header</td><td><code>Metadata: true</code></td></tr>
+            <tr><td>Required query params</td><td><code>api-version=2018-02-01</code> and <code>resource=&lt;audience&gt;</code></td></tr>
+            <tr><td>Example resource for Key Vault</td><td><code>https://vault.azure.net</code></td></tr>
+            <tr><td>Example resource for Storage</td><td><code>https://storage.azure.com</code></td></tr>
+            <tr><td>Token caching</td><td>IMDS caches the token and refreshes it automatically before expiry. Avoid implementing your own caching on top — call IMDS directly per request and let it handle caching.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>DefaultAzureCredential — Credential Chain Order</h3>
+      <p><code>DefaultAzureCredential</code> (from the Azure Identity SDK) tries credential providers in this exact order, stopping at the first that succeeds:</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Priority</th><th>Credential Type</th><th>Activated By</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>EnvironmentCredential</td><td><code>AZURE_CLIENT_ID</code>, <code>AZURE_TENANT_ID</code>, <code>AZURE_CLIENT_SECRET</code> or <code>AZURE_CLIENT_CERTIFICATE_PATH</code> env vars</td></tr>
+            <tr><td>2</td><td>WorkloadIdentityCredential</td><td><code>AZURE_FEDERATED_TOKEN_FILE</code> env var (AKS Workload Identity / Azure AD Workload Identity)</td></tr>
+            <tr><td>3</td><td>ManagedIdentityCredential</td><td>Running inside an Azure service with an assigned managed identity (App Service, VM, AKS pod, etc.)</td></tr>
+            <tr><td>4</td><td>SharedTokenCacheCredential</td><td>Azure tools (Visual Studio, VS Code) signed in via shared token cache on the developer machine</td></tr>
+            <tr><td>5</td><td>VisualStudioCredential</td><td>Visual Studio "Tools > Azure Service Authentication" sign-in</td></tr>
+            <tr><td>6</td><td>VisualStudioCodeCredential</td><td>VS Code Azure Account extension sign-in</td></tr>
+            <tr><td>7</td><td>AzureCliCredential</td><td><code>az login</code> on the developer machine</td></tr>
+            <tr><td>8</td><td>AzurePowerShellCredential</td><td><code>Connect-AzAccount</code> in PowerShell on the developer machine</td></tr>
+            <tr><td>9</td><td>InteractiveBrowserCredential</td><td>Disabled by default; enables interactive browser pop-up as last resort</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Production behavior: EnvironmentCredential takes priority over ManagedIdentityCredential</div>
+          If you set <code>AZURE_CLIENT_ID</code>, <code>AZURE_TENANT_ID</code>, and <code>AZURE_CLIENT_SECRET</code> as environment variables in an App Service that also has a managed identity, <code>DefaultAzureCredential</code> will use the service principal from the env vars — NOT the managed identity. This is a common misconfiguration. In production, either use managed identity (and set no env vars) or service principal env vars (and disable MI). Do not mix.
+        </div>
+      </div>
+
+      <div class="sec-lbl">② Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Owner role does NOT grant access to Key Vault secrets</div>
+          Assigning the <strong>Owner</strong> role to a managed identity does not allow it to read Key Vault secrets or keys. Owner is a management-plane role — it can manage resources, assign roles to others, and configure vault properties. Data-plane access (reading secret values) requires an explicit data-plane role: <strong>Key Vault Secrets User</strong> (RBAC) or a vault access policy with <strong>Get</strong> permission. Exam questions phrase this as: "The function app has Owner on the vault but gets 403 on GetSecret — what must you add?"
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">System-assigned identity's role assignments do NOT survive resource deletion</div>
+          When a resource with a system-assigned managed identity is deleted, the service principal is automatically deleted. If you recreate the resource, a brand-new service principal is created with a different object ID. <strong>All previous role assignments are now orphaned</strong> — they pointed to the old deleted principal and have no effect. You must reassign every RBAC role to the new identity. This is a significant operational hazard and an exam scenario: "After redeploying the App Service, secrets access stopped working."
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">IMDS endpoint is only reachable from within an Azure resource</div>
+          <code>http://169.254.169.254</code> is a link-local address that is only routable from inside an Azure VM, App Service, Container Instance, or similar compute. Code that calls IMDS will work in Azure and fail silently (connection refused or timeout) on a local developer machine. <code>DefaultAzureCredential</code> handles this gracefully by falling through to CLI/VS credentials locally. However, if you call the IMDS endpoint directly in code without using the SDK, you must implement fallback logic yourself — the exam may ask about this.
+        </div>
+      </div>
+
+      <div class="sec-lbl">③ Key Numbers &amp; Limits</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Metric</th><th>Value</th><th>Exam Note</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Max user-assigned identities per resource</td><td>Varies by resource type; VMs support up to 32 user-assigned MIs</td><td>A single App Service plan supports multiple user-assigned MIs</td></tr>
+            <tr><td>Max system-assigned MIs per resource</td><td>1 (exactly one)</td><td>One resource can have only one system-assigned MI</td></tr>
+            <tr><td>IMDS API version (latest stable)</td><td>2018-02-01</td><td>Always specify api-version in the query string; omitting it causes a 400 error</td></tr>
+            <tr><td>Token lifetime</td><td>Typically 1 hour (3600s)</td><td>IMDS caches and auto-refreshes; do not implement your own cache</td></tr>
+            <tr><td>IMDS token refresh buffer</td><td>Refreshes ~5 minutes before expiry</td><td>IMDS proactively refreshes — your app always gets a valid token</td></tr>
+            <tr><td>Role assignment propagation</td><td>Up to a few minutes</td><td>Newly assigned roles can take 1–5 minutes to take effect; retry logic recommended</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">④ CLI / SDK Patterns</div>
+
+      <pre><code># Enable system-assigned MI on an existing App Service
+az webapp identity assign \
+  --name MyWebApp \
+  --resource-group myRG
+# Returns: { "principalId": "...", "tenantId": "...", "type": "SystemAssigned" }
+
+# Create a user-assigned MI (standalone resource)
+az identity create \
+  --name MyUserAssignedMI \
+  --resource-group myRG
+# Returns principalId, clientId, resourceId — save clientId for SDK use
+
+# Assign a user-assigned MI to an App Service
+az webapp identity assign \
+  --name MyWebApp \
+  --resource-group myRG \
+  --identities /subscriptions/.../resourceGroups/myRG/providers/Microsoft.ManagedIdentity/userAssignedIdentities/MyUserAssignedMI
+
+# Grant the MI access to Key Vault secrets (RBAC mode)
+az role assignment create \
+  --assignee <principalId-of-the-MI> \    # Use principalId (object ID), not clientId
+  --role "Key Vault Secrets User" \
+  --scope /subscriptions/.../resourceGroups/myRG/providers/Microsoft.KeyVault/vaults/myVault
+
+# Grant the MI access to a storage account
+az role assignment create \
+  --assignee <principalId> \
+  --role "Storage Blob Data Reader" \
+  --scope /subscriptions/.../resourceGroups/myRG/providers/Microsoft.Storage/storageAccounts/myStorage</code></pre>
+
+      <pre><code>// C# SDK: Using DefaultAzureCredential with a specific user-assigned MI
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+
+// Specify the client ID of the user-assigned MI to avoid ambiguity
+// when multiple user-assigned MIs are attached to the resource
+var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions
+{
+    ManagedIdentityClientId = "your-user-assigned-mi-client-id"
+});
+
+var client = new SecretClient(
+    new Uri("https://myVault.vault.azure.net/"),
+    credential
+);
+
+// If only one MI (system-assigned) is on the resource, no options needed:
+var client2 = new SecretClient(
+    new Uri("https://myVault.vault.azure.net/"),
+    new DefaultAzureCredential()
+);</code></pre>
+
+      <pre><code>// Raw IMDS token request (no SDK) — useful in environments without SDK support
+// GET http://169.254.169.254/metadata/identity/oauth2/token
+//     ?api-version=2018-02-01
+//     &resource=https://vault.azure.net
+//     &client_id=<user-assigned-mi-client-id>   // Optional: omit for system-assigned
+
+// Required header: Metadata: true
+// Response JSON includes: access_token, expires_on, token_type="Bearer"
+
+curl "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://vault.azure.net" \
+  -H "Metadata: true"</code></pre>
+
+      <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Set AZURE_CLIENT_ID to the managed identity's client ID to ensure it is used in production"</div>
+          <strong>FALSE — this backfires.</strong> Setting <code>AZURE_CLIENT_ID</code> alone triggers <code>EnvironmentCredential</code> to attempt a service principal login, which requires <code>AZURE_CLIENT_SECRET</code> or <code>AZURE_CLIENT_CERTIFICATE_PATH</code> as well. Without those, <code>EnvironmentCredential</code> fails, and <code>DefaultAzureCredential</code> will try the next credential in the chain. However, some SDK versions may throw an error instead of falling through. The safe pattern is: do NOT set any <code>AZURE_*</code> env vars in production when you want managed identity. Let <code>DefaultAzureCredential</code> discover the MI automatically via IMDS.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "A function app can only have one managed identity — system-assigned or user-assigned, not both"</div>
+          <strong>FALSE.</strong> Azure resources support having <strong>both</strong> a system-assigned MI and one or more user-assigned MIs simultaneously. The types are not mutually exclusive. A common pattern: use system-assigned MI for the app's own resource-specific access (e.g., its own Key Vault), and a shared user-assigned MI for cross-cutting concerns (e.g., a centralized logging storage account shared by many services).
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Use principalId and clientId interchangeably when assigning RBAC roles"</div>
+          <strong>FALSE.</strong> These are different identifiers with different uses. <strong>principalId</strong> (also called the object ID) is what you pass to <code>az role assignment create --assignee</code> — it is the AAD object ID of the service principal. <strong>clientId</strong> (application ID) is what you pass to SDK options like <code>ManagedIdentityClientId</code> when specifying which user-assigned MI to use for token acquisition. Confusing them causes role assignments to fail silently or the SDK to authenticate with the wrong identity.
+        </div>
+      </div>
+
+      <div class="sec-lbl">⑥ Practice Q&amp;A</div>
+      <div class="qa-list">
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">An App Service uses a system-assigned managed identity to access Key Vault. After the dev team deletes and recreates the App Service in a new deployment, the application receives 403 errors on Key Vault. No code changes were made. What is the root cause?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ System-assigned MI service principal changed — RBAC roles must be reassigned</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> When the App Service was deleted, its system-assigned managed identity's service principal was automatically deleted from AAD. The new App Service has a new service principal with a different object ID. The Key Vault RBAC role assignment (Key Vault Secrets User) pointed to the old, now-deleted object ID — it no longer applies to anything.<br><br>
+              <ul>
+                <li>The fix is to run <code>az role assignment create</code> again, using the new App Service's <code>principalId</code> from <code>az webapp identity show</code>.</li>
+                <li>To avoid this in future deployments, switch to a <strong>user-assigned managed identity</strong>, which persists independently of the App Service lifecycle.</li>
+                <li>With user-assigned MI, role assignments are made once to the MI object and survive resource recreations.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">Your application uses <code>DefaultAzureCredential</code>. It works correctly in production (using managed identity) but fails in local development with the error "EnvironmentCredential: Missing AZURE_TENANT_ID". What is the most likely configuration issue?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ AZURE_CLIENT_ID is set locally without the other required env vars</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> The environment has <code>AZURE_CLIENT_ID</code> set (perhaps as a leftover configuration) but not <code>AZURE_TENANT_ID</code> or <code>AZURE_CLIENT_SECRET</code>. <code>DefaultAzureCredential</code> sees <code>AZURE_CLIENT_ID</code> and activates <code>EnvironmentCredential</code>, which then fails because the required tenant ID and secret are missing instead of falling through to <code>AzureCliCredential</code>.<br><br>
+              <ul>
+                <li>Fix: remove the partial <code>AZURE_CLIENT_ID</code> env var so <code>EnvironmentCredential</code> is not triggered.</li>
+                <li>Alternatively, set all three env vars for a service principal: <code>AZURE_CLIENT_ID</code>, <code>AZURE_TENANT_ID</code>, and <code>AZURE_CLIENT_SECRET</code>.</li>
+                <li>Or simply run <code>az login</code> and let <code>AzureCliCredential</code> (priority 7) handle local auth.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">You need to retrieve an access token for Azure Key Vault from within a Python Azure Function using the managed identity. The IMDS URL is <code>http://169.254.169.254/metadata/identity/oauth2/token</code>. Which parameter specifies the target Azure service?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ resource=https://vault.azure.net</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> The <code>resource</code> query parameter specifies the audience (the Azure service) for which the token is requested. For Key Vault, the value is <code>https://vault.azure.net</code>.<br><br>
+              <ul>
+                <li>Full URL: <code>http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&amp;resource=https://vault.azure.net</code></li>
+                <li>The <code>Metadata: true</code> header is required — requests without it are rejected with a 400.</li>
+                <li>Other common resource values: <code>https://storage.azure.com</code> (Storage), <code>https://management.azure.com</code> (ARM), <code>https://graph.microsoft.com</code> (Graph API).</li>
+                <li>In practice, use the Azure Identity SDK (<code>DefaultAzureCredential</code>) instead of calling IMDS directly — it handles token caching, refresh, and credential fallback.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">Fifty Azure VMs all need access to the same shared Azure Storage account. Which managed identity approach minimizes operational overhead for role assignment management?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Single user-assigned MI assigned to all 50 VMs</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> Create one <strong>user-assigned managed identity</strong>, assign it the <strong>Storage Blob Data Reader</strong> (or appropriate) role on the storage account once, then attach that same MI to all 50 VMs.<br><br>
+              <ul>
+                <li>With 50 system-assigned MIs, you would need to create 50 separate role assignments — one per VM. Any new VM added to the fleet requires a new role assignment.</li>
+                <li>With a user-assigned MI, one role assignment covers all current and future VMs that get the MI attached.</li>
+                <li>The VMs specify the user-assigned MI's client ID in SDK code to avoid ambiguity (in case they also have a system-assigned MI).</li>
+                <li>The user-assigned MI is an independent ARM resource and must be explicitly created and deleted separately from the VMs.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">A developer calls the IMDS endpoint directly (without SDK) and does not include any specific header. The call returns HTTP 400. What is missing?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ The required Metadata: true header</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> The IMDS endpoint requires the HTTP header <code>Metadata: true</code> on every request. This header was designed as a security measure to prevent DNS rebinding attacks — a browser's CORS preflight mechanism would not send custom headers to an arbitrary IP, protecting the endpoint from cross-site request forgery.<br><br>
+              <ul>
+                <li>Without the header: HTTP 400 Bad Request.</li>
+                <li>From outside an Azure resource (local machine): connection timeout or refused — IMDS is only reachable from within Azure.</li>
+                <li>Also required: <code>api-version=2018-02-01</code> as a query parameter and the <code>resource</code> query parameter specifying the target audience.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">An App Service has both a system-assigned MI and a user-assigned MI (clientId: <code>abc123</code>). The application code uses <code>new DefaultAzureCredential()</code> with no options. Which identity is used for token acquisition in Azure?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ System-assigned MI — it is the default when no clientId is specified</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> When multiple managed identities are attached to a resource and no <code>ManagedIdentityClientId</code> is specified, the SDK defaults to the <strong>system-assigned MI</strong>. If only user-assigned MIs are present, the SDK uses the first one, which may be non-deterministic.<br><br>
+              <ul>
+                <li>To explicitly use the user-assigned MI, pass <code>ManagedIdentityClientId = "abc123"</code> to <code>DefaultAzureCredentialOptions</code>.</li>
+                <li>Alternatively, use <code>new ManagedIdentityCredential("abc123")</code> directly to bypass the credential chain entirely.</li>
+                <li>Always be explicit when multiple MIs are present — relying on implicit defaults leads to hard-to-diagnose permission errors.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">A function app's managed identity is granted the <strong>Owner</strong> role on the resource group containing the Key Vault. After deployment, <code>GetSecret</code> calls return 403. What additional step is required?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Assign a Key Vault data-plane role (Key Vault Secrets User) separately</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> <strong>Owner</strong> is a management-plane role. Even scoped to the resource group or the vault itself, it does not grant data-plane access to Key Vault objects (secrets, keys, certificates).<br><br>
+              <ul>
+                <li>Management plane: create/delete vaults, configure access policies, manage RBAC assignments. Owner covers this.</li>
+                <li>Data plane: read/write/delete secret values, perform key operations. Owner does NOT cover this.</li>
+                <li>The fix: assign <strong>Key Vault Secrets User</strong> on the vault (or a specific secret) to the function app's MI. This is separate from the Owner assignment and both can coexist.</li>
+                <li>If the vault uses Vault Access Policy model, Owner does not automatically grant access policy permissions either — you must create an explicit access policy entry.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end qa-list -->
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         MODULE 3 — Azure App Configuration
+    ═══════════════════════════════════════════════════════════ -->
+    <section class="module" id="m3">
+      <h2><span class="mod-num">03</span> Azure App Configuration</h2>
+
+      <div class="sec-lbl">① Key Concepts</div>
+
+      <h3>Core Capabilities</h3>
+      <p>Azure App Configuration is a managed service for centralized application settings and feature flags. It decouples configuration from code, enabling dynamic updates without redeployment.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Capability</th><th>Description</th><th>Key Detail</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Key-Value Store</td>
+              <td>Store application settings as key-value pairs with optional labels (e.g., <code>Environment=Production</code>)</td>
+              <td>Keys are hierarchical by convention (e.g., <code>AppSettings:ConnectionString</code>). Labels allow environment-specific or app-specific variants of the same key.</td>
+            </tr>
+            <tr>
+              <td>Feature Flags</td>
+              <td>Manage feature toggles centrally using the feature management library</td>
+              <td>Stored as special key-value pairs prefixed <code>.appconfig.featureflag/</code>. Supports filters: time-window, percentage rollout, targeting (user/group).</td>
+            </tr>
+            <tr>
+              <td>Key Vault References</td>
+              <td>Store a reference to a Key Vault secret URI; the SDK resolves it to the actual secret value at runtime</td>
+              <td>App Config stores the URI, NOT the secret value. The app needs access to BOTH App Config AND Key Vault to retrieve the value.</td>
+            </tr>
+            <tr>
+              <td>Snapshots</td>
+              <td>Point-in-time immutable capture of the configuration store's key-value pairs</td>
+              <td>Useful for rollback. Retained for 30 days after the snapshot expires. Cannot be modified after creation.</td>
+            </tr>
+            <tr>
+              <td>Dynamic Refresh</td>
+              <td>Application polls for config changes at a configurable interval using a sentinel key pattern</td>
+              <td>The app monitors one "sentinel" key for changes. When the sentinel changes, it reloads the full configuration. This avoids polling every key individually.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Labels — Multi-Environment Configuration</h3>
+      <p>Labels are a key differentiator of App Configuration. A single key can have multiple values differentiated by label:</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Key</th><th>Label</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>AppSettings:Theme</code></td><td><em>(no label)</em></td><td>Default</td></tr>
+            <tr><td><code>AppSettings:Theme</code></td><td>dev</td><td>Dark</td></tr>
+            <tr><td><code>AppSettings:Theme</code></td><td>production</td><td>Light</td></tr>
+            <tr><td><code>AppSettings:ConnectionString</code></td><td>dev</td><td>Server=dev-db;...</td></tr>
+            <tr><td><code>AppSettings:ConnectionString</code></td><td>production</td><td>Server=prod-db;...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>At startup, the application requests keys filtered by the appropriate label (e.g., <code>production</code>), which overrides the no-label defaults. This provides a clean per-environment configuration layering.</p>
+
+      <h3>Key Vault References vs Direct Secrets</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Aspect</th><th>KV Reference in App Config</th><th>Direct Secret in Key Vault</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>What is stored</td>
+              <td>A JSON object containing the Key Vault secret URI: <code>{"uri":"https://vault.azure.net/secrets/MySecret"}</code></td>
+              <td>The actual secret value (string, up to 25 KB)</td>
+            </tr>
+            <tr>
+              <td>Runtime resolution</td>
+              <td>App Config SDK fetches the URI from App Config, then fetches the value from Key Vault using the app's credential</td>
+              <td>Application calls Key Vault directly</td>
+            </tr>
+            <tr>
+              <td>Access required</td>
+              <td>App needs App Config Reader + Key Vault Secrets User</td>
+              <td>App needs Key Vault Secrets User only</td>
+            </tr>
+            <tr>
+              <td>Value rotation</td>
+              <td>Automatic: Key Vault secrets can be rotated without changing App Config configuration. SDK reloads from KV on each access (or on config refresh).</td>
+              <td>Manual: application must be updated or restarted to pick up rotated values unless it polls KV directly</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Sentinel key pattern for efficient dynamic refresh</div>
+          Instead of polling every configuration key for changes (expensive), add a single "sentinel" key (e.g., <code>Sentinel</code> with value <code>1</code>) to your App Config store. Configure the SDK to watch only this key. When you update configuration, increment the sentinel value. The SDK detects the sentinel change and reloads all keys. This minimizes API calls and gives you explicit control over when a refresh is triggered.
+        </div>
+      </div>
+
+      <div class="sec-lbl">② Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">App Configuration does NOT store secret values — dual access is required</div>
+          A Key Vault Reference in App Configuration stores only the URI pointing to a Key Vault secret. When the application reads that configuration key, the App Config SDK fetches the URI from App Config and then makes a <strong>separate call to Key Vault</strong> to retrieve the actual value. This means the application needs <strong>both</strong>: access to the App Configuration store (App Configuration Data Reader role or connection string) AND access to Key Vault (Key Vault Secrets User role or access policy). Removing Key Vault access while keeping App Config access will cause runtime failures when resolving KV references.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Dynamic config refresh is NOT automatic — it requires a sentinel key and polling interval</div>
+          App Configuration does <strong>not</strong> push configuration changes to applications, and the SDK does not check for changes on every request (that would be prohibitively expensive). You must explicitly configure: (1) a refresh interval via <code>options.SetRefreshInterval(TimeSpan)</code>, (2) a sentinel key for the SDK to watch, and (3) call <code>refresher.TryRefreshAsync()</code> in a middleware or background service. A configuration change in the portal does NOT propagate to running applications until the next polling cycle triggers a refresh.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Feature flags in App Config are managed by a separate feature management library</div>
+          Reading feature flags is NOT done with the standard key-value API. Feature flags use the <code>Microsoft.FeatureManagement</code> library. In .NET, you inject <code>IFeatureManager</code> and call <code>await featureManager.IsEnabledAsync("MyFeature")</code>. The flag value stored in App Configuration (<code>.appconfig.featureflag/MyFeature</code>) is a JSON object with conditions and filters — it is not a simple boolean. Do not attempt to read feature flags as ordinary key-value pairs.
+        </div>
+      </div>
+
+      <div class="sec-lbl">③ Key Numbers &amp; Limits</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Metric</th><th>Value</th><th>Exam Note</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Max key length</td><td>10,000 characters</td><td>Keys are hierarchical by convention; use <code>:</code> or <code>/</code> as separator</td></tr>
+            <tr><td>Max value size</td><td>200 KB per key-value</td><td>For large configs, split or store references to external storage</td></tr>
+            <tr><td>Max label length</td><td>200 characters</td><td>Labels cannot contain <code>*</code>, <code>,</code>, or <code>\</code></td></tr>
+            <tr><td>Snapshot retention after expiry</td><td>30 days</td><td>Snapshot can also be archived; archived snapshots are retained indefinitely until deleted</td></tr>
+            <tr><td>Max snapshots per store</td><td>200 (Free tier: 10)</td><td>Snapshots count toward store limits</td></tr>
+            <tr><td>Free tier key-value limit</td><td>10,000 key-values</td><td>Free tier also caps at 1 MB total storage and no geo-replication</td></tr>
+            <tr><td>Standard tier requests</td><td>Unlimited (pay per request after free allocation)</td><td>1,000 free requests per day on Standard tier</td></tr>
+            <tr><td>Geo-replication</td><td>Standard tier only</td><td>Free tier does not support replica regions</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">④ CLI / SDK Patterns</div>
+
+      <pre><code># Create an App Configuration store
+az appconfig create \
+  --name myAppConfig \
+  --resource-group myRG \
+  --location eastus \
+  --sku Standard               # Free or Standard; Standard required for geo-replication
+
+# Set a key-value pair with a label
+az appconfig kv set \
+  --name myAppConfig \
+  --key "AppSettings:Theme" \
+  --value "Dark" \
+  --label "dev"               # Label differentiates environments
+
+# Set a Key Vault reference (stores the KV URI, NOT the secret value)
+az appconfig kv set-keyvault \
+  --name myAppConfig \
+  --key "AppSettings:ConnectionString" \
+  --secret-identifier "https://myVault.vault.azure.net/secrets/DbConnectionString"
+
+# Set a feature flag
+az appconfig feature set \
+  --name myAppConfig \
+  --feature "BetaDashboard"
+
+# List all key-values filtered by label
+az appconfig kv list \
+  --name myAppConfig \
+  --label "production"
+
+# Create a snapshot (point-in-time capture)
+az appconfig snapshot create \
+  --name mySnapshot \
+  --store-name myAppConfig \
+  --filters '[{"key":"AppSettings:*","label":"production"}]'</code></pre>
+
+      <pre><code>// C# .NET: Add App Configuration provider in Program.cs
+using Azure.Identity;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddAzureAppConfiguration(options =>
+{
+    options
+        .Connect(
+            new Uri("https://myAppConfig.azconfig.io"),
+            new DefaultAzureCredential()              // Uses MI in production
+        )
+        .Select("AppSettings:*", "production")        // Keys matching pattern, label=production
+        .ConfigureKeyVault(kv =>
+        {
+            kv.SetCredential(new DefaultAzureCredential()); // For resolving KV references
+        })
+        .ConfigureRefresh(refresh =>
+        {
+            refresh
+                .Register("Sentinel", refreshAll: true)   // Watch sentinel key
+                .SetRefreshInterval(TimeSpan.FromMinutes(5)); // Poll every 5 minutes
+        });
+});
+
+// Register the refresher service so IConfigurationRefresherProvider is injectable
+builder.Services.AddAzureAppConfiguration();
+
+var app = builder.Build();
+
+// Add middleware to trigger refresh on incoming requests
+app.UseAzureAppConfiguration();      // Calls TryRefreshAsync() on each request (after interval)</code></pre>
+
+      <pre><code>// C# .NET: Feature flags with IFeatureManager
+using Microsoft.FeatureManagement;
+
+// Register feature management (reads flags from App Configuration)
+builder.Services.AddFeatureManagement();
+
+// In a controller or service:
+public class DashboardController : ControllerBase
+{
+    private readonly IFeatureManager _featureManager;
+
+    public DashboardController(IFeatureManager featureManager)
+    {
+        _featureManager = featureManager;
+    }
+
+    public async Task&lt;IActionResult&gt; GetDashboard()
+    {
+        if (await _featureManager.IsEnabledAsync("BetaDashboard"))
+        {
+            return Ok(new BetaDashboardViewModel());
+        }
+        return Ok(new StandardDashboardViewModel());
+    }
+}</code></pre>
+
+      <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Using a Key Vault Reference in App Config means the app only needs App Config access"</div>
+          <strong>FALSE.</strong> A Key Vault Reference is exactly that — a reference. The secret value lives in Key Vault, and the App Config SDK makes a live call to Key Vault to retrieve it at runtime. The application's identity must have explicit data-plane access to Key Vault (<strong>Key Vault Secrets User</strong> role or <strong>Get</strong> access policy) in addition to the <strong>App Configuration Data Reader</strong> role on the App Config store. Both access grants are required; neither alone is sufficient.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Updating a value in App Configuration immediately refreshes it in all running applications"</div>
+          <strong>FALSE.</strong> App Configuration has no push mechanism to notify running applications. Configuration changes only reach a running app when: (1) the configured refresh interval has elapsed since the last check, (2) a request arrives (triggering the <code>UseAzureAppConfiguration</code> middleware), and (3) the sentinel key has changed. If an application is idle (no incoming requests), configuration changes will not propagate until the next request after the refresh interval expires. For time-sensitive updates, use a background refresh timer instead of the request-based middleware.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Feature flags can be read using the standard IConfiguration key-value API"</div>
+          <strong>FALSE.</strong> Feature flags are stored in App Configuration as structured JSON objects under the key prefix <code>.appconfig.featureflag/</code>. Reading them as a plain string via <code>IConfiguration["FeatureName"]</code> returns the raw JSON — not a boolean. To properly evaluate feature flags including conditional activation rules (time windows, percentage rollouts, user targeting), you must use the <code>Microsoft.FeatureManagement</code> library and inject <code>IFeatureManager</code>. The <code>IsEnabledAsync</code> method evaluates all filters configured on the flag.
+        </div>
+      </div>
+
+      <div class="sec-lbl">⑥ Practice Q&amp;A</div>
+      <div class="qa-list">
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">An application is reading a Key Vault Reference from Azure App Configuration. The App Config SDK resolves the key to the actual secret value at runtime. The application identity has <strong>App Configuration Data Reader</strong> on the App Config store but receives a 403 error. What additional permission is required?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Key Vault Secrets User role on the referenced Key Vault</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> A Key Vault Reference stores only the KV secret URI in App Configuration. When the SDK resolves it, it makes a live API call to Key Vault using the application's own credential. The application needs <strong>Key Vault Secrets User</strong> (RBAC mode) or <strong>Get</strong> in an access policy on the referenced vault.<br><br>
+              <ul>
+                <li>App Configuration Data Reader grants access to the App Config store only — it does not delegate Key Vault access.</li>
+                <li>Both permissions are required simultaneously: App Config access to get the URI, Key Vault access to get the value.</li>
+                <li>The credential passed to <code>ConfigureKeyVault(kv =&gt; kv.SetCredential(...))</code> is used for KV calls. In production, this is typically the same <code>DefaultAzureCredential</code> that resolves to the managed identity.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">A team updates a configuration value in App Configuration at 14:00. The running application (refresh interval set to 30 minutes, sentinel key configured) last checked at 13:45. At what earliest time will the application pick up the new value?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ At 14:15 — after the 30-minute interval from last check expires</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> The SDK checked at 13:45 and set the next check time to 14:15 (13:45 + 30 minutes). The config change at 14:00 is not visible until the next refresh cycle at 14:15, when the next incoming request triggers the middleware to poll App Configuration, detects the sentinel key has changed, and reloads all keys.<br><br>
+              <ul>
+                <li>The refresh interval timer starts from the last successful refresh, not from the last change.</li>
+                <li>If the application receives no requests between 14:15 and later, the update may be delayed further (request-driven middleware only fires on incoming traffic).</li>
+                <li>For time-critical config updates, use <code>IConfigurationRefresher</code> in a <code>IHostedService</code> background timer instead of the request-based middleware.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">You want to gradually roll out a new UI feature to 20% of users, increasing to 100% over two weeks, using Azure App Configuration. Which feature flag filter type is most appropriate?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Percentage rollout filter (Microsoft.Percentage)</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> The <strong>Microsoft.Percentage</strong> built-in filter enables a feature for a configurable percentage of requests. Set it to 20 initially, then increase the percentage in App Configuration without redeployment.<br><br>
+              <ul>
+                <li><strong>Microsoft.TimeWindow</strong> — enables a feature only between specified start and end times. Useful for scheduled maintenance windows or timed promotions, not gradual rollouts.</li>
+                <li><strong>Microsoft.Targeting</strong> — enables a feature for specific users, groups, or with a percentage fallback. More precise than a pure percentage rollout — you can target named groups and set a default percentage for everyone else.</li>
+                <li>Percentage filter decisions are stateless per request — the same user may see the feature on one request and not another. For consistent per-user experiences, use the Targeting filter with user claims.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">You need to capture the exact state of your production App Configuration at the end of the quarter for audit and rollback purposes. What App Configuration feature should you use?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ App Configuration Snapshot</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> An App Configuration <strong>Snapshot</strong> is an immutable, point-in-time capture of the key-value pairs matching specified filters. Once created, a snapshot cannot be modified.<br><br>
+              <ul>
+                <li>Snapshots can be created with key and label filters to capture only a subset of the store (e.g., all keys with the <code>production</code> label).</li>
+                <li>Retained for 30 days after their configured expiry (or until manually deleted). Can also be "archived" for indefinite retention.</li>
+                <li>Applications can load configuration from a specific snapshot by passing the snapshot name to the SDK, enabling consistent rollback to a known-good configuration state.</li>
+                <li>Up to 200 snapshots per Standard tier store; 10 on Free tier.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">Your .NET application uses <code>AddAzureAppConfiguration</code>. You have the <code>Sentinel</code> key registered for refresh. After updating the database connection string and incrementing the Sentinel in the portal, the running application continues to use the old connection string even after 10 minutes. The refresh interval is set to 5 minutes. What is the most likely cause?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ app.UseAzureAppConfiguration() middleware is missing or the app has received no requests</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> The refresh mechanism in <code>AddAzureAppConfiguration</code> is triggered by the <code>UseAzureAppConfiguration()</code> middleware, which fires <code>TryRefreshAsync()</code> on each incoming HTTP request. If the middleware is not registered, or if the application has received no requests since the interval expired, the refresh never occurs.<br><br>
+              <ul>
+                <li>Verify <code>app.UseAzureAppConfiguration()</code> is called in the middleware pipeline in <code>Program.cs</code>.</li>
+                <li>For worker services or applications without HTTP requests, use <code>IConfigurationRefresher.TryRefreshAsync()</code> in a <code>BackgroundService</code> timer loop instead.</li>
+                <li>Also verify that <code>builder.Services.AddAzureAppConfiguration()</code> is called to register the refresher in DI — without this, the middleware cannot resolve the refresher.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">Two applications (App A and App B) share the same App Configuration store. They need different values for the key <code>Api:BaseUrl</code>. What is the recommended approach using App Configuration's built-in features?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Use Labels — same key with different labels per application</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> Create the key <code>Api:BaseUrl</code> twice — once with the label <code>app-a</code> and once with label <code>app-b</code>. Each application selects its label in the SDK configuration:<br><br>
+              <ul>
+                <li>App A: <code>.Select("*", "app-a")</code> — loads all keys with the <code>app-a</code> label.</li>
+                <li>App B: <code>.Select("*", "app-b")</code> — loads all keys with the <code>app-b</code> label.</li>
+                <li>Unlabeled keys serve as defaults — app reads unlabeled first, then overlays the labeled values. This allows shared defaults with per-app overrides.</li>
+                <li>An alternative pattern is to key-prefix by app name (e.g., <code>AppA:Api:BaseUrl</code>), but labels are the idiomatic App Configuration approach as they keep key names clean and consistent.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">A developer wants to enable a feature flag named <code>NewCheckout</code> only between 09:00 and 17:00 UTC on weekdays, automatically disabling itself outside those hours without any code deployment. Which feature flag filter achieves this?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Microsoft.TimeWindow filter</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> The <strong>Microsoft.TimeWindow</strong> built-in filter enables a feature flag only between a configured start and end time (ISO 8601 datetime with timezone offset). The evaluation happens in the <code>IFeatureManager.IsEnabledAsync</code> call at runtime — no code change or deployment needed.<br><br>
+              <ul>
+                <li>Configure: <code>Start: "Mon, 01 Jan 2024 09:00:00 +00:00"</code> and <code>End: "Mon, 01 Jan 2024 17:00:00 +00:00"</code> with a recurring weekly pattern.</li>
+                <li>Note: The basic TimeWindow filter does not natively support recurring weekly schedules — you would need to update the window each week or implement a custom filter for recurrence.</li>
+                <li><strong>Microsoft.Percentage</strong> — for random percentage enablement. <strong>Microsoft.Targeting</strong> — for user/group targeting. Neither handles time-based activation.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">8</div>
+            <div class="qa-text">An App Configuration store is in the Free tier. A team needs geo-replication to a secondary Azure region for high availability. What must they do?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Upgrade the store to the Standard tier</div>
+            <div class="qa-body">
+              <strong>Answer:</strong> Geo-replication (replica regions) is only available on the <strong>Standard tier</strong>. The Free tier does not support it.<br><br>
+              <ul>
+                <li>Free tier limits: 10,000 key-values, 1 MB storage, 1,000 requests/day, no geo-replication, no private endpoints, no SLA.</li>
+                <li>Standard tier: 10,000 key-values included (then pay-per-key), 1 GB storage, geo-replication to up to 10 replica regions, private endpoint support, 99.9% SLA.</li>
+                <li>After upgrading and adding a replica, both the primary and replica regions are read-write. Client SDKs can be configured with multiple endpoints for automatic failover.</li>
+                <li>Key Vault References are always resolved from Key Vault directly — geo-replication of App Config does not affect Key Vault HA requirements separately.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end qa-list -->
+    </section>
+
+    <div class="nav-end">
+      <a href="learn-06-auth.html" class="btn-link">← Authentication</a>
+      <a href="learn-08-api-management.html" class="btn-link fwd">API Management →</a>
+    </div>
+  </main>
+</div>
+
+<script>
+
+(function(){
+  // Q&A accordion
+  document.querySelectorAll('.qa-q').forEach(function(q){
+    q.addEventListener('click',function(){
+      this.closest('.qa-item').classList.toggle('open');
+    });
+  });
+  // Sidebar scroll-spy
+  var links=document.querySelectorAll('.sb-link[data-m]');
+  var sections=document.querySelectorAll('.module[id]');
+  if(links.length&&sections.length){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var n=e.target.id.replace('m','');
+          links.forEach(function(l){l.classList.toggle('active',l.dataset.m===n);});
+        }
+      });
+    },{rootMargin:'-8% 0px -72% 0px'});
+    sections.forEach(function(s){obs.observe(s);});
+  }
+  // Sidebar click scroll
+  links.forEach(function(l){
+    l.addEventListener('click',function(e){
+      e.preventDefault();
+      var t=document.getElementById('m'+this.dataset.m);
+      if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+})();
+
+</script>
+</body>
+</html>

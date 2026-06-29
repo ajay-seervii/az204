@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Message-based Solutions — AZ-204 Study Notes</title>
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --azure:#0078D4;--azure-dark:#005a9e;--azure-light:#deecf9;
+  --bg:#f4f6f9;--surface:#fff;--nav-bg:#1a1f36;
+  --border:#d0d7de;--border-light:#e8ecf0;
+  --text:#1a1f36;--text-muted:#6b7280;--text-light:#9ca3af;
+  --ok-bg:#ecfdf5;--ok-bdr:#10b981;--ok-txt:#065f46;
+  --err-bg:#fef2f2;--err-bdr:#ef4444;--err-txt:#991b1b;
+  --warn-bg:#fffbeb;--warn-bdr:#fbbf24;--warn-txt:#92400e;
+  --r:10px;--rs:6px;
+  --sh:0 1px 3px rgba(0,0,0,.08);--shm:0 4px 12px rgba(0,0,0,.12);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--azure);text-decoration:none}
+a:hover{text-decoration:underline}
+#top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
+.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
+.nav-bc a{color:rgba(255,255,255,.75)}
+.nav-bc a:hover{color:#fff;text-decoration:none}
+.nav-bc span{color:rgba(255,255,255,.35)}
+.nav-bc strong{color:#fff}
+.nav-acts{display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
+.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.page-layout{display:flex;min-height:calc(100vh - 54px)}
+.sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
+.sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
+.sb-back:hover{color:var(--azure);text-decoration:none}
+.sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-light);padding:.5rem 1rem;margin-top:.25rem}
+.sb-link{display:flex;align-items:center;gap:8px;padding:.45rem 1rem;font-size:13px;color:var(--text-muted);border-left:3px solid transparent;cursor:pointer;transition:background .1s,color .1s,border-color .1s}
+.sb-link:hover{background:#f8fafc;color:var(--text)}
+.sb-link.active{border-left-color:var(--azure);color:var(--azure);background:#eff6ff;font-weight:600}
+.sb-num{font-size:10px;background:#f3f4f6;border:1px solid var(--border-light);padding:1px 6px;border-radius:20px;margin-left:auto;color:var(--text-light)}
+.sb-next{display:flex;align-items:center;gap:6px;padding:.45rem 1rem;font-size:12px;color:var(--text-muted);margin-top:.5rem;border-top:1px solid var(--border-light)}
+.sb-next:hover{color:var(--azure);text-decoration:none}
+.main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
+.topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
+.topic-header p{font-size:13px;color:var(--text-muted);margin:0}
+.topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
+.module{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem 1.75rem;margin-bottom:1.75rem;scroll-margin-top:70px}
+.module h2{font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--border-light)}
+.module h2 .mod-num{background:var(--azure);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--azure);margin-bottom:.5rem;margin-top:1.25rem;display:flex;align-items:center;gap:6px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--azure-light)}
+h3{font-size:14px;font-weight:700;color:var(--text);margin:.75rem 0 .4rem}
+p,li{font-size:13px;color:var(--text-muted);line-height:1.7}
+ul,ol{padding-left:1.4rem;margin:.4rem 0}
+li{margin-bottom:.25rem}
+strong{color:var(--text)}
+code{font-family:Consolas,'Cascadia Code','Courier New',monospace;font-size:.85em;background:#f3f4f6;padding:1px 5px;border-radius:4px;color:#1a1f36}
+pre{font-family:Consolas,'Cascadia Code','Courier New',monospace;background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:var(--rs);padding:1.1rem 1.25rem;overflow-x:auto;font-size:12.5px;line-height:1.65;margin:.6rem 0}
+pre code{background:none;padding:0;color:inherit}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--rs);margin:.6rem 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f8fafc;color:var(--text-muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.55rem .9rem;text-align:left;border-bottom:2px solid var(--border)}
+td{padding:.55rem .9rem;border-bottom:1px solid var(--border-light);color:var(--text-muted);vertical-align:top;line-height:1.5}
+td:first-child{color:var(--text);font-weight:500}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+.callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
+.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-body{flex:1}
+.callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
+.callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
+.callout.gotcha .callout-title{color:var(--err-txt)}
+.callout.tip{background:#eff6ff;border-left:3px solid var(--azure)}
+.callout.tip .callout-title{color:var(--azure-dark)}
+.callout.warn{background:var(--warn-bg);border-left:3px solid var(--warn-bdr)}
+.callout.warn .callout-title{color:var(--warn-txt)}
+.callout.success{background:var(--ok-bg);border-left:3px solid var(--ok-bdr)}
+.callout.success .callout-title{color:var(--ok-txt)}
+.qa-list{margin-top:.5rem}
+.qa-item{border:1px solid var(--border);border-radius:var(--rs);margin-bottom:.6rem;overflow:hidden}
+.qa-q{display:flex;align-items:flex-start;gap:.65rem;padding:.85rem 1rem;cursor:pointer;background:var(--surface);user-select:none}
+.qa-q:hover{background:#f8fafc}
+.qa-n{flex-shrink:0;width:20px;height:20px;background:var(--azure);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.qa-text{flex:1;font-size:13px;color:var(--text);line-height:1.5;font-weight:500}
+.qa-tog{flex-shrink:0;color:var(--text-light);transition:transform .2s;font-size:14px;margin-top:2px}
+.qa-item.open .qa-tog{transform:rotate(180deg)}
+.qa-ans{display:none;padding:.85rem 1rem 1rem;background:#f8fafc;border-top:1px solid var(--border-light)}
+.qa-item.open .qa-ans{display:block}
+.qa-correct{display:inline-flex;align-items:center;gap:5px;background:var(--ok-bg);color:var(--ok-txt);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-bottom:.6rem}
+.qa-body{font-size:12.5px;color:var(--text-muted);line-height:1.7}
+.qa-body ul{padding-left:1.25rem;margin:.4rem 0}
+.qa-body strong{color:var(--text)}
+.nav-end{display:flex;justify-content:space-between;padding:1.25rem 0;border-top:1px solid var(--border);margin-top:.5rem}
+.btn-link{display:inline-flex;align-items:center;gap:5px;padding:.4rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--text-muted)}
+.btn-link:hover{border-color:var(--azure);color:var(--azure);text-decoration:none}
+.btn-link.fwd{background:var(--azure);color:#fff;border-color:var(--azure)}
+.btn-link.fwd:hover{background:var(--azure-dark);text-decoration:none}
+@media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
+
+</style>
+</head>
+<body>
+
+<nav id="top-nav">
+  <div class="nav-brand">
+    <div class="nav-brand-icon">Az</div>
+    <div class="nav-bc">
+      <a href="learn.html">Study Notes</a>
+      <span>/</span>
+      <strong>Message-based Solutions</strong>
+    </div>
+  </div>
+  <div class="nav-acts">
+    <a href="learn.html" class="btn btn-ghost">← All Topics</a>
+    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <a href="learn.html" class="sb-back">← All Topics</a>
+    <div class="sb-label">Message-based Solutions</div>
+    <a href="#m1" class="sb-link" data-m="1">🔄 Azure Message Queues: Storage Queue vs Service Bus<span class="sb-num">6 sections</span></a>
+    <a href="learn-11-monitoring.html" class="sb-next">Next: Monitoring →</a>
+  </aside>
+
+  <main class="main">
+    <div class="topic-header">
+      <div class="topic-icon-lg">📨</div>
+      <div>
+        <h1>Message-based Solutions</h1>
+        <p>1 module · Azure Message Queues: Storage Queue vs Service Bus</p>
+      </div>
+      <div class="topic-num">Topic 10</div>
+    </div>
+
+    <!-- MODULE 1 -->
+    <section class="module" id="m1">
+      <h2><span class="mod-num">1</span> Azure Message Queues: Storage Queue vs Service Bus</h2>
+
+      <!-- SECTION 1: Key Concepts -->
+      <div class="sec-lbl">① Key Concepts</div>
+
+      <h3>Storage Queue</h3>
+      <p>Azure Storage Queue is the simplest queuing mechanism in Azure. It is REST-based, lives inside a Storage Account, and is designed for high-volume, loosely coupled workloads where advanced messaging features are not required. Messages are stored as plain text (typically Base64-encoded for binary content).</p>
+      <ul>
+        <li><strong>Max message size:</strong> 64 KB per message</li>
+        <li><strong>Max TTL (Time-to-Live):</strong> 7 days (default; configurable up to 7 days)</li>
+        <li><strong>Max queue storage:</strong> 500 TB — essentially unlimited for most workloads</li>
+        <li><strong>Ordering:</strong> Best-effort FIFO only — no guarantees</li>
+        <li><strong>Poison messages:</strong> No built-in dead-letter queue. You must check <code>DequeueCount</code> manually and move messages to a separate "poison" queue in your own code</li>
+        <li><strong>Topics/Subscriptions:</strong> Not supported</li>
+        <li><strong>Sessions:</strong> Not supported</li>
+        <li><strong>Transactions:</strong> Not supported across operations</li>
+        <li><strong>Visibility timeout:</strong> When a message is dequeued, it becomes invisible to other consumers for the visibility timeout period (default 30 seconds, max 7 days). If not deleted within that window, it reappears.</li>
+      </ul>
+
+      <h3>Service Bus Queue</h3>
+      <p>Azure Service Bus is an enterprise message broker supporting advanced patterns: sessions, transactions, dead-lettering, topics, and subscriptions. It comes in two tiers — Standard and Premium — with significantly different message size limits.</p>
+      <ul>
+        <li><strong>Max message size:</strong> 256 KB (Standard tier), 100 MB (Premium tier)</li>
+        <li><strong>Max TTL:</strong> Configurable; default is 14 days, maximum is effectively unlimited (TimeSpan.Max)</li>
+        <li><strong>Max queue size:</strong> 1 GB to 80 GB depending on tier and configuration</li>
+        <li><strong>Dead-letter queue (DLQ):</strong> Built-in. Messages exceeding max delivery count (default 10) or that expire are automatically moved to <code>&lt;queue-name&gt;/$DeadLetterQueue</code></li>
+        <li><strong>Sessions:</strong> Enables FIFO processing per session ID. Must be enabled at queue/subscription creation — cannot be toggled on an existing entity</li>
+        <li><strong>Transactions:</strong> Atomic send/receive across multiple Service Bus entities within the same namespace</li>
+        <li><strong>Topics + Subscriptions:</strong> Pub/sub pattern. One topic, multiple subscriptions with SQL-like or correlation filter rules</li>
+        <li><strong>Lock duration:</strong> Default 60 seconds. Message is locked for the receiver; must call <code>CompleteAsync()</code> or <code>AbandonAsync()</code> before the lock expires, or the message re-enqueues</li>
+        <li><strong>Receive modes:</strong> Peek-Lock (default, safe) and Receive-and-Delete (destructive, faster)</li>
+        <li><strong>Max delivery count:</strong> Default 10. After 10 unsuccessful deliveries, message goes to DLQ automatically</li>
+      </ul>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Peek-Lock is the safe default</div>
+          In Peek-Lock mode the message is not removed from the queue when received. It is merely invisible (locked) while you process it. You must call <code>CompleteMessageAsync()</code> to permanently delete it. If your processing code crashes, the lock expires and the message becomes visible again for retry — giving you at-least-once delivery semantics. Receive-and-Delete removes the message immediately on receipt; if your code then crashes, the message is lost.
+        </div>
+      </div>
+
+      <h3>Feature Comparison</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Storage Queue</th>
+              <th>Service Bus Queue</th>
+              <th>Service Bus Topic</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Max message size</td>
+              <td>64 KB</td>
+              <td>256 KB (Std) / 100 MB (Prem)</td>
+              <td>256 KB (Std) / 100 MB (Prem)</td>
+            </tr>
+            <tr>
+              <td>Max TTL</td>
+              <td>7 days</td>
+              <td>14 days default, configurable</td>
+              <td>14 days default, configurable</td>
+            </tr>
+            <tr>
+              <td>Max storage</td>
+              <td>500 TB</td>
+              <td>1 GB – 80 GB</td>
+              <td>1 GB – 80 GB</td>
+            </tr>
+            <tr>
+              <td>Dead-letter queue</td>
+              <td>Manual (none built-in)</td>
+              <td>Built-in</td>
+              <td>Built-in per subscription</td>
+            </tr>
+            <tr>
+              <td>Ordering guarantee</td>
+              <td>None</td>
+              <td>Within session only</td>
+              <td>Within session only</td>
+            </tr>
+            <tr>
+              <td>Sessions (FIFO)</td>
+              <td>No</td>
+              <td>Yes (must enable at creation)</td>
+              <td>Yes (must enable at creation)</td>
+            </tr>
+            <tr>
+              <td>Transactions</td>
+              <td>No</td>
+              <td>Yes (same namespace)</td>
+              <td>Yes (same namespace)</td>
+            </tr>
+            <tr>
+              <td>Pub/Sub pattern</td>
+              <td>No</td>
+              <td>No</td>
+              <td>Yes (topics + subscriptions)</td>
+            </tr>
+            <tr>
+              <td>Message lock</td>
+              <td>Visibility timeout</td>
+              <td>Lock duration (60s default)</td>
+              <td>Lock duration (60s default)</td>
+            </tr>
+            <tr>
+              <td>Duplicate detection</td>
+              <td>No</td>
+              <td>Yes (configurable window)</td>
+              <td>Yes (configurable window)</td>
+            </tr>
+            <tr>
+              <td>At-most-once delivery</td>
+              <td>No</td>
+              <td>Yes (Receive-and-Delete mode)</td>
+              <td>Yes (Receive-and-Delete mode)</td>
+            </tr>
+            <tr>
+              <td>Geo-disaster recovery</td>
+              <td>Storage GRS</td>
+              <td>Premium: Geo-DR pairing</td>
+              <td>Premium: Geo-DR pairing</td>
+            </tr>
+            <tr>
+              <td>Audit trail (logs)</td>
+              <td>Yes (Storage diagnostics)</td>
+              <td>Yes (Activity Logs)</td>
+              <td>Yes (Activity Logs)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>When to Choose Which</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Requirement</th>
+              <th>Choose</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Queue storage must exceed 80 GB</td>
+              <td>Storage Queue</td>
+              <td>Up to 500 TB, Service Bus caps at 80 GB</td>
+            </tr>
+            <tr>
+              <td>Need full audit trail of all messages</td>
+              <td>Storage Queue</td>
+              <td>Storage logs every operation; Service Bus does not retain message history</td>
+            </tr>
+            <tr>
+              <td>App must not rely on ordered delivery</td>
+              <td>Storage Queue</td>
+              <td>Simpler, cheaper for simple fan-out</td>
+            </tr>
+            <tr>
+              <td>Messages larger than 64 KB</td>
+              <td>Service Bus (Premium)</td>
+              <td>Up to 100 MB on Premium; Storage Queue hard-caps at 64 KB</td>
+            </tr>
+            <tr>
+              <td>FIFO ordering required</td>
+              <td>Service Bus with Sessions</td>
+              <td>Sessions guarantee FIFO within a session ID</td>
+            </tr>
+            <tr>
+              <td>Multiple subscribers (pub/sub)</td>
+              <td>Service Bus Topics</td>
+              <td>Topics + filtered subscriptions; Storage Queue has no pub/sub</td>
+            </tr>
+            <tr>
+              <td>Exactly-once processing needed</td>
+              <td>Service Bus</td>
+              <td>Duplicate detection + Peek-Lock provides idempotent delivery</td>
+            </tr>
+            <tr>
+              <td>Dead-letter handling required</td>
+              <td>Service Bus</td>
+              <td>Built-in DLQ; Storage Queue requires manual poison message logic</td>
+            </tr>
+            <tr>
+              <td>Atomic send across multiple queues</td>
+              <td>Service Bus</td>
+              <td>Transactions span multiple entities in the same namespace</td>
+            </tr>
+            <tr>
+              <td>Long-running message processing (&gt;60s)</td>
+              <td>Service Bus with lock renewal</td>
+              <td>Must call RenewMessageLockAsync() before lock expires</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Topic Subscription Filters</div>
+          Service Bus subscriptions support two filter types: <strong>SQL filters</strong> (arbitrary property expressions, e.g. <code>sys.Label = 'order' AND Priority &gt; 3</code>) and <strong>Correlation filters</strong> (match specific properties like CorrelationId, Label, To, ReplyTo — faster and cheaper to evaluate). A third type, <strong>True/False filters</strong>, either passes all messages or none. The default filter on a new subscription is TrueFilter (pass all).
+        </div>
+      </div>
+
+      <!-- SECTION 2: Exam Gotchas -->
+      <div class="sec-lbl">② Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Gotcha: Peek-Lock Does NOT Delete the Message</div>
+          In Peek-Lock mode, receiving a message does not remove it. The message is locked (invisible to other consumers) for the duration of <code>lockDuration</code> (default 60 seconds). If your code receives the message but then throws an exception before calling <code>CompleteMessageAsync()</code>, the lock will eventually expire and the message will reappear in the queue — incrementing the delivery count. After 10 delivery attempts (default <code>maxDeliveryCount</code>), the message is automatically moved to the dead-letter queue. This is by design for at-least-once delivery. If you process a message successfully but forget to call <code>CompleteAsync()</code>, you will process the same message 10 times before it is dead-lettered.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Gotcha: Storage Queue Has NO Built-in Dead-Letter Queue</div>
+          This is one of the highest-frequency traps on the exam. Azure Storage Queue does not have a dead-letter queue. If a message fails processing repeatedly, it simply continues to reappear after the visibility timeout expires — forever, until its TTL (max 7 days) elapses. To implement poison message handling with Storage Queue you must: (1) read the <code>DequeueCount</code> property on the retrieved message, (2) compare it against your threshold (e.g., 5), (3) if exceeded, explicitly enqueue it into a separate queue you name (e.g., <code>myqueue-poison</code>), and (4) delete it from the original queue. This is entirely manual. Contrast this with Service Bus which automatically moves messages to <code>&lt;queue&gt;/$DeadLetterQueue</code> after <code>maxDeliveryCount</code> is exhausted.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Gotcha: Sessions Cannot Be Enabled on an Existing Queue</div>
+          Service Bus sessions must be enabled at queue or subscription creation time. You cannot enable sessions on an existing entity — not through the portal, not through ARM, not through the SDK. The property <code>requiresSession</code> is immutable after creation. If a question asks how to add session support to an existing Standard-tier queue, the correct answer is: delete the queue and recreate it with sessions enabled, then replay any lost messages. This is also why you should design session requirements upfront. Additionally, session-enabled queues/subscriptions require session-aware receivers (<code>ServiceBusSessionReceiver</code> or <code>ServiceBusSessionProcessor</code>), not regular receivers.
+        </div>
+      </div>
+
+      <!-- SECTION 3: Key Numbers & Limits -->
+      <div class="sec-lbl">③ Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+              <th>Exam Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Storage Queue — max message size</td>
+              <td>64 KB</td>
+              <td>Hard limit. Use claim-check pattern (store payload in Blob, enqueue reference) for larger payloads</td>
+            </tr>
+            <tr>
+              <td>Storage Queue — max TTL</td>
+              <td>7 days</td>
+              <td>Default is also 7 days. Cannot be set longer. Compare to SB default of 14 days</td>
+            </tr>
+            <tr>
+              <td>Storage Queue — max queue size</td>
+              <td>500 TB</td>
+              <td>Effectively unlimited. Differentiator when question mentions very high volume or long retention</td>
+            </tr>
+            <tr>
+              <td>Storage Queue — visibility timeout default</td>
+              <td>30 seconds</td>
+              <td>Max is 7 days. Unlike SB lock duration, visibility timeout is set per-dequeue call</td>
+            </tr>
+            <tr>
+              <td>Service Bus — max message size (Standard)</td>
+              <td>256 KB</td>
+              <td>Includes headers. Body alone is slightly less. If message is larger, Premium or claim-check required</td>
+            </tr>
+            <tr>
+              <td>Service Bus — max message size (Premium)</td>
+              <td>100 MB</td>
+              <td>Premium tier only. Standard tier is hard-capped at 256 KB</td>
+            </tr>
+            <tr>
+              <td>Service Bus — default lock duration</td>
+              <td>60 seconds</td>
+              <td>Configurable per queue/subscription at creation; max 5 minutes. Must renew for long processing</td>
+            </tr>
+            <tr>
+              <td>Service Bus — max lock duration</td>
+              <td>5 minutes</td>
+              <td>Even if processing takes longer, you must call RenewMessageLockAsync() periodically</td>
+            </tr>
+            <tr>
+              <td>Service Bus — default max delivery count</td>
+              <td>10</td>
+              <td>After 10 failed deliveries, message is auto-moved to DLQ. Configurable at queue/subscription creation</td>
+            </tr>
+            <tr>
+              <td>Service Bus — default TTL</td>
+              <td>14 days</td>
+              <td>Configurable. Can be set to TimeSpan.Max for indefinite retention</td>
+            </tr>
+            <tr>
+              <td>Service Bus — max queue size</td>
+              <td>1 GB – 80 GB</td>
+              <td>Depends on tier and configuration. Standard: 1–5 GB. Premium: up to 80 GB per queue</td>
+            </tr>
+            <tr>
+              <td>Service Bus — duplicate detection window</td>
+              <td>20 seconds default, up to 7 days</td>
+              <td>Must be enabled at creation. Uses MessageId for deduplication</td>
+            </tr>
+            <tr>
+              <td>Service Bus — subscriptions per topic</td>
+              <td>2,000</td>
+              <td>Hard limit per topic. Each subscription has its own independent DLQ</td>
+            </tr>
+            <tr>
+              <td>Service Bus — rules per subscription</td>
+              <td>2,000</td>
+              <td>SQL filter rules per subscription; correlation filters are cheaper and faster</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SECTION 4: CLI / SDK Patterns -->
+      <div class="sec-lbl">④ CLI / SDK Patterns</div>
+
+      <h3>Storage Queue — Create and Use (Azure SDK for .NET)</h3>
+      <pre><code>// Create QueueClient — requires Storage Account connection string
+var queueClient = new QueueClient(connectionString, "myqueue");
+await queueClient.CreateIfNotExistsAsync();
+
+// Enqueue a message (plain text or Base64-encoded binary)
+await queueClient.SendMessageAsync("Hello from Storage Queue");
+
+// Dequeue with visibility timeout (message becomes invisible for 30s)
+QueueMessage[] messages = await queueClient.ReceiveMessagesAsync(
+    maxMessages: 5,
+    visibilityTimeout: TimeSpan.FromSeconds(30)  // default is 30s
+);
+
+foreach (var msg in messages)
+{
+    // Check DequeueCount for poison message detection
+    if (msg.DequeueCount > 5)
+    {
+        // Manual poison message handling — enqueue to poison queue
+        var poisonClient = new QueueClient(connectionString, "myqueue-poison");
+        await poisonClient.CreateIfNotExistsAsync();
+        await poisonClient.SendMessageAsync(msg.MessageText);
+        await queueClient.DeleteMessageAsync(msg.MessageId, msg.PopReceipt);
+        continue;
+    }
+
+    // Process message
+    Console.WriteLine(msg.MessageText);
+
+    // Delete the message explicitly after processing
+    await queueClient.DeleteMessageAsync(msg.MessageId, msg.PopReceipt);
+}</code></pre>
+
+      <h3>Service Bus — Send and Receive (Peek-Lock)</h3>
+      <pre><code>// Create ServiceBusClient — use connection string or DefaultAzureCredential
+await using var client = new ServiceBusClient(connectionString);
+
+// SEND — create sender for the queue
+await using ServiceBusSender sender = client.CreateSender("myqueue");
+
+var message = new ServiceBusMessage("Order placed for item 42")
+{
+    MessageId = Guid.NewGuid().ToString(),  // used for duplicate detection
+    SessionId = "customer-001",             // required if sessions are enabled
+    TimeToLive = TimeSpan.FromDays(2)
+};
+await sender.SendMessageAsync(message);
+
+// RECEIVE — Peek-Lock mode (default)
+await using ServiceBusReceiver receiver = client.CreateReceiver("myqueue",
+    new ServiceBusReceiverOptions
+    {
+        ReceiveMode = ServiceBusReceiveMode.PeekLock  // safe default
+        // ServiceBusReceiveMode.ReceiveAndDelete = destructive, no retry
+    });
+
+ServiceBusReceivedMessage received = await receiver.ReceiveMessageAsync(
+    maxWaitTime: TimeSpan.FromSeconds(30));
+
+if (received != null)
+{
+    try
+    {
+        // Process the message
+        Console.WriteLine(received.Body.ToString());
+
+        // Complete = permanently delete from queue
+        await receiver.CompleteMessageAsync(received);
+    }
+    catch
+    {
+        // Abandon = release lock immediately, message re-enqueues
+        await receiver.AbandonMessageAsync(received);
+        // Or: DeadLetterMessageAsync() to force it to DLQ
+    }
+}</code></pre>
+
+      <h3>Service Bus — Processor (Recommended for Production)</h3>
+      <pre><code>// ServiceBusProcessor handles lock renewal automatically
+await using var processor = client.CreateProcessor("myqueue",
+    new ServiceBusProcessorOptions
+    {
+        MaxConcurrentCalls = 4,
+        AutoCompleteMessages = false  // set false to control completion manually
+    });
+
+// Register handlers
+processor.ProcessMessageAsync += async args =>
+{
+    string body = args.Message.Body.ToString();
+    Console.WriteLine($"Processing: {body}");
+
+    // Must call CompleteMessageAsync when AutoCompleteMessages = false
+    await args.CompleteMessageAsync(args.Message);
+};
+
+processor.ProcessErrorAsync += args =>
+{
+    Console.Error.WriteLine(args.Exception.Message);
+    return Task.CompletedTask;
+};
+
+await processor.StartProcessingAsync();
+// ... keep alive ...
+await processor.StopProcessingAsync();</code></pre>
+
+      <h3>Service Bus — Session-Aware Processing</h3>
+      <pre><code>// Session queues require ServiceBusSessionProcessor
+await using var sessionProcessor = client.CreateSessionProcessor("myqueue-sessions",
+    new ServiceBusSessionProcessorOptions
+    {
+        MaxConcurrentSessions = 8,        // how many sessions processed in parallel
+        MaxConcurrentCallsPerSession = 1  // messages within one session are sequential
+    });
+
+sessionProcessor.ProcessMessageAsync += async args =>
+{
+    // args.SessionId is the session this message belongs to
+    Console.WriteLine($"Session: {args.SessionId}, Body: {args.Message.Body}");
+
+    // Store session state (e.g., order accumulator across messages)
+    await args.SetSessionStateAsync(BinaryData.FromString("processed"));
+
+    await args.CompleteMessageAsync(args.Message);
+};
+
+sessionProcessor.ProcessErrorAsync += args =>
+{
+    Console.Error.WriteLine(args.Exception);
+    return Task.CompletedTask;
+};
+
+await sessionProcessor.StartProcessingAsync();</code></pre>
+
+      <h3>CLI — Create Service Bus Namespace and Queue</h3>
+      <pre><code># Create Service Bus namespace (Standard tier)
+az servicebus namespace create \
+  --name myns \
+  --resource-group myRG \
+  --sku Standard        # Premium for 100 MB messages / VNet integration
+
+# Create queue with sessions enabled (immutable after creation)
+az servicebus queue create \
+  --name myqueue \
+  --namespace-name myns \
+  --resource-group myRG \
+  --enable-session true \            # cannot change after creation
+  --max-delivery-count 5 \           # default is 10
+  --lock-duration PT2M \             # ISO 8601: 2 minutes (default PT1M = 60s)
+  --default-message-time-to-live P7D # ISO 8601: 7 days
+
+# Create topic + subscription with SQL filter
+az servicebus topic create --name mytopic --namespace-name myns --resource-group myRG
+
+az servicebus topic subscription create \
+  --name highpriority \
+  --topic-name mytopic \
+  --namespace-name myns \
+  --resource-group myRG
+
+az servicebus topic subscription rule create \
+  --name PriorityRule \
+  --subscription-name highpriority \
+  --topic-name mytopic \
+  --namespace-name myns \
+  --resource-group myRG \
+  --filter-sql-expression "Priority = 1"   # SQL filter on message properties</code></pre>
+
+      <!-- SECTION 5: Wrong-Answer Traps -->
+      <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Service Bus guarantees strict FIFO ordering across all messages"</div>
+          Service Bus guarantees FIFO ordering only <strong>within a session</strong>. Without sessions enabled, the queue delivers messages in roughly FIFO order but makes no formal guarantee — concurrent receivers, network retries, and redelivery after lock expiry can all disrupt ordering. The exam will present a scenario requiring strict ordered processing and list "use Service Bus Queue" as a distractor. The correct answer is always "use Service Bus Queue with sessions enabled, assigning the same SessionId to all related messages." Without sessions, even Service Bus is best-effort FIFO.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Storage Queue automatically moves failed messages to a dead-letter queue"</div>
+          This is false. Storage Queue has no dead-letter queue, period. The queue only has a visibility timeout mechanism — if a message is not deleted within the visibility timeout, it reappears. If your code consistently fails to process it, the message keeps reappearing until its TTL (max 7 days) elapses and it is automatically deleted by the service. There is no automatic movement to any other queue. You must implement poison message handling yourself using <code>DequeueCount</code>. Answers referencing <code>/$DeadLetterQueue</code> or any automatic DLQ behavior for Storage Queue are wrong.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "You can read the dead-letter queue the same way as the main queue"</div>
+          The Service Bus dead-letter queue is a sub-queue with a fixed naming convention: <code>&lt;queue-name&gt;/$DeadLetterQueue</code>. To read from it you must explicitly target that path. In the SDK, use <code>ServiceBusReceiver</code> with the sub-queue option: <code>client.CreateReceiver("myqueue", new ServiceBusReceiverOptions { SubQueue = SubQueue.DeadLetter })</code>. Simply creating a receiver for <code>"myqueue"</code> will never see dead-lettered messages — they live in a separate sub-queue and accumulate there until you explicitly process or delete them. The DLQ itself also has a max size and can fill up.
+        </div>
+      </div>
+
+      <!-- SECTION 6: Practice Q&A -->
+      <div class="sec-lbl">⑥ Practice Q&amp;A</div>
+      <div class="qa-list">
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">Your application needs to send 500 GB of daily telemetry events through a queue. Each message is under 1 KB and no ordered processing or dead-letter handling is needed. Which queue solution minimizes cost and complexity?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Azure Storage Queue</div>
+            <div class="qa-body">
+              <strong>Storage Queue is the correct answer.</strong>
+              <ul>
+                <li>Storage Queue supports up to 500 TB of storage — far exceeding Service Bus's 1–80 GB maximum queue size.</li>
+                <li>Messages are under 64 KB (the Storage Queue limit), so no size constraint is hit.</li>
+                <li>No ordered delivery or DLQ is required, so Service Bus's advanced features are unnecessary overhead.</li>
+                <li>Storage Queue is significantly cheaper at high volume — priced per operation on a storage account, not per messaging unit.</li>
+                <li>Service Bus would be wrong here because it cannot scale to 500 GB of queue backlog in a single queue.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">A financial application processes payment messages and requires that all messages for the same customer are processed in strict FIFO order. Multiple concurrent worker processes consume the queue. What must you configure?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Service Bus Queue with sessions enabled, using customer ID as the SessionId</div>
+            <div class="qa-body">
+              <strong>Sessions are required for FIFO ordering in Service Bus.</strong>
+              <ul>
+                <li>Sessions group related messages under a common <code>SessionId</code>. A single session is processed by one receiver at a time — guaranteeing in-order delivery within that session.</li>
+                <li>Setting <code>SessionId = customerId</code> on each message ensures all messages for a given customer go to the same session and are processed sequentially.</li>
+                <li>Multiple concurrent workers can each handle different sessions in parallel, so throughput is maintained.</li>
+                <li>Sessions must be enabled on the queue at creation (<code>requiresSession = true</code>). They cannot be enabled retroactively.</li>
+                <li>A standard Service Bus queue without sessions does not guarantee FIFO order when multiple concurrent consumers are reading.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">A Service Bus message processing job takes between 2 and 4 minutes to complete. The queue's lock duration is set to the maximum of 5 minutes. What is the risk and what should you do?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Call RenewMessageLockAsync() periodically during processing</div>
+            <div class="qa-body">
+              <strong>Lock expiry causes unintended redelivery even if processing eventually succeeds.</strong>
+              <ul>
+                <li>The max configurable lock duration is 5 minutes. If processing takes 4 minutes, you are within the limit — but barely. If any processing step is slow, the lock can expire before <code>CompleteMessageAsync()</code> is called.</li>
+                <li>When a lock expires, the message becomes visible again to other consumers. It will be picked up and processed a second time, incrementing <code>DeliveryCount</code>. This risks double-processing.</li>
+                <li>The correct solution is to call <code>receiver.RenewMessageLockAsync(message)</code> at intervals during long processing — for example, every 60 seconds. This resets the lock timer without acknowledging the message.</li>
+                <li><code>ServiceBusProcessor</code> automatically renews locks while <code>ProcessMessageAsync</code> is executing, but only if the handler hasn't returned yet. For manual receivers, renewal must be explicit.</li>
+                <li>If you let the lock expire, calling <code>CompleteMessageAsync()</code> afterward will throw <code>ServiceBusException</code> with reason <code>MessageLockLost</code>.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">An application reads messages from a Service Bus queue. After processing fails three times, the message is found in the dead-letter queue. A new consumer now needs to reprocess those dead-lettered messages. How should the consumer connect?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Create a receiver targeting the SubQueue.DeadLetter sub-queue</div>
+            <div class="qa-body">
+              <strong>Dead-lettered messages live in a separate addressable sub-queue.</strong>
+              <ul>
+                <li>The DLQ path is <code>&lt;queue-name&gt;/$DeadLetterQueue</code> but in the SDK you address it via the <code>SubQueue.DeadLetter</code> option: <code>client.CreateReceiver("myqueue", new ServiceBusReceiverOptions { SubQueue = SubQueue.DeadLetter })</code>.</li>
+                <li>A receiver for <code>"myqueue"</code> alone will never see DLQ messages — they are in a distinct sub-queue.</li>
+                <li>DLQ messages include system properties like <code>DeadLetterReason</code> and <code>DeadLetterErrorDescription</code> set by Service Bus, which are useful for diagnosing why the message was dead-lettered (e.g., "MaxDeliveryCountExceeded", "TTLExpiredException").</li>
+                <li>To reprocess: receive the message from DLQ, fix the issue, then send it back to the main queue with <code>sender.SendMessageAsync()</code>. There is no built-in "resend to main queue" operation.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">You have a Service Bus topic with three subscriptions: Orders, Shipping, and Audit. The Orders subscription should only receive messages where the custom property Priority equals 1. The Audit subscription should receive all messages. What filter configuration is correct?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ SQL filter "Priority = 1" on Orders subscription; default TrueFilter on Audit subscription</div>
+            <div class="qa-body">
+              <strong>Service Bus subscription filters control which messages each subscriber receives.</strong>
+              <ul>
+                <li>SQL filters use a subset of SQL-92 syntax applied to message properties and system properties (e.g., <code>Priority = 1</code>, <code>sys.Label = 'order'</code>).</li>
+                <li>Correlation filters are more efficient for simple equality matches (matching CorrelationId, Label, To, etc.) and are recommended when SQL filter expressiveness isn't needed.</li>
+                <li>A newly created subscription gets a default <strong>TrueFilter</strong> which passes all messages. The Audit subscription should keep this default.</li>
+                <li>The Orders subscription should have its default rule replaced: remove the default TrueFilter and add a SQL filter rule with <code>Priority = 1</code>.</li>
+                <li>When a message is published to the topic, Service Bus evaluates it against each subscription's rules. A message CAN be delivered to multiple subscriptions simultaneously — topics are pub/sub, not competing consumer.</li>
+                <li>FalseFilter passes nothing; it's used to disable a subscription temporarily without deleting it.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">A Storage Queue consumer reads a message but processing fails. The dequeue count on the message is now 6, and your threshold is 5. You have not yet implemented poison message handling. What happens to this message over the next 7 days?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ The message reappears repeatedly after each visibility timeout until its TTL (7 days) expires and it is auto-deleted</div>
+            <div class="qa-body">
+              <strong>Storage Queue has no automatic poison message removal — you must handle it yourself.</strong>
+              <ul>
+                <li>After each failed dequeue, the message becomes invisible for the visibility timeout period, then reappears.</li>
+                <li>Without custom poison message code checking <code>DequeueCount</code>, the message will continue cycling through the queue indefinitely.</li>
+                <li>After 7 days (Storage Queue max TTL), the Azure Storage service automatically deletes expired messages — this is the only automatic removal.</li>
+                <li>During those 7 days, every consumer that polls the queue could dequeue this message, fail, and re-enqueue it. This is resource-wasting and can block legitimate message processing if the queue has a low-concurrency consumer.</li>
+                <li>Correct implementation: check <code>message.DequeueCount &gt;= threshold</code> after each dequeue. If exceeded: enqueue to <code>myqueue-poison</code>, then call <code>DeleteMessageAsync(messageId, popReceipt)</code> to remove from the original queue.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">A developer uses ServiceBusReceiver in ReceiveAndDelete mode and their processing code throws an exception after receiving but before completing the business logic. What happens to the message?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ The message is permanently lost — it was already deleted from the queue at receive time</div>
+            <div class="qa-body">
+              <strong>ReceiveAndDelete provides at-most-once delivery — messages are deleted on receipt, not on completion.</strong>
+              <ul>
+                <li>In <code>ReceiveAndDelete</code> mode, Service Bus removes the message from the queue as soon as it is delivered to the consumer. There is no lock, no visibility timeout, and no retry mechanism.</li>
+                <li>If the application crashes or throws an exception after receiving, the message is gone. It will never appear in the DLQ because it was never subject to delivery count tracking — it was consumed.</li>
+                <li>Use <code>ReceiveAndDelete</code> only when message loss is acceptable and maximum throughput is the goal (e.g., telemetry ingestion where an occasional dropped message is tolerable).</li>
+                <li><strong>Peek-Lock</strong> (the default) is the safe choice for any business-critical workflow: message is held until you explicitly call <code>CompleteMessageAsync()</code>, giving you at-least-once delivery semantics.</li>
+                <li>There is no way to recover a message lost in <code>ReceiveAndDelete</code> mode after an exception.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">8</div>
+            <div class="qa-text">You need to send a single Service Bus message and simultaneously dequeue a message from another queue, in an all-or-nothing atomic operation. Both queues are in the same Service Bus namespace. What feature enables this?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Service Bus Transactions</div>
+            <div class="qa-body">
+              <strong>Service Bus supports atomic transactions across multiple operations within the same namespace.</strong>
+              <ul>
+                <li>A Service Bus transaction groups multiple operations (send, complete, abandon, dead-letter, defer) into an atomic unit. Either all operations commit or all roll back.</li>
+                <li>Transactions are scoped to a single Service Bus namespace — you cannot span two different namespaces in one transaction.</li>
+                <li>In the SDK: use <code>sender.CreateMessageBatchAsync()</code> or leverage the transaction scope via <code>ServiceBusClient</code> with <code>using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled)</code>.</li>
+                <li>Common scenario: receive a work message, process it, send a result message to another queue, and complete the original message — all atomically. If the send fails, the complete is rolled back and the original message is retried.</li>
+                <li>Storage Queue does not support transactions across operations. This is a key differentiator that the exam tests.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.qa-list -->
+
+    </section><!-- /#m1 -->
+
+    <div class="nav-end">
+      <a href="learn-09-events.html" class="btn-link">← Events</a>
+      <a href="learn-11-monitoring.html" class="btn-link fwd">Monitoring →</a>
+    </div>
+  </main>
+</div>
+
+<script>
+
+(function(){
+  // Q&A accordion
+  document.querySelectorAll('.qa-q').forEach(function(q){
+    q.addEventListener('click',function(){
+      this.closest('.qa-item').classList.toggle('open');
+    });
+  });
+  // Sidebar scroll-spy
+  var links=document.querySelectorAll('.sb-link[data-m]');
+  var sections=document.querySelectorAll('.module[id]');
+  if(links.length&&sections.length){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var n=e.target.id.replace('m','');
+          links.forEach(function(l){l.classList.toggle('active',l.dataset.m===n);});
+        }
+      });
+    },{rootMargin:'-8% 0px -72% 0px'});
+    sections.forEach(function(s){obs.observe(s);});
+  }
+  // Sidebar click scroll
+  links.forEach(function(l){
+    l.addEventListener('click',function(e){
+      e.preventDefault();
+      var t=document.getElementById('m'+this.dataset.m);
+      if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+})();
+
+</script>
+</body>
+</html>

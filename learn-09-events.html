@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event-based Solutions — AZ-204 Study Notes</title>
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --azure:#0078D4;--azure-dark:#005a9e;--azure-light:#deecf9;
+  --bg:#f4f6f9;--surface:#fff;--nav-bg:#1a1f36;
+  --border:#d0d7de;--border-light:#e8ecf0;
+  --text:#1a1f36;--text-muted:#6b7280;--text-light:#9ca3af;
+  --ok-bg:#ecfdf5;--ok-bdr:#10b981;--ok-txt:#065f46;
+  --err-bg:#fef2f2;--err-bdr:#ef4444;--err-txt:#991b1b;
+  --warn-bg:#fffbeb;--warn-bdr:#fbbf24;--warn-txt:#92400e;
+  --r:10px;--rs:6px;
+  --sh:0 1px 3px rgba(0,0,0,.08);--shm:0 4px 12px rgba(0,0,0,.12);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--azure);text-decoration:none}
+a:hover{text-decoration:underline}
+#top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
+.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
+.nav-bc a{color:rgba(255,255,255,.75)}
+.nav-bc a:hover{color:#fff;text-decoration:none}
+.nav-bc span{color:rgba(255,255,255,.35)}
+.nav-bc strong{color:#fff}
+.nav-acts{display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
+.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.page-layout{display:flex;min-height:calc(100vh - 54px)}
+.sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
+.sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
+.sb-back:hover{color:var(--azure);text-decoration:none}
+.sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-light);padding:.5rem 1rem;margin-top:.25rem}
+.sb-link{display:flex;align-items:center;gap:8px;padding:.45rem 1rem;font-size:13px;color:var(--text-muted);border-left:3px solid transparent;cursor:pointer;transition:background .1s,color .1s,border-color .1s}
+.sb-link:hover{background:#f8fafc;color:var(--text)}
+.sb-link.active{border-left-color:var(--azure);color:var(--azure);background:#eff6ff;font-weight:600}
+.sb-num{font-size:10px;background:#f3f4f6;border:1px solid var(--border-light);padding:1px 6px;border-radius:20px;margin-left:auto;color:var(--text-light)}
+.sb-next{display:flex;align-items:center;gap:6px;padding:.45rem 1rem;font-size:12px;color:var(--text-muted);margin-top:.5rem;border-top:1px solid var(--border-light)}
+.sb-next:hover{color:var(--azure);text-decoration:none}
+.main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
+.topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
+.topic-header p{font-size:13px;color:var(--text-muted);margin:0}
+.topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
+.module{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem 1.75rem;margin-bottom:1.75rem;scroll-margin-top:70px}
+.module h2{font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--border-light)}
+.module h2 .mod-num{background:var(--azure);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--azure);margin-bottom:.5rem;margin-top:1.25rem;display:flex;align-items:center;gap:6px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--azure-light)}
+h3{font-size:14px;font-weight:700;color:var(--text);margin:.75rem 0 .4rem}
+p,li{font-size:13px;color:var(--text-muted);line-height:1.7}
+ul,ol{padding-left:1.4rem;margin:.4rem 0}
+li{margin-bottom:.25rem}
+strong{color:var(--text)}
+code{font-family:Consolas,'Cascadia Code','Courier New',monospace;font-size:.85em;background:#f3f4f6;padding:1px 5px;border-radius:4px;color:#1a1f36}
+pre{font-family:Consolas,'Cascadia Code','Courier New',monospace;background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:var(--rs);padding:1.1rem 1.25rem;overflow-x:auto;font-size:12.5px;line-height:1.65;margin:.6rem 0}
+pre code{background:none;padding:0;color:inherit}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--rs);margin:.6rem 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f8fafc;color:var(--text-muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.55rem .9rem;text-align:left;border-bottom:2px solid var(--border)}
+td{padding:.55rem .9rem;border-bottom:1px solid var(--border-light);color:var(--text-muted);vertical-align:top;line-height:1.5}
+td:first-child{color:var(--text);font-weight:500}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+.callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
+.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-body{flex:1}
+.callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
+.callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
+.callout.gotcha .callout-title{color:var(--err-txt)}
+.callout.tip{background:#eff6ff;border-left:3px solid var(--azure)}
+.callout.tip .callout-title{color:var(--azure-dark)}
+.callout.warn{background:var(--warn-bg);border-left:3px solid var(--warn-bdr)}
+.callout.warn .callout-title{color:var(--warn-txt)}
+.callout.success{background:var(--ok-bg);border-left:3px solid var(--ok-bdr)}
+.callout.success .callout-title{color:var(--ok-txt)}
+.qa-list{margin-top:.5rem}
+.qa-item{border:1px solid var(--border);border-radius:var(--rs);margin-bottom:.6rem;overflow:hidden}
+.qa-q{display:flex;align-items:flex-start;gap:.65rem;padding:.85rem 1rem;cursor:pointer;background:var(--surface);user-select:none}
+.qa-q:hover{background:#f8fafc}
+.qa-n{flex-shrink:0;width:20px;height:20px;background:var(--azure);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.qa-text{flex:1;font-size:13px;color:var(--text);line-height:1.5;font-weight:500}
+.qa-tog{flex-shrink:0;color:var(--text-light);transition:transform .2s;font-size:14px;margin-top:2px}
+.qa-item.open .qa-tog{transform:rotate(180deg)}
+.qa-ans{display:none;padding:.85rem 1rem 1rem;background:#f8fafc;border-top:1px solid var(--border-light)}
+.qa-item.open .qa-ans{display:block}
+.qa-correct{display:inline-flex;align-items:center;gap:5px;background:var(--ok-bg);color:var(--ok-txt);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-bottom:.6rem}
+.qa-body{font-size:12.5px;color:var(--text-muted);line-height:1.7}
+.qa-body ul{padding-left:1.25rem;margin:.4rem 0}
+.qa-body strong{color:var(--text)}
+.nav-end{display:flex;justify-content:space-between;padding:1.25rem 0;border-top:1px solid var(--border);margin-top:.5rem}
+.btn-link{display:inline-flex;align-items:center;gap:5px;padding:.4rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--text-muted)}
+.btn-link:hover{border-color:var(--azure);color:var(--azure);text-decoration:none}
+.btn-link.fwd{background:var(--azure);color:#fff;border-color:var(--azure)}
+.btn-link.fwd:hover{background:var(--azure-dark);text-decoration:none}
+@media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
+
+</style>
+</head>
+<body>
+
+<nav id="top-nav">
+  <div class="nav-brand">
+    <div class="nav-brand-icon">Az</div>
+    <div class="nav-bc">
+      <a href="learn.html">Study Notes</a>
+      <span>/</span>
+      <strong>Event-based Solutions</strong>
+    </div>
+  </div>
+  <div class="nav-acts">
+    <a href="learn.html" class="btn btn-ghost">← All Topics</a>
+    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <a href="learn.html" class="sb-back">← All Topics</a>
+    <div class="sb-label">Event-based Solutions</div>
+    <a href="#m1" class="sb-link" data-m="1">🌐 Azure Event Grid<span class="sb-num">6 sections</span></a>
+    <a href="#m2" class="sb-link" data-m="2">📊 Azure Event Hubs<span class="sb-num">6 sections</span></a>
+    <a href="learn-10-messaging.html" class="sb-next">Next: Messaging →</a>
+  </aside>
+
+  <main class="main">
+    <div class="topic-header">
+      <div class="topic-icon-lg">📡</div>
+      <div>
+        <h1>Event-based Solutions</h1>
+        <p>2 modules · Azure Event Grid · Azure Event Hubs</p>
+      </div>
+      <div class="topic-num">Topic 09</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════ MODULE 1 -->
+    <section class="module" id="m1">
+      <h2><span class="mod-num">01</span> Azure Event Grid</h2>
+
+      <div class="sec-lbl">① Key Concepts</div>
+
+      <h3>Event-driven Architecture: Publishers → Topics → Subscriptions → Handlers</h3>
+      <p>Event Grid is a <strong>fully managed event routing service</strong> that uses a publish-subscribe model. Publishers emit events to topics; Event Grid routes those events to subscribers based on filtering rules. It is designed for <strong>reactive workloads</strong> (something happened — react to it), not high-throughput data streaming.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Topic Type</th><th>Who Creates It</th><th>Use Case</th><th>Exam Note</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>System Topic</td>
+              <td>Azure (built-in for Azure services)</td>
+              <td>Blob created, resource group changed, VM started — events from Azure resources you already own</td>
+              <td>You subscribe to these; you do not manage the publisher. Enable via portal or CLI per resource.</td>
+            </tr>
+            <tr>
+              <td>Custom Topic</td>
+              <td>You (your app publishes events)</td>
+              <td>Your own application events: "order placed", "user registered", "sensor reading received"</td>
+              <td>You get an endpoint + access key. POST events to that endpoint in EventGrid or CloudEvents schema.</td>
+            </tr>
+            <tr>
+              <td>Domain Topic</td>
+              <td>You (part of an Event Domain)</td>
+              <td>Multi-tenant SaaS: one domain manages thousands of topics — one per tenant, for example</td>
+              <td>An Event Domain can host up to 100,000 topics. Subscribers can subscribe to all or individual domain topics.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Event Schemas</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Schema</th><th>Format</th><th>Key Fields</th><th>When to Use</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>EventGrid Schema</td>
+              <td>Azure-proprietary JSON array</td>
+              <td><code>id</code>, <code>subject</code>, <code>eventType</code>, <code>eventTime</code>, <code>dataVersion</code>, <code>data</code></td>
+              <td>Default for Azure system topics and custom topics unless you opt into CloudEvents</td>
+            </tr>
+            <tr>
+              <td>CloudEvents 1.0</td>
+              <td>CNCF-standard JSON (or binary)</td>
+              <td><code>specversion</code>, <code>type</code>, <code>source</code>, <code>id</code>, <code>time</code>, <code>data</code></td>
+              <td>Cross-cloud interoperability, Dapr integration, or when standard compliance is required</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Event Handlers</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Handler</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Azure Functions</td><td>Most common exam answer. EventGrid trigger type handles validation automatically.</td></tr>
+            <tr><td>Logic Apps</td><td>Built-in Event Grid connector; no manual validation needed.</td></tr>
+            <tr><td>Event Hubs</td><td>Fan-out: route events into a high-throughput stream for further processing.</td></tr>
+            <tr><td>Service Bus Queue/Topic</td><td>Decouples event producer from consumer when ordering or sessions matter.</td></tr>
+            <tr><td>Storage Queue</td><td>Durable, cheap; consumer polls at its own pace.</td></tr>
+            <tr><td>Webhook (HTTPS endpoint)</td><td>Any HTTP endpoint — must implement <strong>manual validation handshake</strong> (see Gotchas).</td></tr>
+            <tr><td>Azure Relay Hybrid Connection</td><td>Routes events to on-premises listeners through Azure Relay.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Filtering on Subscriptions</h3>
+      <p>Filters are applied <strong>per event subscription</strong>, not at the topic level. Three filter types can be combined:</p>
+      <ul>
+        <li><strong>Event type filter</strong> — include or exclude specific <code>eventType</code> values (e.g., only <code>Microsoft.Storage.BlobCreated</code>).</li>
+        <li><strong>Subject prefix/suffix filter</strong> — match the <code>subject</code> field by prefix (e.g., <code>/blobServices/default/containers/images/</code>) or suffix (e.g., <code>.jpg</code>).</li>
+        <li><strong>Advanced filter</strong> — JSON path expressions on any field in the event envelope or <code>data</code> object. Supports operators: <code>NumberIn</code>, <code>StringContains</code>, <code>BoolEquals</code>, <code>IsNullOrUndefined</code>, etc.</li>
+      </ul>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Advanced filter limit</div>
+          Each event subscription supports a maximum of <strong>25 advanced filter values</strong> per subscription. If you need more, split the logic across multiple subscriptions or pre-filter in a Function.
+        </div>
+      </div>
+
+      <h3>Dead-letter and Retry Policy</h3>
+      <p>When Event Grid cannot deliver an event (handler returns 4xx/5xx, or the endpoint is unreachable), it enters a <strong>retry cycle</strong>. Events that exhaust retries or exceed the TTL are either dropped or sent to a <strong>dead-letter destination</strong> (a Blob Storage container you configure on the subscription).</p>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Dead-letter is opt-in per subscription</div>
+          Dead-lettering is <strong>not enabled by default</strong>. You must specify a storage container when creating the subscription. Without it, events that fail delivery are silently discarded after the retry window.
+        </div>
+      </div>
+
+      <!-- ② GOTCHAS -->
+      <div class="sec-lbl">② Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Webhook Validation Handshake — Custom Endpoints Must Handle It</div>
+          When you create an event subscription pointing to a custom Webhook URL, Event Grid sends a <strong>SubscriptionValidationEvent</strong> (POST with <code>eventType: "Microsoft.EventGrid.SubscriptionValidationEvent"</code>) to that endpoint. Your handler must extract the <code>validationCode</code> from the event data and respond with <code>{"validationResponse": "&lt;validationCode&gt;"}</code> within 30 seconds. If it does not, subscription creation fails with a validation error. <strong>Azure-native handlers (Azure Functions with EventGrid trigger, Logic Apps) handle this automatically</strong> — the exam distinguishes these from plain Webhooks. For newer endpoints, there is also an asynchronous validation path using a <code>validationUrl</code> that the endpoint owner visits in a browser.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">At-least-once Delivery Does NOT Mean Ordered Delivery</div>
+          Event Grid guarantees <strong>at-least-once delivery</strong> — not exactly-once, and not ordered. A single event may be delivered more than once (your handler must be idempotent). Events within the same topic can arrive at different subscribers in different orders, and even the same subscriber can receive events out of publication order. If your exam scenario says "events must be processed in strict order", Event Grid is the wrong answer — use <strong>Event Hubs with a single consumer per partition</strong>, or Service Bus sessions.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">System Topics Are Per-Resource, Not Per-Subscription</div>
+          A system topic is tied to a specific Azure resource (e.g., a specific Storage account). To receive events from <em>all</em> storage accounts in a subscription, you need to subscribe to the Azure subscription-level system topic or create separate subscriptions per account. The exam may present a scenario where a developer creates one system topic and wonders why they're not seeing events from a second storage account — the answer is that system topics are scoped per source resource.
+        </div>
+      </div>
+
+      <!-- ③ NUMBERS -->
+      <div class="sec-lbl">③ Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Metric</th><th>Value</th><th>Exam Note</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Max event size</td><td>1 MB</td><td>Per individual event. Events over 64 KB are charged in 64 KB increments.</td></tr>
+            <tr><td>Max batch size</td><td>1 MB total</td><td>A single POST to a custom topic can contain multiple events up to 1 MB combined.</td></tr>
+            <tr><td>Retry attempts</td><td>Up to 30</td><td>Exponential backoff. Stops after 30 retries OR after the TTL expires, whichever comes first.</td></tr>
+            <tr><td>Event TTL (retry window)</td><td>1440 minutes (24 hours)</td><td>Default and maximum. Configurable down to a lower value per subscription.</td></tr>
+            <tr><td>Event Domain topics</td><td>Up to 100,000 topics per domain</td><td>Each domain topic behaves like a custom topic. Used for multi-tenant fan-out.</td></tr>
+            <tr><td>Advanced filter values per subscription</td><td>25</td><td>Across all advanced filter conditions on a single subscription.</td></tr>
+            <tr><td>Subscriptions per topic</td><td>500</td><td>Default limit; can be raised via support request.</td></tr>
+            <tr><td>Custom topic throughput</td><td>Millions of events/second</td><td>Internally partitioned and auto-scaled by Microsoft.</td></tr>
+            <tr><td>Webhook validation timeout</td><td>30 seconds</td><td>Endpoint must return validationResponse within 30 s or subscription creation fails.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ④ CLI/SDK -->
+      <div class="sec-lbl">④ CLI / SDK Patterns</div>
+
+      <h3>Create a Custom Topic and Subscribe an Azure Function</h3>
+      <pre><code># 1 — Create a custom topic (your app publishes events here)
+az eventgrid topic create \
+  --name myOrderTopic \
+  --resource-group myRG \
+  --location eastus \
+  --input-schema cloudeventschemav1_0   # Default is eventgridschema; specify for CloudEvents
+
+# 2 — Retrieve the topic endpoint and key (needed to POST events)
+TOPIC_ENDPOINT=$(az eventgrid topic show \
+  --name myOrderTopic -g myRG \
+  --query "endpoint" -o tsv)
+
+TOPIC_KEY=$(az eventgrid topic key list \
+  --name myOrderTopic -g myRG \
+  --query "key1" -o tsv)
+
+# 3 — Subscribe an Azure Function as the handler
+#     Azure Functions handles the validation handshake automatically
+az eventgrid event-subscription create \
+  --name orderProcessorSub \
+  --source-resource-id $(az eventgrid topic show --name myOrderTopic -g myRG --query id -o tsv) \
+  --endpoint /subscriptions/{subId}/resourceGroups/myRG/providers/Microsoft.Web/sites/myFuncApp/functions/ProcessOrder \
+  --endpoint-type azurefunction \
+  --included-event-types "MyApp.OrderPlaced" \        # Filter by event type
+  --subject-begins-with "/orders/premium/" \          # Subject prefix filter
+  --deadletter-endpoint /subscriptions/{subId}/resourceGroups/myRG/providers/Microsoft.Storage/storageAccounts/mydlsa/blobServices/default/containers/deadletter
+
+# 4 — Publish a test event to the custom topic
+curl -X POST "$TOPIC_ENDPOINT" \
+  -H "aeg-sas-key: $TOPIC_KEY" \
+  -H "Content-Type: application/cloudevents+json" \
+  -d '[{
+    "specversion": "1.0",
+    "type": "MyApp.OrderPlaced",
+    "source": "/orders",
+    "id": "ord-001",
+    "time": "2024-01-15T10:30:00Z",
+    "data": { "orderId": "12345", "tier": "premium" }
+  }]'</code></pre>
+
+      <h3>Subscribe to a System Topic (Blob Storage events)</h3>
+      <pre><code># Subscribe to BlobCreated events on a specific storage account
+# System topics are created automatically when you create the subscription
+az eventgrid event-subscription create \
+  --name blobWatcherSub \
+  --source-resource-id /subscriptions/{subId}/resourceGroups/myRG/providers/Microsoft.Storage/storageAccounts/mystorage \
+  --endpoint-type azurefunction \
+  --endpoint /subscriptions/{subId}/resourceGroups/myRG/providers/Microsoft.Web/sites/myApp/functions/OnBlobCreated \
+  --included-event-types "Microsoft.Storage.BlobCreated" \
+  --subject-ends-with ".jpg"   # Only JPEGs — suffix filter on subject</code></pre>
+
+      <h3>SDK — Publish Events (Azure.Messaging.EventGrid .NET)</h3>
+      <pre><code>// NuGet: Azure.Messaging.EventGrid
+using Azure.Messaging.EventGrid;
+using Azure;
+
+// Publish to a custom topic using EventGrid schema
+var topicEndpoint = new Uri("https://myordertopic.eastus-1.eventgrid.azure.net/api/events");
+var credential = new AzureKeyCredential(topicKey);
+var client = new EventGridPublisherClient(topicEndpoint, credential);
+
+var eventToPublish = new EventGridEvent(
+    subject: "/orders/premium/12345",      // Subject used for prefix/suffix filtering
+    eventType: "MyApp.OrderPlaced",
+    dataVersion: "1.0",
+    data: new { orderId = "12345", tier = "premium" }
+);
+
+await client.SendEventAsync(eventToPublish);   // Single event
+// or: await client.SendEventsAsync(new[] { ev1, ev2 });  // Batch</code></pre>
+
+      <!-- ⑤ TRAPS -->
+      <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Event Grid guarantees ordered, exactly-once event delivery"</div>
+          Both parts are wrong. Event Grid guarantees <strong>at-least-once</strong> delivery (not exactly-once — duplicate delivery is possible) and makes <strong>no ordering guarantee</strong>. Exam distractors often frame this as "Event Grid ensures events are processed in the order they were published" — this is false. For ordered processing, use Event Hubs (partition-level ordering) or Service Bus (sessions for ordered message groups).
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "My Azure Function didn't receive the subscription validation event — I need to handle it in code"</div>
+          When you use an <strong>Azure Functions EventGrid trigger binding</strong> (not an HTTP trigger), the Functions runtime handles the SubscriptionValidationEvent response automatically. You only need to implement the validation handshake if you are using a <strong>plain HTTP endpoint / Webhook</strong> as the destination. The exam frequently tests whether candidates know this distinction — choosing the wrong trigger type (HTTP trigger instead of EventGrid trigger) for an Azure Function Webhook would require manual validation logic.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Event Grid is the right service for processing 100,000 sensor telemetry events per second"</div>
+          Event Grid is designed for <strong>reactive event routing</strong> at low-to-moderate volumes where you need fan-out to multiple handlers. For <strong>high-throughput streaming telemetry</strong> (IoT sensors, clickstreams, log aggregation), <strong>Event Hubs</strong> is the correct answer. Event Grid does not provide consumer groups, checkpointing, event replay, or the sustained ingestion throughput that Event Hubs does.
+        </div>
+      </div>
+
+      <!-- ⑥ Q&A -->
+      <div class="sec-lbl">⑥ Practice Q&amp;A</div>
+      <div class="qa-list">
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">A developer creates an event subscription on a custom Event Grid topic with the endpoint pointing to an ASP.NET Core Web API endpoint. The subscription creation fails with a validation error. What is the most likely cause and how should it be fixed?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">✓ Correct Answer</span>
+            <div class="qa-body">
+              <strong>The webhook endpoint did not respond to the SubscriptionValidationEvent with the correct validationResponse.</strong>
+              <ul>
+                <li>When a subscription is created pointing to a Webhook (non-native handler), Event Grid POSTs a <code>SubscriptionValidationEvent</code> to the endpoint immediately.</li>
+                <li>The endpoint must extract <code>data.validationCode</code> from the event and return <code>{"validationResponse": "&lt;code&gt;"}</code> as a 200 response within 30 seconds.</li>
+                <li>If the endpoint is not implemented to handle this event type (e.g., it returns 404 or ignores the body), subscription creation fails.</li>
+                <li>Fix: add a handler in the ASP.NET controller that checks for <code>eventType == "Microsoft.EventGrid.SubscriptionValidationEvent"</code> and returns the echo response.</li>
+                <li>Alternative fix: switch the handler to an Azure Functions EventGrid trigger, which handles validation automatically.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">Your application publishes events to an Event Grid custom topic. Some downstream consumers are failing to process events and you want failed events to be preserved for investigation. What must you configure, and where?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">✓ Correct Answer</span>
+            <div class="qa-body">
+              <strong>Configure a dead-letter destination on each event subscription, pointing to a Blob Storage container.</strong>
+              <ul>
+                <li>Dead-lettering is configured at the <strong>event subscription level</strong>, not on the topic itself.</li>
+                <li>You specify a storage account and container. Events that exhaust all retries (up to 30 over 24 hours) are written there as JSON blobs.</li>
+                <li>Dead-lettering is <strong>off by default</strong> — without it, failed events are silently dropped after the retry window.</li>
+                <li>The storage account must be in the same subscription as the event subscription (or you must grant Event Grid the Storage Blob Data Contributor role on the container).</li>
+                <li>CLI flag: <code>--deadletter-endpoint</code> on <code>az eventgrid event-subscription create</code>.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">A SaaS platform hosts 5,000 customers and wants each customer to receive only their own events via Event Grid. Creating 5,000 custom topics separately would be operationally unmanageable. What Event Grid feature addresses this?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">✓ Correct Answer</span>
+            <div class="qa-body">
+              <strong>Event Domains, which host up to 100,000 domain topics under a single management endpoint.</strong>
+              <ul>
+                <li>An Event Domain is a single resource that acts as a container for thousands of topics.</li>
+                <li>Each customer gets their own <strong>domain topic</strong> (e.g., <code>myDomain.eventgrid.azure.net/topics/customer-1234</code>).</li>
+                <li>The domain owner can subscribe to all topics at once or to individual topics per customer.</li>
+                <li>Publishing uses a single endpoint with a per-topic path, or the domain endpoint with a topic specified in the event subject.</li>
+                <li>Limit: up to 100,000 topics per domain. Beyond that, use multiple domains.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">You need to filter Event Grid events so that only events where the custom data field <code>data.priority</code> equals "high" are delivered to your handler. Which filter type do you use?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">✓ Correct Answer</span>
+            <div class="qa-body">
+              <strong>Advanced filter using a StringIn or StringContains operator on the JSON path <code>data.priority</code>.</strong>
+              <ul>
+                <li>Subject prefix/suffix filters only work on the top-level <code>subject</code> field — they cannot inspect <code>data</code>.</li>
+                <li>Advanced filters use JSON path expressions to reference any field, including nested fields inside the <code>data</code> object.</li>
+                <li>Example: <code>{"operatorType": "StringIn", "key": "data.priority", "values": ["high"]}</code>.</li>
+                <li>Up to 25 advanced filter conditions per subscription; up to 5 values per <code>StringIn</code> condition.</li>
+                <li>Can combine multiple advanced filters — all conditions are ANDed together.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">An Event Grid subscription has a retry policy of 30 attempts and a 24-hour TTL. The target webhook goes offline for 36 hours. What happens to events published during the outage?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">✓ Correct Answer</span>
+            <div class="qa-body">
+              <strong>Events are dead-lettered (if configured) or permanently lost after 24 hours, regardless of the 30-retry limit.</strong>
+              <ul>
+                <li>The retry policy has two stop conditions: exhausting all 30 retries, OR exceeding the event TTL — whichever occurs first.</li>
+                <li>Events published within the 24-hour window before the outage ends will have their TTL expire before delivery can succeed (since the endpoint is down for 36 hours).</li>
+                <li>Events are not "held" indefinitely — once the TTL of 24 hours expires, they are moved to the dead-letter destination or dropped.</li>
+                <li>This means that even if the endpoint comes back after 36 hours, the events are gone from Event Grid's retry queue.</li>
+                <li>For scenarios requiring longer durable storage, use Service Bus (up to 14-day message lock + durable queue) or write to Event Hubs Capture.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">A developer says: "I need multiple independent services to each receive every event from my Event Grid topic. I'll create a single subscription and have all services share it." What is wrong with this design?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">✓ Correct Answer</span>
+            <div class="qa-body">
+              <strong>A single subscription delivers each event to exactly one endpoint. Each independent service needs its own subscription to receive all events independently.</strong>
+              <ul>
+                <li>Event Grid subscriptions route each event to the one handler configured on that subscription — it is not a broadcast to multiple handlers on the same subscription.</li>
+                <li>To achieve fan-out (every service gets every event), create <strong>one subscription per service handler</strong>. Event Grid delivers the event to all matching subscriptions independently.</li>
+                <li>This is unlike a Service Bus queue (competing consumers) — Event Grid is designed for fan-out via multiple subscriptions.</li>
+                <li>Up to 500 subscriptions per topic (default limit), so the pattern scales to hundreds of independent consumers.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">You want to receive events when any blob is created anywhere in your Azure subscription (across all storage accounts). What Event Grid topic type and configuration should you use?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">✓ Correct Answer</span>
+            <div class="qa-body">
+              <strong>Create a system topic at the Azure subscription or resource group scope, not at the individual storage account scope.</strong>
+              <ul>
+                <li>Event Grid system topics can be scoped to an Azure subscription or resource group, which will surface events from all matching resources within that scope.</li>
+                <li>Example: subscribe to the Azure subscription-level system topic and filter for <code>eventType: Microsoft.Storage.BlobCreated</code> — this catches blobs from any storage account in the subscription.</li>
+                <li>Alternatively, use Azure Policy or Event Grid event subscriptions at the resource group level to capture events from all storage accounts in that group.</li>
+                <li>A system topic per individual storage account is the wrong approach when coverage needs to span multiple accounts.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">8</div>
+            <div class="qa-text">Your Event Grid custom topic is configured with CloudEvents 1.0 schema. A developer posts events using the old EventGrid schema format and reports that events are silently dropped. Why?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">✓ Correct Answer</span>
+            <div class="qa-body">
+              <strong>The topic's input schema is set to CloudEvents 1.0; events submitted in EventGrid schema format fail schema validation and are rejected (returning a 400 error), not silently dropped.</strong>
+              <ul>
+                <li>Each custom topic has a fixed <code>--input-schema</code> set at creation time: <code>eventgridschema</code>, <code>cloudeventschemav1_0</code>, or <code>customeventschema</code>.</li>
+                <li>Events that do not match the configured schema return an HTTP 400 Bad Request to the publisher — the publisher should be logging this error, not reporting silent drops.</li>
+                <li>The schema is <strong>immutable after topic creation</strong> — you cannot change a topic from EventGrid schema to CloudEvents schema later. You would need to create a new topic.</li>
+                <li>The fix: update the publishing code to use CloudEvents 1.0 format (required fields: <code>specversion</code>, <code>type</code>, <code>source</code>, <code>id</code>), and set the <code>Content-Type</code> header to <code>application/cloudevents+json</code>.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end qa-list -->
+    </section>
+    <!-- ═══════════════════════════════════════════════════ END MODULE 1 -->
+
+
+    <!-- ═══════════════════════════════════════════════════ MODULE 2 -->
+    <section class="module" id="m2">
+      <h2><span class="mod-num">02</span> Azure Event Hubs</h2>
+
+      <div class="sec-lbl">① Key Concepts</div>
+
+      <h3>High-throughput Event Streaming Architecture</h3>
+      <p>Event Hubs is a <strong>distributed streaming platform</strong> built for ingesting millions of events per second. Think of it as a durable, append-only log split into partitions. Unlike Event Grid (routing/reaction), Event Hubs is designed for <strong>streaming pipelines</strong>: telemetry ingestion, log aggregation, real-time analytics, and event replay.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Concept</th><th>Definition</th><th>Exam Relevance</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Partition</td>
+              <td>An ordered, append-only sequence of events. Each event in a partition has a monotonically increasing offset. Partitions are set at namespace/hub creation.</td>
+              <td>Partition count determines max parallelism. Cannot decrease after creation; can increase only in Premium/Dedicated.</td>
+            </tr>
+            <tr>
+              <td>Consumer Group</td>
+              <td>A named view of the entire event stream. Each consumer group maintains its own offset position independently of all others.</td>
+              <td>Multiple consumer groups allow multiple independent applications to read the same data without interfering. The <code>$Default</code> consumer group always exists.</td>
+            </tr>
+            <tr>
+              <td>Offset / Checkpoint</td>
+              <td>Offset is the byte position of an event within a partition. A checkpoint is when a consumer saves its current offset so it can resume from that point after a restart.</td>
+              <td>Without checkpointing, a consumer restarts from the beginning of the retention window (or latest, depending on configuration). EventProcessorClient does checkpointing automatically to Blob Storage.</td>
+            </tr>
+            <tr>
+              <td>Throughput Unit (TU)</td>
+              <td>Standard tier capacity unit. 1 TU = 1 MB/s ingress, 2 MB/s egress, up to 1,000 events/s ingress.</td>
+              <td>You can scale TUs manually or use auto-inflate (Standard) to auto-scale up to a configured maximum.</td>
+            </tr>
+            <tr>
+              <td>Processing Unit (PU)</td>
+              <td>Premium tier capacity unit. More powerful than TUs; provides isolation and higher limits.</td>
+              <td>Premium PUs support dynamic partition count increases (unlike Standard TUs).</td>
+            </tr>
+            <tr>
+              <td>Capacity Unit (CU)</td>
+              <td>Dedicated tier. A single-tenant cluster for maximum throughput, longest retention, and full isolation.</td>
+              <td>Dedicated = single-tenant. If a question says "tenant isolation" or "predictable performance at scale", dedicated is the answer.</td>
+            </tr>
+            <tr>
+              <td>Event Hubs Capture</td>
+              <td>Automatic, continuous snapshot of the event stream written to Azure Blob Storage or ADLS Gen2 in Apache Avro format.</td>
+              <td>Enabled per Event Hub (not namespace). Configurable time/size window (minimum 60 seconds or 10 MB). Avro format means consumers must deserialize using an Avro library.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Namespace Tier Comparison</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Feature</th><th>Basic</th><th>Standard</th><th>Premium</th><th>Dedicated</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Consumer Groups</td>
+              <td>$Default only</td>
+              <td>Up to 20</td>
+              <td>Up to 100</td>
+              <td>Up to 1,000</td>
+            </tr>
+            <tr>
+              <td>Event Hubs Capture</td>
+              <td>No</td>
+              <td>Yes (extra cost)</td>
+              <td>Yes (included)</td>
+              <td>Yes (included)</td>
+            </tr>
+            <tr>
+              <td>Kafka surface</td>
+              <td>No</td>
+              <td>Yes</td>
+              <td>Yes</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>Event retention</td>
+              <td>1 day</td>
+              <td>1–7 days</td>
+              <td>1–90 days</td>
+              <td>1–90 days</td>
+            </tr>
+            <tr>
+              <td>Dynamic partition increase</td>
+              <td>No</td>
+              <td>No</td>
+              <td>Yes</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>Customer-managed keys</td>
+              <td>No</td>
+              <td>No</td>
+              <td>Yes</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>Tenant isolation</td>
+              <td>Shared</td>
+              <td>Shared</td>
+              <td>Isolated compute</td>
+              <td>Single-tenant cluster</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Partition key determines which partition an event goes to</div>
+          If you specify a <strong>partition key</strong> when publishing, Event Grid hashes it to assign the event to a consistent partition. All events with the same partition key land in the same partition, guaranteeing relative ordering for that key. If you omit the partition key (or use round-robin), events are distributed across all partitions — higher throughput but no key-based ordering.
+        </div>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">EventProcessorClient is the modern SDK for consuming</div>
+          The <code>EventProcessorClient</code> (in <code>Azure.Messaging.EventHubs.Processor</code>) handles partition ownership, load balancing across multiple consumer instances, and checkpointing to a Blob Storage container. The older <code>EventProcessorHost</code> is legacy. The exam may reference both — prefer EventProcessorClient in modern scenarios.
+        </div>
+      </div>
+
+      <!-- ② GOTCHAS -->
+      <div class="sec-lbl">② Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Partition Count Is Effectively Immutable for Standard Tier</div>
+          For <strong>Standard tier</strong>, partition count is set at Event Hub creation and <strong>cannot be changed</strong> (neither increased nor decreased) after the fact. If you need more parallelism later, you must delete and recreate the Event Hub (losing all retained events) or migrate to Premium/Dedicated where dynamic partition increases are supported. The exam tests this directly: "your throughput is insufficient and you need more parallelism — what do you do with a Standard namespace?" The answer is: you cannot simply increase partitions; you must add more TUs for throughput, and for true partition parallelism increases, you must recreate the hub or upgrade to Premium.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Consumer Groups Grant Independent Views — Consumers Within a Group Split Partitions</div>
+          This is the most frequently misunderstood Event Hubs concept on the exam. A <strong>consumer group</strong> as a whole reads the entire event stream (all partitions). But <strong>within a consumer group</strong>, each active consumer instance owns a subset of partitions — no partition is read by two consumers in the same group simultaneously. With 4 partitions and 2 consumers in the same group, each consumer reads 2 partitions. If you add a 5th consumer when there are only 4 partitions, the 5th consumer is idle (no partitions to own). Adding more consumers than partitions does NOT increase throughput — you need more partitions first.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Event Hubs Capture Uses Avro Format — Downstream Consumers Must Deserialize</div>
+          Event Hubs Capture writes event data to Blob Storage or ADLS Gen2 in <strong>Apache Avro binary format</strong>, not plain JSON. Files are organized by a configurable naming convention: <code>{Namespace}/{EventHub}/{PartitionId}/{Year}/{Month}/{Day}/{Hour}/{Minute}/{Second}.avro</code>. A scenario where a developer claims they can directly read Capture files as JSON is incorrect — they need an Avro reader (e.g., the <code>Apache.Avro</code> NuGet package, or Azure Data Factory, or Azure Synapse). Also: Capture is enabled <strong>per Event Hub</strong>, not at the namespace level.
+        </div>
+      </div>
+
+      <!-- ③ NUMBERS -->
+      <div class="sec-lbl">③ Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Metric</th><th>Value</th><th>Exam Note</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Max event size</td><td>1 MB (Standard &amp; Premium)</td><td>Individual event body limit. AMQP framing overhead applies; practical limit is slightly under 1 MB.</td></tr>
+            <tr><td>1 Throughput Unit ingress</td><td>1 MB/s or 1,000 events/s</td><td>Whichever is reached first triggers throttling. Add TUs to scale ingress.</td></tr>
+            <tr><td>1 Throughput Unit egress</td><td>2 MB/s</td><td>Egress TU limit is 2× ingress. Consumer groups multiply egress consumption.</td></tr>
+            <tr><td>Default retention (Standard)</td><td>1 day</td><td>Configurable up to 7 days for Standard. Must explicitly set to higher value; default is 1 day.</td></tr>
+            <tr><td>Max retention (Standard)</td><td>7 days</td><td>Premium and Dedicated support up to 90 days.</td></tr>
+            <tr><td>Default partition count</td><td>4</td><td>Can be set 1–32 at creation for Standard. Higher values possible for Premium/Dedicated.</td></tr>
+            <tr><td>Max consumer groups (Standard)</td><td>20 per Event Hub</td><td>Basic only has $Default. Premium supports up to 100, Dedicated up to 1,000.</td></tr>
+            <tr><td>Capture minimum window</td><td>60 seconds or 10 MB</td><td>Configurable per Event Hub. Capture writes when either threshold is hit first.</td></tr>
+            <tr><td>Max Event Hubs per namespace</td><td>10 (Basic/Standard)</td><td>Premium: 100. Dedicated: depends on CUs.</td></tr>
+            <tr><td>Auto-inflate max TUs</td><td>Up to 40 TUs</td><td>Standard tier only. Auto-inflate scales up automatically, but does NOT scale down.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ④ CLI/SDK -->
+      <div class="sec-lbl">④ CLI / SDK Patterns</div>
+
+      <h3>Create a Namespace, Event Hub, and Enable Capture</h3>
+      <pre><code># Create a Standard namespace (choose tier carefully — Basic lacks consumer groups/Capture)
+az eventhubs namespace create \
+  --name myEHNamespace \
+  --resource-group myRG \
+  --location eastus \
+  --sku Standard \               # Basic | Standard | Premium
+  --capacity 2 \                  # Number of TUs; auto-inflate can increase this automatically
+  --enable-auto-inflate true \
+  --maximum-throughput-units 10   # Auto-inflate ceiling
+
+# Create an Event Hub with 4 partitions and 7-day retention
+az eventhubs eventhub create \
+  --name myTelemetryHub \
+  --namespace-name myEHNamespace \
+  --resource-group myRG \
+  --partition-count 4 \           # Cannot change for Standard after creation
+  --message-retention 7           # Days; max 7 for Standard, 90 for Premium/Dedicated
+
+# Enable Capture to Blob Storage (must pre-create the container)
+az eventhubs eventhub update \
+  --name myTelemetryHub \
+  --namespace-name myEHNamespace \
+  --resource-group myRG \
+  --enable-capture true \
+  --capture-interval 300 \        # Seconds; min 60, max 900
+  --capture-size-limit 314572800 \ # Bytes; 300 MB here; min 10 MB
+  --destination-name EventHubArchive.AzureBlockBlob \
+  --storage-account /subscriptions/{subId}/resourceGroups/myRG/providers/Microsoft.Storage/storageAccounts/mycapturestorage \
+  --blob-container capturecontainer \
+  --archive-name-format "{Namespace}/{EventHub}/{PartitionId}/{Year}/{Month}/{Day}/{Hour}/{Minute}/{Second}.avro"
+
+# Create a consumer group (Standard tier allows multiple)
+az eventhubs eventhub consumer-group create \
+  --name analyticsConsumerGroup \
+  --eventhub-name myTelemetryHub \
+  --namespace-name myEHNamespace \
+  --resource-group myRG</code></pre>
+
+      <h3>SDK — Send and Receive Events (.NET)</h3>
+      <pre><code">// NuGet: Azure.Messaging.EventHubs
+//        Azure.Messaging.EventHubs.Processor  (for EventProcessorClient)
+
+using Azure.Messaging.EventHubs;
+using Azure.Messaging.EventHubs.Producer;
+using Azure.Messaging.EventHubs.Processor;
+using Azure.Storage.Blobs;
+
+// ── PRODUCER: Send events with a partition key ──────────────────────────
+var producerClient = new EventHubProducerClient(connectionString, "myTelemetryHub");
+
+// Events with the same partition key always go to the same partition (ordering guarantee)
+using EventDataBatch batch = await producerClient.CreateBatchAsync(
+    new CreateBatchOptions { PartitionKey = "device-sensor-42" }
+);
+batch.TryAdd(new EventData(Encoding.UTF8.GetBytes("{\"temp\":72.4}")));
+batch.TryAdd(new EventData(Encoding.UTF8.GetBytes("{\"temp\":72.6}")));
+await producerClient.SendAsync(batch);
+
+// ── CONSUMER: EventProcessorClient with checkpointing ───────────────────
+// Checkpoint store must be a Blob Storage container
+var storageClient = new BlobContainerClient(storageConnectionString, "checkpoints");
+var processor = new EventProcessorClient(
+    storageClient,
+    consumerGroup: "$Default",     // Use named consumer group for isolation
+    connectionString: connectionString,
+    eventHubName: "myTelemetryHub"
+);
+
+processor.ProcessEventAsync += async (args) => {
+    string body = Encoding.UTF8.GetString(args.Data.Body.ToArray());
+    Console.WriteLine($"Partition {args.Partition.PartitionId}: {body}");
+    // Checkpoint saves offset so restart continues from here, not the beginning
+    await args.UpdateCheckpointAsync();
+};
+
+processor.ProcessErrorAsync += (args) => {
+    Console.WriteLine($"Error on partition {args.PartitionId}: {args.Exception.Message}");
+    return Task.CompletedTask;
+};
+
+await processor.StartProcessingAsync();
+// ... keep running ...
+await processor.StopProcessingAsync();</code></pre>
+
+      <h3>SDK — Read Events from a Specific Offset</h3>
+      <pre><code">// EventHubConsumerClient — useful for ad-hoc reads, diagnostics, or replay
+using Azure.Messaging.EventHubs.Consumer;
+
+var consumer = new EventHubConsumerClient(
+    EventHubConsumerClient.DefaultConsumerGroupName,
+    connectionString,
+    "myTelemetryHub"
+);
+
+// Read from the beginning of the retention window on partition 0
+await foreach (PartitionEvent pe in consumer.ReadEventsFromPartitionAsync(
+    partitionId: "0",
+    startingPosition: EventPosition.Earliest,   // or .Latest, or .FromOffset(long), or .FromEnqueuedTime(DateTimeOffset)
+    cancellationToken: cts.Token))
+{
+    Console.WriteLine(Encoding.UTF8.GetString(pe.Data.Body.ToArray()));
+}</code></pre>
+
+      <!-- ⑤ TRAPS -->
+      <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Adding more consumers to a consumer group increases read throughput"</div>
+          Not beyond the partition count. Each partition can only be owned by <strong>one consumer instance per consumer group</strong>. If you have 4 partitions and spin up 6 consumer instances in the same consumer group, 2 of those instances will be idle with no partitions assigned. To increase read parallelism, you need more partitions — and for Standard tier you cannot add partitions after creation, so you would need to recreate the hub (or use Premium/Dedicated and increase partitions dynamically).
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Event Hubs Basic supports multiple consumer groups"</div>
+          Basic tier only supports the single built-in <code>$Default</code> consumer group. You <strong>cannot create additional consumer groups</strong> on a Basic namespace. The exam frequently presents a scenario where you need multiple independent applications to read the same stream (requiring separate consumer groups) and asks which tier is required — the answer is Standard or higher. If the question says "Basic tier is already deployed", the fix is to upgrade to Standard, not add consumer groups.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Event Hubs guarantees exactly-once delivery"</div>
+          Event Hubs guarantees <strong>at-least-once delivery</strong>. A consumer that crashes between receiving an event and checkpointing will re-read that event on restart. To achieve exactly-once semantics you must implement idempotency in your processing logic (e.g., track event IDs in a database and skip duplicates). The Kafka surface on Event Hubs supports idempotent producer settings, but the AMQP/SDK surface does not provide exactly-once out of the box.
+        </div>
+      </div>
+
+      <!-- ⑥ Q&A -->
+      <div class="sec-lbl">⑥ Practice Q&amp;A</div>
+      <div class="qa-list">
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">An IoT application sends 500,000 telemetry events per second to Event Hubs. The processing team needs three independent applications to each consume and analyze the full stream without interfering with each other. How should the Event Hubs namespace be configured?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">✓ Correct Answer</span>
+            <div class="qa-body">
+              <strong>Standard tier (or higher) with three separate consumer groups — one per application.</strong>
+              <ul>
+                <li>Each consumer group maintains its own independent offset cursor across all partitions. All three groups receive all events from the hub.</li>
+                <li>Basic tier supports only <code>$Default</code> — it cannot provide three independent groups. Standard tier supports up to 20 consumer groups per Event Hub.</li>
+                <li>The three applications do not share offsets. One application falling behind does not affect the others.</li>
+                <li>For 500K events/second at ~200 bytes each, that is roughly 100 MB/s ingress, requiring approximately 100 TUs. Use Standard with auto-inflate or upgrade to Premium.</li>
+                <li>Ensure partition count is high enough (e.g., 32) to allow each application to scale consumer instances for parallel processing.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">A developer notices that after their event processor restarts, it begins re-reading events from an hour ago instead of continuing where it left off. What is the most likely cause?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">✓ Correct Answer</span>
+            <div class="qa-body">
+              <strong>The processor is not checkpointing, or checkpoints are being written to a location that does not persist across restarts.</strong>
+              <ul>
+                <li>Without a valid checkpoint, <code>EventProcessorClient</code> defaults to reading from the beginning of the retention window (or from <code>EventPosition.Earliest</code> for that partition).</li>
+                <li>If using <code>EventProcessorClient</code>, a Blob Storage container must be provided as the checkpoint store, and <code>await args.UpdateCheckpointAsync()</code> must be called after each event (or after processing a batch) to persist the current offset.</li>
+                <li>Common mistake: checkpointing to a local file or in-memory store that is lost on restart, rather than Blob Storage.</li>
+                <li>Another cause: the checkpoint container is being cleared between restarts, or the connection string points to a different storage account in production than in development.</li>
+                <li>Fix: verify the <code>BlobContainerClient</code> points to a persistent container, ensure <code>UpdateCheckpointAsync</code> is called, and verify the container exists before starting the processor.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">A team needs to archive all incoming Event Hubs events to long-term storage for compliance. They want to query the archived data with Azure Synapse Analytics. Which Event Hubs feature should they use, and what is the output format?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">✓ Correct Answer</span>
+            <div class="qa-body">
+              <strong>Event Hubs Capture to Azure Data Lake Storage Gen2 in Apache Avro format.</strong>
+              <ul>
+                <li>Capture automatically writes events to either Azure Blob Storage or ADLS Gen2 in Avro format. ADLS Gen2 is preferred for Synapse Analytics integration (native connector support).</li>
+                <li>Files are organized by a time-based naming pattern: <code>{Namespace}/{EventHub}/{PartitionId}/{Year}/{Month}/{Day}/{Hour}/{Minute}/{Second}.avro</code>.</li>
+                <li>Avro files can be queried from Azure Synapse via external tables using the built-in Avro reader, or processed with Azure Data Factory mapping data flows.</li>
+                <li>Capture is enabled per Event Hub, not per namespace. It requires Standard tier or higher (Basic does not support Capture).</li>
+                <li>The capture window is configurable: write when either the time interval (min 60 sec) or the size threshold (min 10 MB) is reached.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">An Event Hubs Standard namespace has an Event Hub with 8 partitions. A developer deploys 12 instances of a consumer application all using the same consumer group. How many instances will actively process events?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">✓ Correct Answer</span>
+            <div class="qa-body">
+              <strong>Only 8 instances will actively process events; the remaining 4 will be idle.</strong>
+              <ul>
+                <li>Each partition can be owned by exactly one consumer instance within a consumer group at any point in time.</li>
+                <li>With 8 partitions and 12 consumers in the same group, the <code>EventProcessorClient</code> load balancer assigns one partition per active consumer until all 8 are assigned.</li>
+                <li>The remaining 4 consumer instances will enter a standby/idle state. They will take over partitions only if one of the 8 active instances fails or is removed.</li>
+                <li>This means running more consumers than partitions wastes compute resources but provides faster failover (idle consumers pick up orphaned partitions quickly).</li>
+                <li>To make all 12 instances active, increase partition count to 12 — but on Standard tier this requires recreating the Event Hub. On Premium/Dedicated, you can increase partitions dynamically.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">You are designing a solution where all events from the same device must be processed in order by a single consumer. How should you configure event publishing to Event Hubs to guarantee this?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">✓ Correct Answer</span>
+            <div class="qa-body">
+              <strong>Publish events with the device ID as the partition key. All events sharing the same partition key are routed to the same partition and are read in order within that partition.</strong>
+              <ul>
+                <li>Event Hubs hashes the partition key to determine the target partition. All events with the same key consistently land on the same partition.</li>
+                <li>Within a partition, events are stored in append-only order by offset — a consumer reading that partition will see events in the exact order they were ingested.</li>
+                <li>The consumer owning that partition (within a consumer group) processes its events serially, guaranteeing per-device ordering.</li>
+                <li>Do NOT use round-robin publishing (no partition key) if ordering per device matters — events from the same device could land on different partitions.</li>
+                <li>Tradeoff: if one device generates far more events than others, its partition becomes a hot partition. Consider hashing device IDs into a fixed number of buckets to distribute load.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">A company is evaluating whether to use Azure Event Grid or Azure Event Hubs for their new system that receives 200,000 log entries per second from distributed servers and needs to replay the last 3 days of logs on demand. Which service is correct and why?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">✓ Correct Answer</span>
+            <div class="qa-body">
+              <strong>Azure Event Hubs — it supports high-throughput ingestion, event retention for replay, and consumer groups for independent readers.</strong>
+              <ul>
+                <li><strong>Event Grid</strong> is for discrete event routing (something happened → react). It has no event retention or replay capability; once an event is delivered, it's gone.</li>
+                <li><strong>Event Hubs</strong> is a streaming log — events are retained for a configurable window (1–7 days Standard, up to 90 days Premium/Dedicated). Consumers can replay from any offset within the retention window.</li>
+                <li>3-day replay requires Standard tier with <code>--message-retention 3</code> (or higher). Basic supports only 1 day and no extra consumer groups.</li>
+                <li>200,000 log entries/second is well within Event Hubs Standard capacity (with enough TUs and partitions).</li>
+                <li>For even longer retention beyond 90 days, combine Event Hubs with Capture → ADLS Gen2, and replay from there using Azure Synapse or custom consumers.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">An existing Event Hubs Standard namespace was created with 4 partitions. After six months, throughput has grown and the team needs 16 partitions for more consumer parallelism. What are the options?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">✓ Correct Answer</span>
+            <div class="qa-body">
+              <strong>For Standard tier, you cannot increase partition count in-place. Options are: (1) recreate the Event Hub with 16 partitions (accepting data loss from the old hub), or (2) upgrade the namespace to Premium tier, which supports dynamic partition increases.</strong>
+              <ul>
+                <li>Standard tier partition count is immutable after Event Hub creation — it can be neither increased nor decreased.</li>
+                <li>Option 1 — Recreate: create a new Event Hub with 16 partitions, redirect producers to it, and drain the old hub. Any events still in the old hub's retention window must be re-processed before decommissioning it.</li>
+                <li>Option 2 — Upgrade to Premium: Premium tier supports <code>az eventhubs eventhub update --partition-count</code> to increase (not decrease) partitions on an existing hub without data loss. Premium costs more but provides isolation, customer-managed keys, and longer retention.</li>
+                <li>Adding more TUs alone will improve ingress/egress throughput but will NOT increase consumer parallelism beyond the current partition count.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">8</div>
+            <div class="qa-text">A team uses Event Hubs Capture and reports that they cannot read the captured files as JSON using a standard text editor or az storage blob download. What is the correct explanation?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <span class="qa-correct">✓ Correct Answer</span>
+            <div class="qa-body">
+              <strong>Event Hubs Capture writes files in Apache Avro binary format, not plain JSON. They must be deserialized using an Avro reader.</strong>
+              <ul>
+                <li>Avro is a compact binary serialization format. Opening a <code>.avro</code> file in a text editor shows binary garbage — it is not human-readable.</li>
+                <li>The Avro file contains a schema header followed by compressed binary data blocks. The schema is embedded in the file header.</li>
+                <li>To read: use the <code>Apache.Avro</code> NuGet package in .NET, <code>avro-tools</code> CLI, Azure Data Factory, Azure Synapse Analytics (built-in Avro support), or Azure Databricks (<code>spark.read.format("avro")</code>).</li>
+                <li>There is no option to change Capture output to JSON — Avro is the only supported format for Event Hubs Capture.</li>
+                <li>The file naming convention embeds partition ID and timestamp, making it easy to find events from a specific partition and time range.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end qa-list -->
+    </section>
+    <!-- ═══════════════════════════════════════════════════ END MODULE 2 -->
+
+    <div class="nav-end">
+      <a href="learn-08-api-management.html" class="btn-link">← API Management</a>
+      <a href="learn-10-messaging.html" class="btn-link fwd">Messaging →</a>
+    </div>
+  </main>
+</div>
+
+<script>
+
+(function(){
+  // Q&A accordion
+  document.querySelectorAll('.qa-q').forEach(function(q){
+    q.addEventListener('click',function(){
+      this.closest('.qa-item').classList.toggle('open');
+    });
+  });
+  // Sidebar scroll-spy
+  var links=document.querySelectorAll('.sb-link[data-m]');
+  var sections=document.querySelectorAll('.module[id]');
+  if(links.length&&sections.length){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var n=e.target.id.replace('m','');
+          links.forEach(function(l){l.classList.toggle('active',l.dataset.m===n);});
+        }
+      });
+    },{rootMargin:'-8% 0px -72% 0px'});
+    sections.forEach(function(s){obs.observe(s);});
+  }
+  // Sidebar click scroll
+  links.forEach(function(l){
+    l.addEventListener('click',function(e){
+      e.preventDefault();
+      var t=document.getElementById('m'+this.dataset.m);
+      if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+})();
+
+</script>
+</body>
+</html>

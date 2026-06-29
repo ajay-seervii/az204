@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blob Storage — AZ-204 Study Notes</title>
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --azure:#0078D4;--azure-dark:#005a9e;--azure-light:#deecf9;
+  --bg:#f4f6f9;--surface:#fff;--nav-bg:#1a1f36;
+  --border:#d0d7de;--border-light:#e8ecf0;
+  --text:#1a1f36;--text-muted:#6b7280;--text-light:#9ca3af;
+  --ok-bg:#ecfdf5;--ok-bdr:#10b981;--ok-txt:#065f46;
+  --err-bg:#fef2f2;--err-bdr:#ef4444;--err-txt:#991b1b;
+  --warn-bg:#fffbeb;--warn-bdr:#fbbf24;--warn-txt:#92400e;
+  --r:10px;--rs:6px;
+  --sh:0 1px 3px rgba(0,0,0,.08);--shm:0 4px 12px rgba(0,0,0,.12);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--azure);text-decoration:none}
+a:hover{text-decoration:underline}
+#top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
+.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
+.nav-bc a{color:rgba(255,255,255,.75)}
+.nav-bc a:hover{color:#fff;text-decoration:none}
+.nav-bc span{color:rgba(255,255,255,.35)}
+.nav-bc strong{color:#fff}
+.nav-acts{display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
+.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.page-layout{display:flex;min-height:calc(100vh - 54px)}
+.sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
+.sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
+.sb-back:hover{color:var(--azure);text-decoration:none}
+.sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-light);padding:.5rem 1rem;margin-top:.25rem}
+.sb-link{display:flex;align-items:center;gap:8px;padding:.45rem 1rem;font-size:13px;color:var(--text-muted);border-left:3px solid transparent;cursor:pointer;transition:background .1s,color .1s,border-color .1s}
+.sb-link:hover{background:#f8fafc;color:var(--text)}
+.sb-link.active{border-left-color:var(--azure);color:var(--azure);background:#eff6ff;font-weight:600}
+.sb-num{font-size:10px;background:#f3f4f6;border:1px solid var(--border-light);padding:1px 6px;border-radius:20px;margin-left:auto;color:var(--text-light)}
+.sb-next{display:flex;align-items:center;gap:6px;padding:.45rem 1rem;font-size:12px;color:var(--text-muted);margin-top:.5rem;border-top:1px solid var(--border-light)}
+.sb-next:hover{color:var(--azure);text-decoration:none}
+.main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
+.topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
+.topic-header p{font-size:13px;color:var(--text-muted);margin:0}
+.topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
+.module{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem 1.75rem;margin-bottom:1.75rem;scroll-margin-top:70px}
+.module h2{font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--border-light)}
+.module h2 .mod-num{background:var(--azure);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--azure);margin-bottom:.5rem;margin-top:1.25rem;display:flex;align-items:center;gap:6px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--azure-light)}
+h3{font-size:14px;font-weight:700;color:var(--text);margin:.75rem 0 .4rem}
+p,li{font-size:13px;color:var(--text-muted);line-height:1.7}
+ul,ol{padding-left:1.4rem;margin:.4rem 0}
+li{margin-bottom:.25rem}
+strong{color:var(--text)}
+code{font-family:Consolas,'Cascadia Code','Courier New',monospace;font-size:.85em;background:#f3f4f6;padding:1px 5px;border-radius:4px;color:#1a1f36}
+pre{font-family:Consolas,'Cascadia Code','Courier New',monospace;background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:var(--rs);padding:1.1rem 1.25rem;overflow-x:auto;font-size:12.5px;line-height:1.65;margin:.6rem 0}
+pre code{background:none;padding:0;color:inherit}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--rs);margin:.6rem 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f8fafc;color:var(--text-muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.55rem .9rem;text-align:left;border-bottom:2px solid var(--border)}
+td{padding:.55rem .9rem;border-bottom:1px solid var(--border-light);color:var(--text-muted);vertical-align:top;line-height:1.5}
+td:first-child{color:var(--text);font-weight:500}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+.callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
+.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-body{flex:1}
+.callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
+.callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
+.callout.gotcha .callout-title{color:var(--err-txt)}
+.callout.tip{background:#eff6ff;border-left:3px solid var(--azure)}
+.callout.tip .callout-title{color:var(--azure-dark)}
+.callout.warn{background:var(--warn-bg);border-left:3px solid var(--warn-bdr)}
+.callout.warn .callout-title{color:var(--warn-txt)}
+.callout.success{background:var(--ok-bg);border-left:3px solid var(--ok-bdr)}
+.callout.success .callout-title{color:var(--ok-txt)}
+.qa-list{margin-top:.5rem}
+.qa-item{border:1px solid var(--border);border-radius:var(--rs);margin-bottom:.6rem;overflow:hidden}
+.qa-q{display:flex;align-items:flex-start;gap:.65rem;padding:.85rem 1rem;cursor:pointer;background:var(--surface);user-select:none}
+.qa-q:hover{background:#f8fafc}
+.qa-n{flex-shrink:0;width:20px;height:20px;background:var(--azure);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.qa-text{flex:1;font-size:13px;color:var(--text);line-height:1.5;font-weight:500}
+.qa-tog{flex-shrink:0;color:var(--text-light);transition:transform .2s;font-size:14px;margin-top:2px}
+.qa-item.open .qa-tog{transform:rotate(180deg)}
+.qa-ans{display:none;padding:.85rem 1rem 1rem;background:#f8fafc;border-top:1px solid var(--border-light)}
+.qa-item.open .qa-ans{display:block}
+.qa-correct{display:inline-flex;align-items:center;gap:5px;background:var(--ok-bg);color:var(--ok-txt);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-bottom:.6rem}
+.qa-body{font-size:12.5px;color:var(--text-muted);line-height:1.7}
+.qa-body ul{padding-left:1.25rem;margin:.4rem 0}
+.qa-body strong{color:var(--text)}
+.nav-end{display:flex;justify-content:space-between;padding:1.25rem 0;border-top:1px solid var(--border);margin-top:.5rem}
+.btn-link{display:inline-flex;align-items:center;gap:5px;padding:.4rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--text-muted)}
+.btn-link:hover{border-color:var(--azure);color:var(--azure);text-decoration:none}
+.btn-link.fwd{background:var(--azure);color:#fff;border-color:var(--azure)}
+.btn-link.fwd:hover{background:var(--azure-dark);text-decoration:none}
+@media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
+
+</style>
+</head>
+<body>
+
+<nav id="top-nav">
+  <div class="nav-brand">
+    <div class="nav-brand-icon">Az</div>
+    <div class="nav-bc">
+      <a href="learn.html">Study Notes</a>
+      <span>/</span>
+      <strong>Blob Storage</strong>
+    </div>
+  </div>
+  <div class="nav-acts">
+    <a href="learn.html" class="btn btn-ghost">← All Topics</a>
+    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <a href="learn.html" class="sb-back">← All Topics</a>
+    <div class="sb-label">Blob Storage</div>
+    <a href="#m1" class="sb-link" data-m="1">🔍 Explore Azure Blob Storage<span class="sb-num">6 sections</span></a>
+    <a href="#m2" class="sb-link" data-m="2">♻️ Manage the Blob Storage Lifecycle<span class="sb-num">6 sections</span></a>
+    <a href="#m3" class="sb-link" data-m="3">💻 Work with Azure Blob Storage<span class="sb-num">6 sections</span></a>
+    <a href="learn-04-cosmos-db.html" class="sb-next">Next: Cosmos DB →</a>
+  </aside>
+
+  <main class="main">
+    <div class="topic-header">
+      <div class="topic-icon-lg">🗄️</div>
+      <div>
+        <h1>Blob Storage</h1>
+        <p>3 modules · Explore Azure Blob Storage · Manage the Blob Storage Lifecycle · Work with Azure Blob Storage</p>
+      </div>
+      <div class="topic-num">Topic 03</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         MODULE 1 — Explore Azure Blob Storage
+    ═══════════════════════════════════════════════════════ -->
+    <section class="module" id="m1">
+      <h2><span class="mod-num">M1</span> Explore Azure Blob Storage</h2>
+
+      <div class="sec-lbl">① Key Concepts</div>
+
+      <h3>Storage Account Types</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Account Type</th>
+              <th>Supported Services</th>
+              <th>Redundancy Options</th>
+              <th>Key Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>General-purpose v2 (GPv2)</td>
+              <td>Blob, File, Queue, Table, Disk</td>
+              <td>LRS, ZRS, GRS, GZRS, RA-GRS, RA-GZRS</td>
+              <td>Recommended for most scenarios; supports all access tiers including Archive</td>
+            </tr>
+            <tr>
+              <td>Premium Block Blob</td>
+              <td>Block blobs and append blobs only</td>
+              <td>LRS, ZRS only</td>
+              <td>High-throughput, low-latency workloads; no GRS/GZRS support</td>
+            </tr>
+            <tr>
+              <td>Premium Page Blob</td>
+              <td>Page blobs only</td>
+              <td>LRS only</td>
+              <td>Azure VM unmanaged disks; random read/write access</td>
+            </tr>
+            <tr>
+              <td>Premium File Share</td>
+              <td>Azure Files only</td>
+              <td>LRS, ZRS only</td>
+              <td>High-performance SMB/NFS file shares for enterprise workloads</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">GPv2 is always the recommended default</div>
+          If an exam question asks which account type to use and does not specify performance or pricing constraints, choose <strong>General-purpose v2</strong>. It supports every feature including lifecycle management, all redundancy tiers, and all access tiers.
+        </div>
+      </div>
+
+      <h3>Blob Types</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Blob Type</th>
+              <th>Max Size</th>
+              <th>Block Size / Unit</th>
+              <th>Allowed Operations</th>
+              <th>Typical Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Block Blob</td>
+              <td>4.77 TB</td>
+              <td>Up to 100 MB per block; max 50,000 blocks</td>
+              <td>Put Block, Put Block List, Get Block List; full read/write/delete</td>
+              <td>Files, images, videos, documents, backups</td>
+            </tr>
+            <tr>
+              <td>Append Blob</td>
+              <td>195 GB</td>
+              <td>Up to 4 MB per append block; max 50,000 blocks</td>
+              <td>Append Block only — <strong>no overwrite, no update</strong></td>
+              <td>Log files, audit trails, telemetry streams</td>
+            </tr>
+            <tr>
+              <td>Page Blob</td>
+              <td>8 TB</td>
+              <td>512-byte pages (aligned I/O)</td>
+              <td>Random read/write to any 512-byte range</td>
+              <td>Azure VM unmanaged OS/data disks, virtual hard drives</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Append blobs cannot be overwritten — only appended</div>
+          This is the defining exam trap for append blobs. Once a block is committed, it cannot be modified. You can <em>append</em> new blocks (each up to 4 MB), but you cannot update bytes in an existing block. This makes append blobs ideal for log ingestion where you never need to correct past entries.
+        </div>
+      </div>
+
+      <h3>Access Tiers</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th>Access Pattern</th>
+              <th>Min Storage Duration</th>
+              <th>Storage Cost</th>
+              <th>Access Cost</th>
+              <th>Availability SLA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Hot</td>
+              <td>Frequent</td>
+              <td>None</td>
+              <td>Highest</td>
+              <td>Lowest</td>
+              <td>99.9% (RA: 99.99%)</td>
+            </tr>
+            <tr>
+              <td>Cool</td>
+              <td>Infrequent (&gt;30 days)</td>
+              <td>30 days (early deletion fee)</td>
+              <td>Lower than Hot</td>
+              <td>Higher than Hot</td>
+              <td>99% (RA: 99.9%)</td>
+            </tr>
+            <tr>
+              <td>Cold</td>
+              <td>Rare (&gt;90 days)</td>
+              <td>90 days (early deletion fee)</td>
+              <td>Lower than Cool</td>
+              <td>Higher than Cool</td>
+              <td>99% (RA: 99.9%)</td>
+            </tr>
+            <tr>
+              <td>Archive</td>
+              <td>Offline / long-term (&gt;180 days)</td>
+              <td>180 days (early deletion fee)</td>
+              <td>Lowest</td>
+              <td>Highest + rehydration fee</td>
+              <td>N/A (offline — must rehydrate)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Account-level vs. blob-level tiering</div>
+          The <strong>account-level default tier</strong> (Hot or Cool) applies to blobs with no explicit tier set. <strong>Cold</strong> and <strong>Archive</strong> tiers can only be set at the <em>individual blob level</em> — they cannot be set as the account default. This distinction appears on exams.
+        </div>
+      </div>
+
+      <h3>Redundancy Options</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Redundancy</th>
+              <th>Copies</th>
+              <th>Failure Protection</th>
+              <th>Read from Secondary?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>LRS (Locally Redundant)</td>
+              <td>3 copies — same datacenter</td>
+              <td>Drive/rack failure within one datacenter</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td>ZRS (Zone Redundant)</td>
+              <td>3 copies — 3 availability zones, same region</td>
+              <td>Zone-level failure within one region</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td>GRS (Geo Redundant)</td>
+              <td>6 copies — LRS primary + LRS secondary region (async)</td>
+              <td>Regional disaster (secondary is read-only after failover)</td>
+              <td>Only with RA-GRS</td>
+            </tr>
+            <tr>
+              <td>GZRS (Geo-Zone Redundant)</td>
+              <td>6 copies — ZRS primary + LRS secondary region (async)</td>
+              <td>Zone failure + regional disaster</td>
+              <td>Only with RA-GZRS</td>
+            </tr>
+            <tr>
+              <td>RA-GRS / RA-GZRS</td>
+              <td>Same as GRS/GZRS</td>
+              <td>Same as GRS/GZRS</td>
+              <td>Yes — always, even before failover</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">② Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Archive blobs cannot be read directly — rehydration is mandatory</div>
+          A blob in the Archive tier is stored offline. Any attempt to read, copy, or download it returns a <code>409 BlobArchived</code> error until the blob is rehydrated. Rehydration means either: (a) changing the blob's tier back to Hot or Cool using <code>Set Blob Tier</code>, or (b) copying the archived blob to a new blob in a Hot or Cool tier. Standard rehydration priority takes <strong>up to 15 hours</strong>. High priority takes <strong>under 1 hour</strong> for blobs smaller than 10 GB and costs more.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Premium storage accounts do NOT support Archive tier or lifecycle management</div>
+          Premium Block Blob, Premium Page Blob, and Premium File Share accounts are optimized for low latency — they only support Hot tier. You cannot tier blobs to Cool, Cold, or Archive in a Premium account, and lifecycle management policies do not apply to Premium accounts at all. If an exam scenario says the app needs lifecycle tiering, the answer is GPv2, not Premium.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">ZRS does NOT protect against regional disasters</div>
+          ZRS replicates across three availability zones in the same Azure region. If the entire region experiences a disaster (power, network, or natural disaster affecting all zones), ZRS data is at risk. Only GRS, GZRS, RA-GRS, or RA-GZRS replicate data to a geographically distant paired region. Exam distractors often describe ZRS as "protecting against regional outages" — that is false.
+        </div>
+      </div>
+
+      <div class="sec-lbl">③ Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+              <th>Exam Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Block blob max size</td>
+              <td>4.77 TB</td>
+              <td>50,000 blocks × 100 MB per block = 4.77 TB (approximately)</td>
+            </tr>
+            <tr>
+              <td>Single Put Blob limit</td>
+              <td>5,000 MB (5 GB)</td>
+              <td>Blobs larger than 5 GB must use Put Block + Put Block List (multipart upload)</td>
+            </tr>
+            <tr>
+              <td>Page blob max size</td>
+              <td>8 TB</td>
+              <td>Pages are 512-byte aligned; used for VM unmanaged disks</td>
+            </tr>
+            <tr>
+              <td>Append blob max size</td>
+              <td>195 GB</td>
+              <td>50,000 append blocks × 4 MB per block</td>
+            </tr>
+            <tr>
+              <td>Archive rehydration — Standard</td>
+              <td>Up to 15 hours</td>
+              <td>Lower cost; use for non-urgent recovery scenarios</td>
+            </tr>
+            <tr>
+              <td>Archive rehydration — High Priority</td>
+              <td>Under 1 hour</td>
+              <td>Higher cost; for blobs under 10 GB; use when SLA demands fast restore</td>
+            </tr>
+            <tr>
+              <td>Cool tier — early deletion fee</td>
+              <td>30 days minimum</td>
+              <td>If blob is deleted or moved before 30 days, you pay for the remaining days</td>
+            </tr>
+            <tr>
+              <td>Cold tier — early deletion fee</td>
+              <td>90 days minimum</td>
+              <td>Introduced as a tier between Cool and Archive; costs less than Cool to store</td>
+            </tr>
+            <tr>
+              <td>Archive tier — early deletion fee</td>
+              <td>180 days minimum</td>
+              <td>Moving out before 180 days incurs a prorated early deletion charge</td>
+            </tr>
+            <tr>
+              <td>Max block size (block blob)</td>
+              <td>100 MB per block (with newer API versions)</td>
+              <td>Older API versions allowed only 4 MB blocks; newer allows up to 100 MB</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">④ CLI / SDK Patterns</div>
+
+      <pre><code># Create a GPv2 storage account with GRS redundancy
+az storage account create \
+  --name mystorageacct \
+  --resource-group myRG \
+  --location eastus \
+  --sku Standard_GRS \          # SKU encodes both type and redundancy
+  --kind StorageV2 \            # StorageV2 = GPv2; BlobStorage = legacy Blob account
+  --access-tier Hot             # Default account tier: Hot or Cool (not Cold/Archive)
+
+# Create a Premium Block Blob account (high-throughput, no Archive support)
+az storage account create \
+  --name mypremiumacct \
+  --resource-group myRG \
+  --location eastus \
+  --sku Premium_LRS \           # Premium only supports LRS or ZRS
+  --kind BlockBlobStorage       # BlockBlobStorage = Premium Block Blob account
+
+# Upload a blob and immediately set its access tier
+az storage blob upload \
+  --account-name mystorageacct \
+  --container-name mycontainer \
+  --name myblob.txt \
+  --file ./myblob.txt \
+  --tier Cool                   # Sets tier at upload time (GPv2 only)
+
+# Change an existing blob tier to Archive
+az storage blob set-tier \
+  --account-name mystorageacct \
+  --container-name mycontainer \
+  --name myblob.txt \
+  --tier Archive                # Blob becomes offline; reads will fail until rehydrated
+
+# Rehydrate an archived blob by copying to a new blob in Hot tier
+az storage blob copy start \
+  --account-name mystorageacct \
+  --destination-blob rehydrated-myblob.txt \
+  --destination-container mycontainer \
+  --source-uri "https://mystorageacct.blob.core.windows.net/mycontainer/myblob.txt" \
+  --tier Hot                    # Destination tier — sets the rehydrated copy to Hot
+  --rehydrate-priority High     # Standard (up to 15h) or High (under 1h, costs more)</code></pre>
+
+      <pre><code>// C# SDK — BlobServiceClient hierarchy
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+
+// Top-level: BlobServiceClient (storage account)
+var serviceClient = new BlobServiceClient(connectionString);
+
+// Container level
+var containerClient = serviceClient.GetBlobContainerClient("mycontainer");
+await containerClient.CreateIfNotExistsAsync(PublicAccessType.None); // No public access by default
+
+// Blob level — upload
+var blobClient = containerClient.GetBlobClient("myblob.txt");
+using var stream = File.OpenRead("./myblob.txt");
+await blobClient.UploadAsync(stream, overwrite: true);  // overwrite: true silently replaces
+
+// Set blob access tier programmatically
+await blobClient.SetAccessTierAsync(AccessTier.Cool);
+
+// Change tier to Archive
+await blobClient.SetAccessTierAsync(AccessTier.Archive);</code></pre>
+
+      <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Use a Premium Block Blob account for infrequently accessed data to save costs"</div>
+          Premium Block Blob accounts only support Hot tier. They have higher storage costs than GPv2 in exchange for sub-millisecond latency. They do not support Cool, Cold, or Archive tiers. Premium accounts are only appropriate for latency-sensitive workloads, not cost-optimized cold storage.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "RA-GRS provides two independent write endpoints for load balancing writes"</div>
+          RA-GRS (Read-Access Geo-Redundant Storage) provides a <em>read-only</em> secondary endpoint. You can read from the secondary endpoint at any time using the <code>-secondary</code> URL suffix (e.g., <code>mystorageacct-secondary.blob.core.windows.net</code>), but all <em>writes</em> still go to the primary region only. RA-GRS is for read scale-out and disaster recovery reads, not write load balancing.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "You can update bytes within an existing append blob block to fix a log entry"</div>
+          Append blobs are write-once per block. Once a block is appended and committed, its content is immutable. The only operation allowed after creation is appending new blocks. To "correct" data in an append blob, you would need to create a new blob. This is by design — it makes append blobs suitable for tamper-evident audit logs.
+        </div>
+      </div>
+
+      <div class="sec-lbl">⑥ Practice Q&amp;A</div>
+
+      <div class="qa-list">
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">A company stores compliance logs that must be retained for 7 years but accessed only once or twice per year. The logs are written sequentially and must never be overwritten. Which blob type and access tier combination is most appropriate?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Append Blob + Archive tier</div>
+            <div class="qa-body">
+              <strong>Append blob</strong> is the correct blob type because log files are written sequentially and must not be overwritten — append blobs enforce this by only allowing the Append Block operation.<br><br>
+              <strong>Archive tier</strong> is correct because: access is rare (&lt;2 times/year), it has the lowest storage cost, and the 180-day minimum is easily met (7-year retention). The early-deletion fee is irrelevant here since the data stays far beyond 180 days.
+              <ul>
+                <li>Block blob would also hold the data, but does not enforce the no-overwrite constraint</li>
+                <li>Page blob is for random-access scenarios like VM disks — not log files</li>
+                <li>Cool tier would work but costs more than Archive for 7-year retention with rare access</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">Your application reads from Azure Blob Storage in a different Azure region when the primary region is unavailable. You need the secondary endpoint to be always readable, not just during failover. Which redundancy option should you configure?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ RA-GRS (Read-Access Geo-Redundant Storage)</div>
+            <div class="qa-body">
+              <strong>RA-GRS</strong> provides a persistent read-only secondary endpoint that is always available, regardless of whether the primary region is experiencing issues. The secondary URL is <code>accountname-secondary.blob.core.windows.net</code>.
+              <ul>
+                <li><strong>GRS</strong> replicates to a secondary region but does NOT expose a readable secondary endpoint — you can only read from secondary after Microsoft initiates a failover</li>
+                <li><strong>ZRS</strong> does not replicate to another region at all — it stays within the same region across zones</li>
+                <li><strong>GZRS</strong> combines zone redundancy with geo-replication, but still does not expose a secondary read endpoint — only RA-GZRS does</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">A developer uploads a 6 GB video file to Azure Blob Storage using the REST API. The upload fails with a 413 error. What is the most likely cause, and how should the upload be redesigned?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ File exceeds single Put Blob limit (5 GB); use Put Block + Put Block List</div>
+            <div class="qa-body">
+              The <strong>Put Blob</strong> operation has a maximum size limit of <strong>5,000 MB (5 GB)</strong>. A 6 GB file exceeds this limit. The correct approach for large blobs is chunked upload:
+              <ul>
+                <li><strong>Put Block</strong>: upload the file in chunks (each up to 100 MB with newer API versions)</li>
+                <li><strong>Put Block List</strong>: commit the list of block IDs to assemble the final blob</li>
+                <li>The Azure SDK handles this automatically via <code>UploadAsync</code> — it detects the file size and automatically switches to multipart upload when the file exceeds the single-request threshold</li>
+                <li>Manually staging blocks gives you parallelism (upload multiple blocks concurrently) and resume capability (retry failed blocks only)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">A blob was moved to Archive tier 45 days ago. A business requirement now requires the data to be accessible within 30 minutes. A developer submits a rehydration request. Approximately how long will this take, and what priority should be selected?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Select High Priority rehydration — under 1 hour for blobs under 10 GB</div>
+            <div class="qa-body">
+              The 30-minute SLA rules out Standard priority rehydration (up to 15 hours). High priority rehydration completes in <strong>under 1 hour</strong> for blobs smaller than 10 GB.
+              <ul>
+                <li>The blob has been in Archive for 45 days — well past the 180-day minimum, so there is no early deletion fee</li>
+                <li>High priority rehydration costs more per operation but is the only option that meets the 30-minute window</li>
+                <li>Rehydration can be done by: (a) calling <code>Set Blob Tier</code> with <code>rehydratePriority=High</code> to move the blob back to Hot/Cool, or (b) <code>Copy Blob</code> to a new Hot/Cool destination blob</li>
+                <li>The original blob remains in Archive until the operation completes — the blob's status will show as <code>rehydrate-pending-to-hot</code> or <code>rehydrate-pending-to-cool</code> during the process</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">Which storage account type should you choose to host Azure VM unmanaged disks that require random read/write access at the block level?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Premium Page Blob storage account (or GPv2 with page blobs)</div>
+            <div class="qa-body">
+              <strong>Page blobs</strong> are the only blob type that supports random 512-byte aligned read/write operations, making them the correct blob type for VM disks.
+              <ul>
+                <li><strong>Premium Page Blob</strong> account (kind: <code>StorageV2</code> with Premium_LRS or, historically, <code>Storage</code> with Premium_LRS) provides the low latency required for OS and data disks</li>
+                <li>GPv2 with Standard_LRS can also host page blobs (unmanaged disks) but with higher latency — acceptable for non-critical or dev/test VMs</li>
+                <li>Block blobs and append blobs do not support random-access writes — they do not work for VM disk scenarios</li>
+                <li>Modern Azure guidance is to use <strong>managed disks</strong> instead of unmanaged page blobs — but page blobs still appear on the AZ-204 exam</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">A storage account uses GRS redundancy. The primary region becomes unavailable. A developer immediately attempts to read from the secondary endpoint. What happens?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ The read fails — GRS secondary is not readable; only RA-GRS secondary is always readable</div>
+            <div class="qa-body">
+              With standard <strong>GRS</strong>, the secondary region receives asynchronous copies of data, but the secondary endpoint is <strong>not exposed for reads</strong> unless Microsoft initiates a storage account failover (which promotes the secondary to primary). Until failover completes, reads from the secondary URL will fail.
+              <ul>
+                <li>To read from the secondary at any time without waiting for failover, you need <strong>RA-GRS</strong></li>
+                <li>With RA-GRS, the secondary endpoint is always at: <code>accountname-secondary.blob.core.windows.net</code></li>
+                <li>Note: data in the secondary may be slightly stale due to asynchronous replication (the RPO/recovery point objective is typically under 15 minutes, but Microsoft does not guarantee a specific RPO value)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">A developer needs a storage account for a high-throughput ETL pipeline that ingests millions of small files per second with sub-millisecond latency. The data never needs tiering. Which account type and redundancy should they choose?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Premium Block Blob account with LRS or ZRS</div>
+            <div class="qa-body">
+              <strong>Premium Block Blob</strong> (kind: <code>BlockBlobStorage</code>, SKU: <code>Premium_LRS</code> or <code>Premium_ZRS</code>) is purpose-built for high-throughput, low-latency block blob workloads.
+              <ul>
+                <li>Sub-millisecond first-byte latency is only available on Premium accounts — GPv2 with Standard SKU has higher latency (single-digit milliseconds)</li>
+                <li>Premium Block Blob only supports LRS and ZRS — GRS/GZRS are not available, which is acceptable since the scenario doesn't mention geo-disaster recovery</li>
+                <li>No need for tiering rules out the only significant limitation vs. GPv2</li>
+                <li>The ETL pipeline would typically connect via the Azure SDK or ADLS Gen2 compatible API if hierarchical namespace is needed</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         MODULE 2 — Manage the Blob Storage Lifecycle
+    ═══════════════════════════════════════════════════════ -->
+    <section class="module" id="m2">
+      <h2><span class="mod-num">M2</span> Manage the Blob Storage Lifecycle</h2>
+
+      <div class="sec-lbl">① Key Concepts</div>
+
+      <h3>Lifecycle Management Policy Structure</h3>
+      <p>A lifecycle policy is a <strong>JSON document</strong> containing an array of <strong>rules</strong>. Each rule has a name, a <strong>filter set</strong> (what blobs it applies to) and an <strong>action set</strong> (what to do). Policies run <strong>once per day</strong>.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Policy Component</th>
+              <th>Property</th>
+              <th>Description</th>
+              <th>Example Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Rule — Filter</td>
+              <td><code>prefixMatch</code></td>
+              <td>Array of container/prefix strings to match blob names</td>
+              <td><code>["logs/2023", "archive/"]</code></td>
+            </tr>
+            <tr>
+              <td>Rule — Filter</td>
+              <td><code>blobTypes</code></td>
+              <td>Blob types this rule applies to: blockBlob, appendBlob</td>
+              <td><code>["blockBlob"]</code></td>
+            </tr>
+            <tr>
+              <td>Rule — Filter</td>
+              <td><code>blobIndexMatch</code></td>
+              <td>Match blobs by their blob index tags (key-value pairs)</td>
+              <td><code>[{"name": "project", "op": "==", "value": "alpha"}]</code></td>
+            </tr>
+            <tr>
+              <td>Rule — Action</td>
+              <td><code>tierToCool</code></td>
+              <td>Move blob to Cool tier after N days</td>
+              <td><code>daysAfterModificationGreaterThan: 30</code></td>
+            </tr>
+            <tr>
+              <td>Rule — Action</td>
+              <td><code>tierToCold</code></td>
+              <td>Move blob to Cold tier after N days</td>
+              <td><code>daysAfterModificationGreaterThan: 90</code></td>
+            </tr>
+            <tr>
+              <td>Rule — Action</td>
+              <td><code>tierToArchive</code></td>
+              <td>Move blob to Archive tier after N days</td>
+              <td><code>daysAfterModificationGreaterThan: 180</code></td>
+            </tr>
+            <tr>
+              <td>Rule — Action</td>
+              <td><code>delete</code></td>
+              <td>Delete the blob after N days</td>
+              <td><code>daysAfterModificationGreaterThan: 2555</code></td>
+            </tr>
+            <tr>
+              <td>Rule — Action (snapshot)</td>
+              <td><code>snapshots: { tierToArchive }</code></td>
+              <td>Apply action to snapshots (must be explicitly declared)</td>
+              <td><code>daysAfterCreationGreaterThan: 90</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Condition Types</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Condition</th>
+              <th>Measures From</th>
+              <th>Requires</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>daysAfterModificationGreaterThan</code></td>
+              <td>Last modified timestamp</td>
+              <td>Always available; default condition</td>
+            </tr>
+            <tr>
+              <td><code>daysAfterLastAccessTimeGreaterThan</code></td>
+              <td>Last access timestamp</td>
+              <td>Access tracking must be enabled on the storage account</td>
+            </tr>
+            <tr>
+              <td><code>daysAfterCreationGreaterThan</code></td>
+              <td>Creation timestamp</td>
+              <td>Used for snapshots and blob versions</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Multiple actions can exist in one rule — the most cost-effective wins</div>
+          If a blob qualifies for multiple actions in the same rule (e.g., both <code>tierToCool</code> and <code>tierToArchive</code>), the lifecycle engine applies the action that results in the lowest storage cost — typically the deepest tier. This is important: you don't need separate rules to cascade through Hot → Cool → Archive; a single rule with multiple <code>daysAfterModificationGreaterThan</code> thresholds works.
+        </div>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Blob index tags can filter lifecycle rules without relying on naming conventions</div>
+          Instead of filtering by prefix (which requires you to organize blobs by name), you can attach <strong>blob index tags</strong> (e.g., <code>retention=7years</code>) and write lifecycle rules that match on those tags. This decouples storage organization from lifecycle behavior and is more flexible when blobs from different prefixes share the same retention policy.
+        </div>
+      </div>
+
+      <div class="sec-lbl">② Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Lifecycle policies do NOT apply to Premium storage accounts</div>
+          This is one of the most commonly tested limitations. Premium Block Blob, Premium Page Blob, and Premium File Share accounts do not support lifecycle management policies at all. If a question says the customer is using a Premium account and asks how to automatically tier blobs to Archive, the correct answer is that this is not possible — the account type must be changed to GPv2.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Snapshots are NOT included in lifecycle actions unless explicitly declared</div>
+          Lifecycle rules for <code>baseBlob</code> do not automatically cascade to snapshots or blob versions. To apply a lifecycle action (tier or delete) to snapshots, you must include a <code>"snapshot": {}</code> block within the rule's actions. Similarly, blob versions require a <code>"version": {}</code> block. Forgetting this is a common exam trap — if a question asks why snapshots are not being archived by a lifecycle policy, the answer is the missing snapshot block.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Early deletion fees apply even when lifecycle policy moves the blob</div>
+          When a lifecycle rule automatically moves a blob from Cool to Archive, the early deletion fee still applies if the blob has been in Cool for fewer than 30 days. The policy engine does not waive fees based on the fact that the movement was policy-driven. Similarly, deleting a Cool blob via a lifecycle policy before 30 days incurs a prorated fee. Planning policies must account for minimum durations to avoid unexpected charges.
+        </div>
+      </div>
+
+      <div class="sec-lbl">③ Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+              <th>Exam Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Policy execution frequency</td>
+              <td>Once per day</td>
+              <td>A newly created policy may take up to 24 hours before the first run; blobs are NOT immediately moved</td>
+            </tr>
+            <tr>
+              <td>Cool tier minimum duration</td>
+              <td>30 days</td>
+              <td>Early deletion fee charged for remaining days if deleted/moved before day 30</td>
+            </tr>
+            <tr>
+              <td>Cold tier minimum duration</td>
+              <td>90 days</td>
+              <td>Cold tier is newer — verify exam question context; sits between Cool and Archive in cost/access</td>
+            </tr>
+            <tr>
+              <td>Archive tier minimum duration</td>
+              <td>180 days</td>
+              <td>Moving from Archive back to Hot/Cool before 180 days incurs the early deletion fee</td>
+            </tr>
+            <tr>
+              <td>Max rules per policy</td>
+              <td>100 rules</td>
+              <td>Each rule can have multiple filter and action combinations</td>
+            </tr>
+            <tr>
+              <td>Policy format</td>
+              <td>JSON only</td>
+              <td>Must be a valid JSON document — cannot be passed as key-value CLI args; use <code>--policy @file.json</code></td>
+            </tr>
+            <tr>
+              <td>Premium accounts supported?</td>
+              <td>No</td>
+              <td>GPv2 only — this limit is frequently tested</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">④ CLI / SDK Patterns</div>
+
+      <pre><code># Create or replace a lifecycle management policy from a JSON file
+az storage account management-policy create \
+  --account-name mystorageacct \
+  --resource-group myRG \
+  --policy @lifecycle-policy.json   # Must be a JSON file path prefixed with @
+
+# View current lifecycle policy
+az storage account management-policy show \
+  --account-name mystorageacct \
+  --resource-group myRG
+
+# Delete lifecycle policy
+az storage account management-policy delete \
+  --account-name mystorageacct \
+  --resource-group myRG</code></pre>
+
+      <pre><code>// lifecycle-policy.json — full example policy
+{
+  "rules": [
+    {
+      "name": "tiering-rule",          // Rule name must be unique within the policy
+      "enabled": true,
+      "type": "Lifecycle",
+      "definition": {
+        "filters": {
+          "blobTypes": ["blockBlob"],   // Only applies to block blobs
+          "prefixMatch": ["logs/"]      // Only blobs with names starting with logs/
+        },
+        "actions": {
+          "baseBlob": {
+            "tierToCool": {
+              "daysAfterModificationGreaterThan": 30   // Move to Cool 30+ days after last modify
+            },
+            "tierToCold": {
+              "daysAfterModificationGreaterThan": 90   // Move to Cold 90+ days after last modify
+            },
+            "tierToArchive": {
+              "daysAfterModificationGreaterThan": 180  // Move to Archive 180+ days after last modify
+            },
+            "delete": {
+              "daysAfterModificationGreaterThan": 2555 // Delete after 7 years (2555 days)
+            }
+          },
+          "snapshot": {
+            "delete": {
+              "daysAfterCreationGreaterThan": 90       // Delete snapshots older than 90 days
+            }
+          },
+          "version": {
+            "tierToArchive": {
+              "daysAfterCreationGreaterThan": 60       // Archive old versions after 60 days
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "tag-based-rule",
+      "enabled": true,
+      "type": "Lifecycle",
+      "definition": {
+        "filters": {
+          "blobTypes": ["blockBlob"],
+          "blobIndexMatch": [
+            {
+              "name": "retention",     // Blob index tag key
+              "op": "==",
+              "value": "short-term"    // Blob index tag value
+            }
+          ]
+        },
+        "actions": {
+          "baseBlob": {
+            "delete": {
+              "daysAfterLastAccessTimeGreaterThan": 7  // Requires access tracking enabled on account
+            }
+          }
+        }
+      }
+    }
+  ]
+}</code></pre>
+
+      <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Creating a lifecycle policy immediately moves blobs to Archive"</div>
+          Lifecycle policies run <strong>once per day</strong>. Even if a policy is configured with a condition of <code>daysAfterModificationGreaterThan: 0</code>, the policy engine will not process blobs until its next scheduled run (up to 24 hours after creation). Additionally, conditions must actually evaluate to true — if no blobs have been modified more than N days ago, no blobs move. There is no way to trigger a manual immediate execution of a lifecycle policy.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "You can pass lifecycle policy rules as --rule arguments on the CLI"</div>
+          The <code>az storage account management-policy create</code> command requires the policy to be a <strong>complete JSON document</strong> passed via <code>--policy @filename.json</code> (file reference) or <code>--policy '{...}'</code> (inline JSON string). There are no individual <code>--rule</code>, <code>--action</code>, or <code>--filter</code> flag arguments. Attempting to build the policy from CLI flags is not supported — the entire policy must be expressed as JSON.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "A lifecycle rule that moves blobs from Hot to Cool at 30 days will also tier snapshots"</div>
+          Actions defined under <code>"baseBlob"</code> do not affect snapshots or blob versions. Snapshots require their own <code>"snapshot": {}</code> action block, and blob versions require a <code>"version": {}</code> block. This is a frequent source of confusion — customers configure rules and then discover their snapshots are consuming storage in Hot tier indefinitely because the snapshot section was omitted from the policy.
+        </div>
+      </div>
+
+      <div class="sec-lbl">⑥ Practice Q&amp;A</div>
+
+      <div class="qa-list">
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">A developer creates a lifecycle management policy for a GPv2 storage account. The policy has a rule that tiers blobs to Archive after 180 days. The developer then notices that blob snapshots are still in Hot tier after 200 days. What is the most likely cause?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ The policy's rule does not include a "snapshot" action block</div>
+            <div class="qa-body">
+              Lifecycle actions under <strong><code>baseBlob</code></strong> only apply to the base blob — they do not cascade to snapshots or versions. To tier snapshots, the rule must include a separate <code>"snapshot"</code> key within the <code>actions</code> object:
+              <ul>
+                <li>Add <code>"snapshot": { "tierToArchive": { "daysAfterCreationGreaterThan": 180 } }</code> to the rule's actions block</li>
+                <li>Snapshots use <code>daysAfterCreationGreaterThan</code> (not <code>daysAfterModificationGreaterThan</code>) because snapshots are immutable and have no modification date</li>
+                <li>The same principle applies to blob versions — they need a separate <code>"version"</code> block</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">You are designing a lifecycle policy for blobs that should be accessible by the blob access pattern rather than their age. Blobs not accessed in 14 days should be moved to Cool tier. What must be enabled on the storage account first?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Last access time tracking must be enabled on the storage account</div>
+            <div class="qa-body">
+              The condition <code>daysAfterLastAccessTimeGreaterThan</code> requires Azure to track the last time each blob was accessed (read). This tracking is <strong>not enabled by default</strong> because it adds a small overhead to every read operation.
+              <ul>
+                <li>Enable via portal: Storage account → Lifecycle management → Enable access tracking</li>
+                <li>Enable via CLI: <code>az storage account update --enable-last-access-tracking true</code></li>
+                <li>Without this setting enabled, the <code>daysAfterLastAccessTimeGreaterThan</code> condition is always evaluated as false and no blobs will be tiered by that condition</li>
+                <li>This is distinct from <code>daysAfterModificationGreaterThan</code>, which is always available without any extra configuration</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">A lifecycle policy moves a blob from Hot to Cool tier on day 10. The blob was originally uploaded 10 days ago. How many days of Cool tier storage will be charged?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ 30 days — the full minimum retention period is charged</div>
+            <div class="qa-body">
+              The Cool tier has a <strong>30-day minimum storage duration</strong>. When a blob is moved to Cool, the billing clock starts. If the blob is deleted or moved before the 30-day minimum elapses, you are charged for the remaining days as an early deletion fee.
+              <ul>
+                <li>In this scenario: the blob enters Cool on day 10; if it's moved or deleted on day 20, you owe 10 more days of Cool storage as an early deletion fee</li>
+                <li>The same principle applies to Cold (90 days) and Archive (180 days)</li>
+                <li>The lifecycle policy itself doesn't waive these fees — the early deletion fee applies regardless of whether the movement was manual or policy-driven</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">An architect wants to apply different lifecycle rules to blobs based on their business context (e.g., "project=alpha" blobs should be archived sooner than "project=beta" blobs) without restructuring the container hierarchy. What feature enables this?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Blob index tags with blobIndexMatch filters in lifecycle rules</div>
+            <div class="qa-body">
+              <strong>Blob index tags</strong> are key-value metadata stored at the blob level and indexed by the storage system (unlike user-defined metadata, which is not searchable). Lifecycle rules can filter on blob index tags using the <code>blobIndexMatch</code> filter:
+              <ul>
+                <li>Tag a blob at upload time: <code>az storage blob upload --tags "project=alpha"</code></li>
+                <li>Update tags later: <code>az storage blob tag set --tags "project=alpha"</code></li>
+                <li>Write separate lifecycle rules — one matching <code>project == alpha</code> with aggressive tiering, another matching <code>project == beta</code> with conservative tiering</li>
+                <li>This is more maintainable than prefix-based filtering when blobs from different projects are in the same container</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">A company uses a Premium Block Blob storage account for high-throughput ingestion. They want to configure a lifecycle policy to automatically delete blobs older than 90 days. What should the architect tell them?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ This is not possible — lifecycle management is not supported on Premium storage accounts</div>
+            <div class="qa-body">
+              Lifecycle management policies are only supported on <strong>GPv2 storage accounts with Standard performance</strong>. Premium accounts (Block Blob, Page Blob, File Share) do not support lifecycle policies at all.
+              <ul>
+                <li>Options to work around this: (a) migrate to a GPv2 account if lifecycle management is needed; (b) implement a scheduled Azure Function or Logic App that queries old blobs and deletes them via the SDK; (c) use tiered architecture — ingest to Premium, then copy completed data to GPv2 for archiving</li>
+                <li>The architect should clarify whether the 90-day deletion requirement can be handled by an external process, or whether the account type needs to be reconsidered</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">A lifecycle rule has two actions: tierToCool after 30 days and tierToArchive after 60 days. A blob was last modified 65 days ago. Which action does the lifecycle engine apply?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ tierToArchive — the most cost-effective (deepest) eligible action wins</div>
+            <div class="qa-body">
+              When a blob qualifies for multiple actions in the same rule, the lifecycle engine applies the action that results in the <strong>lowest storage cost</strong>. Since the blob is 65 days past its last modification, it satisfies both the 30-day Cool condition and the 60-day Archive condition. Archive has a lower per-GB storage cost than Cool, so <code>tierToArchive</code> is applied.
+              <ul>
+                <li>The blob moves directly from Hot to Archive — it does not first stop at Cool</li>
+                <li>This means the blob immediately becomes offline (Archive) even though it never passed through Cool or Cold</li>
+                <li>The early deletion fee for Cool (30 days) is not triggered because the blob was never actually placed in Cool tier</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         MODULE 3 — Work with Azure Blob Storage
+    ═══════════════════════════════════════════════════════ -->
+    <section class="module" id="m3">
+      <h2><span class="mod-num">M3</span> Work with Azure Blob Storage</h2>
+
+      <div class="sec-lbl">① Key Concepts</div>
+
+      <h3>SDK Client Hierarchy</h3>
+      <p>The Azure Blob Storage SDK uses a three-level client hierarchy. Each client is scoped to a specific resource level and exposes relevant operations.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Client Class</th>
+              <th>Scope</th>
+              <th>Key Operations</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>BlobServiceClient</code></td>
+              <td>Storage account</td>
+              <td>List containers, create/delete containers, get account properties, generate account SAS</td>
+            </tr>
+            <tr>
+              <td><code>BlobContainerClient</code></td>
+              <td>Container</td>
+              <td>Create/delete container, set access policy, list blobs, upload blob (shortcut), generate container SAS</td>
+            </tr>
+            <tr>
+              <td><code>BlobClient</code></td>
+              <td>Individual blob</td>
+              <td>Download, set tier, set metadata, set tags, acquire lease, create snapshot, delete blob, generate blob SAS</td>
+            </tr>
+            <tr>
+              <td><code>BlockBlobClient</code></td>
+              <td>Block blob (specialized)</td>
+              <td>Upload (UploadAsync, StageBlockAsync, CommitBlockListAsync), all BlobClient operations</td>
+            </tr>
+            <tr>
+              <td><code>AppendBlobClient</code></td>
+              <td>Append blob (specialized)</td>
+              <td>Create append blob, AppendBlockAsync — no overwrite operations</td>
+            </tr>
+            <tr>
+              <td><code>PageBlobClient</code></td>
+              <td>Page blob (specialized)</td>
+              <td>Create page blob, UploadPagesAsync, ClearPagesAsync (random access)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Metadata vs. Blob Index Tags</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Metadata</th>
+              <th>Blob Index Tags</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Storage</td>
+              <td>HTTP headers on the blob</td>
+              <td>Indexed key-value pairs in the storage system</td>
+            </tr>
+            <tr>
+              <td>Key case sensitivity</td>
+              <td>Keys are case-insensitive</td>
+              <td>Keys are case-sensitive</td>
+            </tr>
+            <tr>
+              <td>Value case sensitivity</td>
+              <td>Values are case-sensitive</td>
+              <td>Values are case-sensitive</td>
+            </tr>
+            <tr>
+              <td>Cross-account search</td>
+              <td>Not searchable — cannot query across blobs</td>
+              <td>Searchable — use Find Blobs By Tags API to query across entire account</td>
+            </tr>
+            <tr>
+              <td>Lifecycle policy filtering</td>
+              <td>Not supported</td>
+              <td>Supported via <code>blobIndexMatch</code></td>
+            </tr>
+            <tr>
+              <td>Maximum entries</td>
+              <td>8 KB total per blob</td>
+              <td>10 tags per blob; keys ≤128 chars, values ≤256 chars</td>
+            </tr>
+            <tr>
+              <td>SDK method</td>
+              <td><code>SetMetadataAsync()</code> / <code>GetPropertiesAsync()</code></td>
+              <td><code>SetTagsAsync()</code> / <code>GetTagsAsync()</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>SAS Token Types</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>SAS Type</th>
+              <th>Scope</th>
+              <th>Backed By</th>
+              <th>Max Validity</th>
+              <th>Revocation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Service SAS</td>
+              <td>Single service (Blob, Queue, Table, or File)</td>
+              <td>Storage account key</td>
+              <td>No limit (key-based)</td>
+              <td>Rotate account key, or use Stored Access Policy</td>
+            </tr>
+            <tr>
+              <td>Account SAS</td>
+              <td>Multiple services in one account</td>
+              <td>Storage account key</td>
+              <td>No limit (key-based)</td>
+              <td>Rotate account key</td>
+            </tr>
+            <tr>
+              <td>User Delegation SAS</td>
+              <td>Blob and Data Lake Storage Gen2 only</td>
+              <td>Azure AD credentials (OAuth)</td>
+              <td>7 days</td>
+              <td>Revoke the user delegation key; or wait for expiry</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">User Delegation SAS is the most secure SAS type — prefer it when possible</div>
+          Because it is backed by Azure AD credentials rather than a storage account key, it avoids the risk of key exposure. The maximum validity of 7 days limits blast radius if a token is leaked. Use a <strong>Stored Access Policy</strong> with Service SAS if you need the ability to revoke a token before expiry without rotating the account key.
+        </div>
+      </div>
+
+      <h3>Blob Leases</h3>
+      <p>A lease is an exclusive write lock on a blob or container. Any write or delete operation on a leased blob requires the current <strong>lease ID</strong>.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Lease State</th>
+              <th>Description</th>
+              <th>Operations Allowed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Available</td>
+              <td>No lease exists on the blob</td>
+              <td>All operations</td>
+            </tr>
+            <tr>
+              <td>Leased</td>
+              <td>Active lease held by a client</td>
+              <td>Write/delete only with correct lease ID; reads always allowed</td>
+            </tr>
+            <tr>
+              <td>Expired</td>
+              <td>Fixed-duration lease elapsed without renewal</td>
+              <td>All operations (another client can acquire a new lease)</td>
+            </tr>
+            <tr>
+              <td>Breaking</td>
+              <td>Break requested; waiting for break period to elapse</td>
+              <td>Reads allowed; writes blocked until break completes</td>
+            </tr>
+            <tr>
+              <td>Broken</td>
+              <td>Break period elapsed or break was immediate (period=0)</td>
+              <td>All operations; another client can now acquire</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <div class="callout-title">Lease duration: 15–60 seconds (fixed) or -1 (infinite)</div>
+          Fixed leases auto-expire if the client crashes — preventing deadlocks. Infinite leases (<code>-1</code>) require an explicit <code>ReleaseLease</code> call. Use infinite leases only when the client lifecycle is well-managed (e.g., a distributed lock manager). In exam scenarios asking how to prevent concurrent writes from two processes, the answer is usually: acquire a fixed-duration lease, pass the lease ID on all writes, and renew the lease before it expires.
+        </div>
+      </div>
+
+      <h3>Data Protection Features</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>What it Does</th>
+              <th>Retention / Duration</th>
+              <th>Reversible?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Soft Delete (blob)</td>
+              <td>Marks deleted blobs as soft-deleted; recoverable within retention period</td>
+              <td>1–365 days (configurable)</td>
+              <td>Yes — undelete within retention window</td>
+            </tr>
+            <tr>
+              <td>Versioning</td>
+              <td>Auto-creates a new version on every overwrite or delete</td>
+              <td>Until explicitly deleted or lifecycle policy removes old versions</td>
+              <td>Yes — restore any version to be the current version</td>
+            </tr>
+            <tr>
+              <td>Immutability (time-based)</td>
+              <td>WORM: no delete or overwrite allowed during retention interval</td>
+              <td>User-specified days/years; locked policies cannot be shortened</td>
+              <td>No — once a locked policy's interval starts, it cannot be reduced</td>
+            </tr>
+            <tr>
+              <td>Immutability (legal hold)</td>
+              <td>WORM: blocks all modifications until legal hold is explicitly cleared</td>
+              <td>Indefinite — lasts until tag is removed</td>
+              <td>Yes — authorized users can remove legal hold tags</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">② Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">UploadAsync silently overwrites existing blobs — no error is thrown</div>
+          Unlike databases where an INSERT to an existing key fails, <code>BlobClient.UploadAsync()</code> by default overwrites any existing blob with the same name without throwing an exception. To prevent accidental overwrites, pass an <code>overwrite: false</code> parameter, or use an HTTP conditional header <code>If-None-Match: *</code> (which fails if the blob already exists). This is a classic exam trap: "What happens when UploadAsync is called on a blob that already exists?" — the answer is the existing blob is overwritten silently.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">Metadata keys are case-insensitive; metadata values are case-sensitive</div>
+          When you set metadata with key <code>Author</code> and retrieve it with key <code>author</code>, you get the same value — keys are case-insensitive. However, the value <code>John</code> is different from <code>john</code> — values are case-sensitive. This asymmetry is a subtle exam point. Also: <strong>metadata is not searchable</strong> — you cannot query "find all blobs where Author=John" using metadata alone. For cross-blob searching, you must use blob index tags.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">🚨</div>
+        <div class="callout-body">
+          <div class="callout-title">User Delegation SAS maximum validity is 7 days — not unlimited</div>
+          A User Delegation SAS token is backed by a <strong>user delegation key</strong> obtained from Azure AD. The user delegation key itself has a maximum validity of 7 days, which means the SAS token's expiry cannot exceed 7 days from the delegation key's start time. If an exam question asks for a SAS that must be valid for 30 days and must be backed by Azure AD, that is not currently possible with User Delegation SAS — you would need a Service SAS or Account SAS with a Stored Access Policy for revocation.
+        </div>
+      </div>
+
+      <div class="sec-lbl">③ Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+              <th>Exam Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>User Delegation SAS max validity</td>
+              <td>7 days</td>
+              <td>Constrained by user delegation key lifetime; frequently tested</td>
+            </tr>
+            <tr>
+              <td>Lease duration (fixed)</td>
+              <td>15–60 seconds</td>
+              <td>Auto-expires if client crashes; prevents deadlock</td>
+            </tr>
+            <tr>
+              <td>Lease duration (infinite)</td>
+              <td>-1 (no expiry)</td>
+              <td>Must be explicitly released; risk of deadlock if client crashes</td>
+            </tr>
+            <tr>
+              <td>Soft delete retention</td>
+              <td>1–365 days</td>
+              <td>Configurable per account; soft-deleted blobs still count toward storage billing</td>
+            </tr>
+            <tr>
+              <td>Metadata max size</td>
+              <td>8 KB total per blob</td>
+              <td>Sum of all key-value pairs including names cannot exceed 8 KB</td>
+            </tr>
+            <tr>
+              <td>Blob index tags — max per blob</td>
+              <td>10 tags</td>
+              <td>Key max 128 chars; value max 256 chars; tags are searchable unlike metadata</td>
+            </tr>
+            <tr>
+              <td>Snapshot max depth</td>
+              <td>Unlimited (flat model)</td>
+              <td>Snapshots are flat, not hierarchical; you cannot take a snapshot of a snapshot</td>
+            </tr>
+            <tr>
+              <td>Immutability — min interval</td>
+              <td>1 day</td>
+              <td>Once a locked immutability policy is set, it cannot be shortened — only extended</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">④ CLI / SDK Patterns</div>
+
+      <pre><code>// C# — Full SDK pattern: upload with conditional check, metadata, tags, and lease
+
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Azure.Storage.Blobs.Specialized;
+
+var serviceClient = new BlobServiceClient(connectionString);
+var containerClient = serviceClient.GetBlobContainerClient("mycontainer");
+await containerClient.CreateIfNotExistsAsync(PublicAccessType.None);
+
+var blobClient = containerClient.GetBlobClient("report-2024.pdf");
+
+// Upload — prevent overwrite using IfNoneMatch: * condition
+var uploadOptions = new BlobUploadOptions
+{
+    Conditions = new BlobRequestConditions { IfNoneMatch = ETag.All }, // Fail if blob exists
+};
+try
+{
+    using var fileStream = File.OpenRead("./report-2024.pdf");
+    await blobClient.UploadAsync(fileStream, uploadOptions);
+}
+catch (Azure.RequestFailedException ex) when (ex.Status == 409)
+{
+    Console.WriteLine("Blob already exists — upload skipped.");
+}
+
+// Set custom metadata (keys are case-insensitive; values case-sensitive)
+var metadata = new Dictionary&lt;string, string&gt;
+{
+    { "department", "Finance" },  // Stored; retrievable but NOT searchable
+    { "author", "Jane Smith" }
+};
+await blobClient.SetMetadataAsync(metadata);
+
+// Set blob index tags (searchable across the storage account)
+var tags = new Dictionary&lt;string, string&gt;
+{
+    { "project", "Q4-Report" },   // Tags are searchable via FindBlobsByTagsAsync
+    { "status", "final" }
+};
+await blobClient.SetTagsAsync(tags);
+
+// Acquire a 30-second lease to prevent concurrent writes
+var leaseClient = blobClient.GetBlobLeaseClient();
+BlobLease lease = await leaseClient.AcquireAsync(TimeSpan.FromSeconds(30));
+Console.WriteLine($"Lease acquired: {lease.LeaseId}");
+
+// Write using the lease ID (any write without the correct lease ID fails with 412)
+var writeOptions = new BlobUploadOptions
+{
+    Conditions = new BlobRequestConditions { LeaseId = lease.LeaseId }
+};
+using var updateStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("updated content"));
+await blobClient.UploadAsync(updateStream, writeOptions);
+
+// Release the lease when done
+await leaseClient.ReleaseAsync();</code></pre>
+
+      <pre><code>// C# — Generate a User Delegation SAS (Azure AD backed, max 7 days)
+using Azure.Storage.Blobs;
+using Azure.Storage.Sas;
+using Azure.Identity;
+
+// Authenticate with Azure AD — no storage account key needed
+var serviceClient = new BlobServiceClient(
+    new Uri("https://mystorageacct.blob.core.windows.net"),
+    new DefaultAzureCredential()
+);
+
+// Get a user delegation key (max 7 days from now)
+var startsOn = DateTimeOffset.UtcNow;
+var expiresOn = DateTimeOffset.UtcNow.AddDays(7); // Max allowed
+UserDelegationKey userDelegationKey = await serviceClient.GetUserDelegationKeyAsync(startsOn, expiresOn);
+
+// Build the SAS builder
+var sasBuilder = new BlobSasBuilder
+{
+    BlobContainerName = "mycontainer",
+    BlobName = "report-2024.pdf",
+    Resource = "b",               // "b" = blob; "c" = container
+    StartsOn = startsOn,
+    ExpiresOn = expiresOn
+};
+sasBuilder.SetPermissions(BlobSasPermissions.Read); // Read-only SAS
+
+// Generate the SAS token
+var uriBuilder = new BlobUriBuilder(blobClient.Uri)
+{
+    Sas = sasBuilder.ToSasQueryParameters(userDelegationKey, "mystorageacct")
+};
+Uri sasUri = uriBuilder.ToUri(); // Share this URI — no account key exposed</code></pre>
+
+      <pre><code># CLI — Upload, set tier, manage metadata and tags
+# Upload blob and set Cool tier atomically
+az storage blob upload \
+  --account-name mystorageacct \
+  --container-name mycontainer \
+  --name report-2024.pdf \
+  --file ./report-2024.pdf \
+  --tier Cool \                      # GPv2 only; not available on Premium accounts
+  --metadata "department=Finance" "author=Jane Smith"  # Custom metadata at upload
+
+# Set blob index tags (searchable — unlike metadata)
+az storage blob tag set \
+  --account-name mystorageacct \
+  --container-name mycontainer \
+  --name report-2024.pdf \
+  --tags "project=Q4-Report" "status=final"
+
+# Query blobs by tag across the entire storage account
+az storage blob query \
+  --account-name mystorageacct \
+  --query-expression "\"project\" = 'Q4-Report'"   # Find all blobs tagged with project=Q4-Report
+
+# Acquire lease (30 seconds)
+az storage blob lease acquire \
+  --account-name mystorageacct \
+  --container-name mycontainer \
+  --blob-name report-2024.pdf \
+  --lease-duration 30               # 15-60 seconds for fixed; -1 for infinite</code></pre>
+
+      <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "To search blobs by custom attribute, store the attribute in blob metadata"</div>
+          Blob metadata is not indexed and cannot be searched across blobs. There is no API to query "find all blobs where metadata['department'] equals 'Finance'". The correct answer for cross-blob attribute searching is <strong>blob index tags</strong>, which are indexed by Azure Storage and support the <code>Find Blobs By Tags</code> operation. Metadata is only useful when you already know which blob you want and need to read its properties.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Soft delete prevents all data loss — blobs deleted during the retention period are always recoverable"</div>
+          Soft delete protects against <em>accidental deletion</em> by standard delete operations, but it does NOT protect against: (a) overwriting a blob with <code>UploadAsync</code> (the new content replaces the old; if versioning is off, the old content is lost); (b) immutability policies that are locked (delete is blocked entirely regardless of soft delete); or (c) deleting the storage account itself. For full data protection against overwrites, enable <strong>blob versioning</strong> in addition to soft delete.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "A Stored Access Policy lets you revoke any SAS token before it expires"</div>
+          A Stored Access Policy can revoke SAS tokens — but only <strong>Service SAS tokens</strong> that reference that policy. A Stored Access Policy cannot revoke: Account SAS tokens (they don't support stored policies), or ad-hoc Service SAS tokens that do not reference a stored policy. User Delegation SAS tokens are revoked by revoking or expiring the user delegation key. The exam often pairs "SAS revocation" with "Stored Access Policy" — the correct answer depends on which SAS type is in scope.
+        </div>
+      </div>
+
+      <div class="sec-lbl">⑥ Practice Q&amp;A</div>
+
+      <div class="qa-list">
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">A developer calls BlobClient.UploadAsync() on a blob that already exists with important data. No special options are passed. What happens?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ The existing blob is silently overwritten with no error</div>
+            <div class="qa-body">
+              By default, <strong><code>UploadAsync</code> overwrites existing blobs without throwing an exception</strong>. This is distinct from, for example, SQL Server's INSERT, which would fail on a duplicate key. To prevent overwriting:
+              <ul>
+                <li>Pass <code>overwrite: false</code> as a parameter — this will throw a <code>RequestFailedException</code> (HTTP 409 Conflict) if the blob already exists</li>
+                <li>Use an HTTP conditional header: set <code>BlobRequestConditions { IfNoneMatch = ETag.All }</code> in <code>BlobUploadOptions</code> — fails with 412 Precondition Failed if blob exists</li>
+                <li>Enable blob versioning — the previous version is preserved automatically on every overwrite, even if UploadAsync silently replaces the current version</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">A security team requires that all SAS tokens for accessing blob data must be revocable without rotating the storage account key. Which approach satisfies this requirement for short-lived tokens up to 7 days?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ User Delegation SAS — revoke by deleting/expiring the user delegation key</div>
+            <div class="qa-body">
+              <strong>User Delegation SAS</strong> is backed by Azure AD credentials and a user delegation key (not the storage account key). Revoking a user delegation key (via <code>BlobServiceClient.RevokeUserDelegationKeysAsync()</code>) immediately invalidates all SAS tokens derived from that key — without affecting the storage account key or other SAS tokens.
+              <ul>
+                <li>Maximum validity is 7 days — sufficient for the stated requirement</li>
+                <li>Alternatively, a <strong>Service SAS</strong> linked to a <strong>Stored Access Policy</strong> can be revoked by deleting or modifying the stored policy — this works without rotating the account key too</li>
+                <li>Account SAS does not support Stored Access Policies and can only be revoked by rotating the account key</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">Two microservices might simultaneously update the same blob, causing a race condition. Which Azure Blob Storage feature should be used to serialize these writes, and what happens if a service tries to write without the lock?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Blob lease — the write without the lease ID fails with HTTP 412 Precondition Failed</div>
+            <div class="qa-body">
+              A <strong>blob lease</strong> provides an exclusive write lock. The process that holds the lease passes its <code>LeaseId</code> with every write operation via <code>BlobRequestConditions.LeaseId</code>.
+              <ul>
+                <li>Any write or delete operation on a leased blob that does NOT include the correct lease ID fails with <strong>HTTP 412 Precondition Failed</strong></li>
+                <li>Read operations always succeed regardless of lease status — leases only gate writes and deletes</li>
+                <li>Use a fixed-duration lease (15–60 seconds) so the lock auto-expires if the holding service crashes, preventing indefinite deadlock</li>
+                <li>The holding service must renew the lease before it expires using <code>leaseClient.RenewAsync()</code> if the operation takes longer than the lease duration</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">A developer sets blob metadata with key "Source" and value "Azure". Later, another developer retrieves the metadata using key "source" (lowercase). What value is returned?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ "Azure" — metadata keys are case-insensitive; the correct value is returned</div>
+            <div class="qa-body">
+              Blob metadata key lookup is <strong>case-insensitive</strong>. Whether you retrieve using <code>"Source"</code>, <code>"source"</code>, or <code>"SOURCE"</code>, you get the same value. However, <strong>metadata values are case-sensitive</strong>:
+              <ul>
+                <li>The value <code>"Azure"</code> is different from <code>"azure"</code> — if you store <code>"Azure"</code>, you get back <code>"Azure"</code> exactly</li>
+                <li>This asymmetry (case-insensitive keys, case-sensitive values) is a specific exam point</li>
+                <li>Also remember: metadata is stored as HTTP headers on the blob and is not indexed or searchable — for searchable attributes, use blob index tags instead</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">A compliance officer requires that financial documents stored in Azure Blob Storage cannot be deleted or overwritten for exactly 7 years, and this policy must be enforced even by storage administrators. Which feature should be used?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Time-based retention immutability policy (WORM) — locked configuration</div>
+            <div class="qa-body">
+              <strong>Time-based immutability</strong> with a <strong>locked policy</strong> prevents any user — including storage administrators and the account owner — from deleting or overwriting blobs during the retention interval.
+              <ul>
+                <li>Locking the policy is irreversible for shortening: once locked, the retention interval can only be extended, never shortened or disabled before expiry</li>
+                <li>Unlocked immutability policies are in a "testing" state and can be modified or deleted — they do NOT satisfy regulatory WORM requirements</li>
+                <li>Legal hold is an alternative when you don't know the exact duration — it blocks modifications indefinitely until an authorized user removes the hold tag</li>
+                <li>Soft delete and versioning alone do NOT satisfy WORM requirements because an administrator could still delete the soft-deleted blobs or purge versions</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">A developer needs to find all blobs across an entire storage account that have the tag "status=pending-review". Which SDK method or REST operation enables this cross-blob search?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ BlobServiceClient.FindBlobsByTagsAsync() with a tag filter expression</div>
+            <div class="qa-body">
+              <strong>Blob index tags</strong> are the only blob attribute type that is indexed for search. The <code>FindBlobsByTagsAsync()</code> method on <code>BlobServiceClient</code> accepts an OData-style filter expression:
+              <ul>
+                <li>Example: <code>await serviceClient.FindBlobsByTagsAsync("\"status\" = 'pending-review'")</code></li>
+                <li>This searches across <em>all containers</em> in the storage account and returns a paginated list of matching blob items with their container names</li>
+                <li><strong>Metadata cannot be used for this</strong> — there is no FindBlobsByMetadata API because metadata is not indexed</li>
+                <li>Tags support compound queries: <code>"\"project\" = 'alpha' AND \"status\" = 'pending-review'"</code></li>
+                <li>Requires the caller to have the <code>Storage Blob Data Reader</code> role or equivalent RBAC permission</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">What is the difference between soft delete and blob versioning, and when should you enable both?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ They protect against different failure modes — enable both for complete accidental-change protection</div>
+            <div class="qa-body">
+              <strong>Soft delete</strong> protects against accidental <em>deletion</em>: when a blob is deleted, Azure keeps a soft-deleted copy for the configured retention period (1–365 days). You can undelete it during that window.
+              <ul>
+                <li><strong>Does NOT protect against overwrites</strong> — if UploadAsync silently replaces the blob content, soft delete does not capture the previous content (the blob was never "deleted," it was just overwritten)</li>
+              </ul>
+              <strong>Blob versioning</strong> protects against both accidental deletions and overwrites: every time a blob is overwritten or deleted, Azure automatically creates a new version preserving the previous state.
+              <ul>
+                <li>Versions are stored permanently until explicitly deleted or a lifecycle policy removes them</li>
+                <li>You can restore any previous version to become the current version</li>
+              </ul>
+              Enable <strong>both</strong> together for complete protection: soft delete catches gaps if versioning is disabled for any reason, and versioning catches overwrites that soft delete misses. On the exam, if asked for complete point-in-time recovery for blob data including overwrites, the answer is blob versioning (not just soft delete).
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">8</div>
+            <div class="qa-text">A developer uses BlobContainerClient to list blobs. Some blobs have tags set, but GetProperties() on each blob returns no tags. What additional call is needed to retrieve blob index tags?</div>
+            <div class="qa-tog">▼</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">✓ Call BlobClient.GetTagsAsync() — tags are not returned by GetPropertiesAsync()</div>
+            <div class="qa-body">
+              Blob index tags and blob metadata/properties use <strong>separate API calls</strong>:
+              <ul>
+                <li><code>blobClient.GetPropertiesAsync()</code> returns system properties (content type, length, ETag, tier) and user-defined <em>metadata</em> — but NOT blob index tags</li>
+                <li><code>blobClient.GetTagsAsync()</code> returns the blob index tags dictionary separately</li>
+                <li>When listing blobs via <code>containerClient.GetBlobsAsync(BlobTraits.Tags)</code>, pass <code>BlobTraits.Tags</code> to include tags in the listing response and avoid a separate round-trip per blob</li>
+                <li>This separation matters for performance at scale: if you are listing 10,000 blobs and need their tags, use <code>BlobTraits.Tags</code> in the list call rather than making 10,000 individual <code>GetTagsAsync</code> calls</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="nav-end">
+      <a href="learn-02-functions.html" class="btn-link">← Azure Functions</a>
+      <a href="learn-04-cosmos-db.html" class="btn-link fwd">Cosmos DB →</a>
+    </div>
+  </main>
+</div>
+
+<script>
+
+(function(){
+  // Q&A accordion
+  document.querySelectorAll('.qa-q').forEach(function(q){
+    q.addEventListener('click',function(){
+      this.closest('.qa-item').classList.toggle('open');
+    });
+  });
+  // Sidebar scroll-spy
+  var links=document.querySelectorAll('.sb-link[data-m]');
+  var sections=document.querySelectorAll('.module[id]');
+  if(links.length&&sections.length){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var n=e.target.id.replace('m','');
+          links.forEach(function(l){l.classList.toggle('active',l.dataset.m===n);});
+        }
+      });
+    },{rootMargin:'-8% 0px -72% 0px'});
+    sections.forEach(function(s){obs.observe(s);});
+  }
+  // Sidebar click scroll
+  links.forEach(function(l){
+    l.addEventListener('click',function(e){
+      e.preventDefault();
+      var t=document.getElementById('m'+this.dataset.m);
+      if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+})();
+
+</script>
+</body>
+</html>

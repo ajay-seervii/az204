@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cosmos DB — AZ-204 Study Notes</title>
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --azure:#0078D4;--azure-dark:#005a9e;--azure-light:#deecf9;
+  --bg:#f4f6f9;--surface:#fff;--nav-bg:#1a1f36;
+  --border:#d0d7de;--border-light:#e8ecf0;
+  --text:#1a1f36;--text-muted:#6b7280;--text-light:#9ca3af;
+  --ok-bg:#ecfdf5;--ok-bdr:#10b981;--ok-txt:#065f46;
+  --err-bg:#fef2f2;--err-bdr:#ef4444;--err-txt:#991b1b;
+  --warn-bg:#fffbeb;--warn-bdr:#fbbf24;--warn-txt:#92400e;
+  --r:10px;--rs:6px;
+  --sh:0 1px 3px rgba(0,0,0,.08);--shm:0 4px 12px rgba(0,0,0,.12);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--azure);text-decoration:none}
+a:hover{text-decoration:underline}
+#top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
+.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
+.nav-bc a{color:rgba(255,255,255,.75)}
+.nav-bc a:hover{color:#fff;text-decoration:none}
+.nav-bc span{color:rgba(255,255,255,.35)}
+.nav-bc strong{color:#fff}
+.nav-acts{display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
+.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.page-layout{display:flex;min-height:calc(100vh - 54px)}
+.sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
+.sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
+.sb-back:hover{color:var(--azure);text-decoration:none}
+.sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-light);padding:.5rem 1rem;margin-top:.25rem}
+.sb-link{display:flex;align-items:center;gap:8px;padding:.45rem 1rem;font-size:13px;color:var(--text-muted);border-left:3px solid transparent;cursor:pointer;transition:background .1s,color .1s,border-color .1s}
+.sb-link:hover{background:#f8fafc;color:var(--text)}
+.sb-link.active{border-left-color:var(--azure);color:var(--azure);background:#eff6ff;font-weight:600}
+.sb-num{font-size:10px;background:#f3f4f6;border:1px solid var(--border-light);padding:1px 6px;border-radius:20px;margin-left:auto;color:var(--text-light)}
+.sb-next{display:flex;align-items:center;gap:6px;padding:.45rem 1rem;font-size:12px;color:var(--text-muted);margin-top:.5rem;border-top:1px solid var(--border-light)}
+.sb-next:hover{color:var(--azure);text-decoration:none}
+.main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
+.topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
+.topic-header p{font-size:13px;color:var(--text-muted);margin:0}
+.topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
+.module{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem 1.75rem;margin-bottom:1.75rem;scroll-margin-top:70px}
+.module h2{font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--border-light)}
+.module h2 .mod-num{background:var(--azure);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--azure);margin-bottom:.5rem;margin-top:1.25rem;display:flex;align-items:center;gap:6px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--azure-light)}
+h3{font-size:14px;font-weight:700;color:var(--text);margin:.75rem 0 .4rem}
+p,li{font-size:13px;color:var(--text-muted);line-height:1.7}
+ul,ol{padding-left:1.4rem;margin:.4rem 0}
+li{margin-bottom:.25rem}
+strong{color:var(--text)}
+code{font-family:Consolas,'Cascadia Code','Courier New',monospace;font-size:.85em;background:#f3f4f6;padding:1px 5px;border-radius:4px;color:#1a1f36}
+pre{font-family:Consolas,'Cascadia Code','Courier New',monospace;background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:var(--rs);padding:1.1rem 1.25rem;overflow-x:auto;font-size:12.5px;line-height:1.65;margin:.6rem 0}
+pre code{background:none;padding:0;color:inherit}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--rs);margin:.6rem 0}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f8fafc;color:var(--text-muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:.55rem .9rem;text-align:left;border-bottom:2px solid var(--border)}
+td{padding:.55rem .9rem;border-bottom:1px solid var(--border-light);color:var(--text-muted);vertical-align:top;line-height:1.5}
+td:first-child{color:var(--text);font-weight:500}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+.callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
+.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-body{flex:1}
+.callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
+.callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
+.callout.gotcha .callout-title{color:var(--err-txt)}
+.callout.tip{background:#eff6ff;border-left:3px solid var(--azure)}
+.callout.tip .callout-title{color:var(--azure-dark)}
+.callout.warn{background:var(--warn-bg);border-left:3px solid var(--warn-bdr)}
+.callout.warn .callout-title{color:var(--warn-txt)}
+.callout.success{background:var(--ok-bg);border-left:3px solid var(--ok-bdr)}
+.callout.success .callout-title{color:var(--ok-txt)}
+.qa-list{margin-top:.5rem}
+.qa-item{border:1px solid var(--border);border-radius:var(--rs);margin-bottom:.6rem;overflow:hidden}
+.qa-q{display:flex;align-items:flex-start;gap:.65rem;padding:.85rem 1rem;cursor:pointer;background:var(--surface);user-select:none}
+.qa-q:hover{background:#f8fafc}
+.qa-n{flex-shrink:0;width:20px;height:20px;background:var(--azure);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.qa-text{flex:1;font-size:13px;color:var(--text);line-height:1.5;font-weight:500}
+.qa-tog{flex-shrink:0;color:var(--text-light);transition:transform .2s;font-size:14px;margin-top:2px}
+.qa-item.open .qa-tog{transform:rotate(180deg)}
+.qa-ans{display:none;padding:.85rem 1rem 1rem;background:#f8fafc;border-top:1px solid var(--border-light)}
+.qa-item.open .qa-ans{display:block}
+.qa-correct{display:inline-flex;align-items:center;gap:5px;background:var(--ok-bg);color:var(--ok-txt);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-bottom:.6rem}
+.qa-body{font-size:12.5px;color:var(--text-muted);line-height:1.7}
+.qa-body ul{padding-left:1.25rem;margin:.4rem 0}
+.qa-body strong{color:var(--text)}
+.nav-end{display:flex;justify-content:space-between;padding:1.25rem 0;border-top:1px solid var(--border);margin-top:.5rem}
+.btn-link{display:inline-flex;align-items:center;gap:5px;padding:.4rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--text-muted)}
+.btn-link:hover{border-color:var(--azure);color:var(--azure);text-decoration:none}
+.btn-link.fwd{background:var(--azure);color:#fff;border-color:var(--azure)}
+.btn-link.fwd:hover{background:var(--azure-dark);text-decoration:none}
+@media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
+
+</style>
+</head>
+<body>
+
+<nav id="top-nav">
+  <div class="nav-brand">
+    <div class="nav-brand-icon">Az</div>
+    <div class="nav-bc">
+      <a href="learn.html">Study Notes</a>
+      <span>/</span>
+      <strong>Cosmos DB</strong>
+    </div>
+  </div>
+  <div class="nav-acts">
+    <a href="learn.html" class="btn btn-ghost">&#8592; All Topics</a>
+    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  </div>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <a href="learn.html" class="sb-back">&#8592; All Topics</a>
+    <div class="sb-label">Cosmos DB</div>
+    <a href="#m1" class="sb-link" data-m="1">&#128269; Explore Azure Cosmos DB<span class="sb-num">6 sections</span></a>
+    <a href="#m2" class="sb-link" data-m="2">&#128187; Work with Azure Cosmos DB<span class="sb-num">6 sections</span></a>
+    <a href="learn-05-containers.html" class="sb-next">Next: Containers &#8594;</a>
+  </aside>
+
+  <main class="main">
+    <div class="topic-header">
+      <div class="topic-icon-lg">&#127760;</div>
+      <div>
+        <h1>Cosmos DB</h1>
+        <p>2 modules &middot; Explore Azure Cosmos DB &middot; Work with Azure Cosmos DB</p>
+      </div>
+      <div class="topic-num">Topic 04</div>
+    </div>
+
+    <!-- MODULE 1 -->
+    <section class="module" id="m1">
+      <h2><span class="mod-num">01</span> Explore Azure Cosmos DB</h2>
+
+      <div class="sec-lbl">&#9312; Key Concepts</div>
+
+      <h3>API Options</h3>
+      <p>Cosmos DB is a globally distributed, multi-model NoSQL database. The <strong>API</strong> you choose at container creation is permanent — it cannot be changed later. Each API exposes a different wire protocol and data model.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>API</th>
+              <th>Data Model</th>
+              <th>Query Language</th>
+              <th>Best For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Core (SQL / NoSQL)</td>
+              <td>JSON documents</td>
+              <td>SQL-like syntax</td>
+              <td>New apps, native Cosmos, richest SDK support</td>
+            </tr>
+            <tr>
+              <td>MongoDB</td>
+              <td>BSON documents</td>
+              <td>MongoDB wire protocol</td>
+              <td>Migrating existing MongoDB apps with minimal code change</td>
+            </tr>
+            <tr>
+              <td>Cassandra</td>
+              <td>Wide-column (rows + columns)</td>
+              <td>CQL (Cassandra Query Language)</td>
+              <td>Migrating Cassandra workloads; time-series, IoT</td>
+            </tr>
+            <tr>
+              <td>Gremlin</td>
+              <td>Graph (vertices + edges)</td>
+              <td>Gremlin traversal language</td>
+              <td>Social graphs, recommendation engines, fraud detection</td>
+            </tr>
+            <tr>
+              <td>Table</td>
+              <td>Key-value pairs</td>
+              <td>OData / REST</td>
+              <td>Migrating Azure Table Storage apps; globally distributed key-value</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">&#128161;</div>
+        <div class="callout-body">
+          <div class="callout-title">Core (SQL) API = exam default</div>
+          When the exam says "Cosmos DB" without specifying an API, assume Core (SQL) API. It supports the richest set of SDK operations, server-side JS (stored procs/triggers/UDFs), change feed, and has the most exam coverage. All code examples in exam questions use the Core API SDK unless stated otherwise.
+        </div>
+      </div>
+
+      <h3>Consistency Levels</h3>
+      <p>Cosmos DB offers five consistency levels. You set the <strong>default at the account level</strong> and can optionally weaken it per request (but never strengthen beyond the account default). Stronger consistency = higher RU cost and higher latency.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Level (weakest &#8594; strongest)</th>
+              <th>Guarantee</th>
+              <th>Reads Reflect</th>
+              <th>Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Eventual</td>
+              <td>Lowest latency, no ordering guarantee</td>
+              <td>Any replica at any point in time</td>
+              <td>Social likes/counts where stale data is acceptable</td>
+            </tr>
+            <tr>
+              <td>Consistent Prefix</td>
+              <td>Reads never see out-of-order writes</td>
+              <td>Writes in order, but possibly lagged</td>
+              <td>Photo captions, comment ordering</td>
+            </tr>
+            <tr>
+              <td>Session</td>
+              <td>Read-your-own-writes within a session token</td>
+              <td>All writes from the current session</td>
+              <td>Shopping cart, user profile — DEFAULT and most common</td>
+            </tr>
+            <tr>
+              <td>Bounded Staleness</td>
+              <td>Lag bounded by K versions or T seconds</td>
+              <td>Writes within the configured staleness window</td>
+              <td>Global apps needing near-real-time sync with low latency</td>
+            </tr>
+            <tr>
+              <td>Strong</td>
+              <td>Linearizable reads — always reads latest committed write</td>
+              <td>Most recent write globally</td>
+              <td>Financial transactions, inventory systems requiring absolute accuracy</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">&#128161;</div>
+        <div class="callout-body">
+          <div class="callout-title">Strong consistency restriction</div>
+          Strong consistency is only available in a <strong>single-region account</strong> OR a multi-region account where all regions are configured for write operations with the same region set. With multi-region writes (multi-master) enabled, Strong consistency is not supported — you must use Bounded Staleness or weaker. The exam will present scenarios to test whether you know this restriction.
+        </div>
+      </div>
+
+      <h3>Partitioning Architecture</h3>
+      <p>Understanding the two-layer partition model is essential for both correctness and performance questions on the exam.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Concept</th>
+              <th>Description</th>
+              <th>Key Fact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Logical Partition</td>
+              <td>All items sharing the same partition key value</td>
+              <td>Max size: <strong>20 GB</strong>. Cannot grow beyond this.</td>
+            </tr>
+            <tr>
+              <td>Physical Partition</td>
+              <td>Internal server-side shard managed by Cosmos DB</td>
+              <td>Can host multiple logical partitions. Scales automatically.</td>
+            </tr>
+            <tr>
+              <td>Partition Key</td>
+              <td>Property used to route items and queries</td>
+              <td>Immutable after container creation. Choose carefully.</td>
+            </tr>
+            <tr>
+              <td>Hot Partition</td>
+              <td>One partition receiving disproportionate traffic</td>
+              <td>Results in HTTP 429 (TooManyRequests) on that partition while others are idle</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">&#128161;</div>
+        <div class="callout-body">
+          <div class="callout-title">Good partition key characteristics</div>
+          A good partition key has <strong>high cardinality</strong> (many distinct values), produces <strong>even distribution</strong> of both storage and throughput, and is commonly used in queries so most queries are single-partition (cheaper). Examples: <code>userId</code>, <code>deviceId</code>, <code>orderId</code>. Bad examples: <code>status</code> (only 3-4 values), <code>country</code> (uneven distribution if most users are in one country), <code>createdDate</code> truncated to day (time-series hotspot).
+        </div>
+      </div>
+
+      <div class="sec-lbl">&#9313; Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;&#65039;</div>
+        <div class="callout-body">
+          <div class="callout-title">Gotcha: Partition key cannot be changed after container creation</div>
+          This is the single most impactful and irreversible architectural decision when creating a Cosmos DB container. Once a container is created with a given partition key, it cannot be modified. If you chose poorly, you must create a new container and migrate data. The exam will present scenarios where a team is experiencing hot partition issues and ask what they should have done differently — the answer always involves selecting a better partition key, not adding more RU/s.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;&#65039;</div>
+        <div class="callout-body">
+          <div class="callout-title">Gotcha: "Global distribution is automatic" — this is FALSE</div>
+          Adding regions to a Cosmos DB account is a manual action in the Azure Portal, CLI, or ARM template. The data is automatically replicated after you add a region, but the region must be added explicitly. Automatic failover (promoting a read region to write region on failure) is also a setting you must enable — it is not on by default. Do not confuse "data is automatically replicated once a region is added" with "regions are automatically provisioned."
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;&#65039;</div>
+        <div class="callout-body">
+          <div class="callout-title">Gotcha: Session consistency only guarantees reads within the same session token</div>
+          Session consistency provides read-your-own-writes <em>only within the same session</em>, scoped by the session token. If a different client (or a new client instance without the session token) reads data, it may not see the latest write. Exam scenarios will describe a user who just submitted a form and sees stale data on page reload — this is only a problem if the session token was not passed correctly to the new request, or a different consistency level is in use. Verify that the scenario is using Session consistency and the token is being threaded through.
+        </div>
+      </div>
+
+      <div class="sec-lbl">&#9314; Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+              <th>Exam Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Max item size</td>
+              <td>2 MB</td>
+              <td>Items larger than 2 MB cannot be stored; design data model accordingly</td>
+            </tr>
+            <tr>
+              <td>Max logical partition size</td>
+              <td>20 GB</td>
+              <td>Exceeding this causes a write error; requires better partition key choice</td>
+            </tr>
+            <tr>
+              <td>Point read cost (1 KB item)</td>
+              <td>1 RU</td>
+              <td>Cheapest read type; use ReadItemAsync whenever you have id + partition key</td>
+            </tr>
+            <tr>
+              <td>Max stored procedure execution time</td>
+              <td>5 seconds</td>
+              <td>Transactions must complete within this window or they time out and roll back</td>
+            </tr>
+            <tr>
+              <td>Default TTL</td>
+              <td>Disabled</td>
+              <td>Must enable TTL at container level first (<code>DefaultTimeToLive</code>), then set on items</td>
+            </tr>
+            <tr>
+              <td>Bounded Staleness (K)</td>
+              <td>Configurable version lag</td>
+              <td>Min K=1 version. For multi-region, min is 100,000 versions or 300 seconds</td>
+            </tr>
+            <tr>
+              <td>Bounded Staleness (T)</td>
+              <td>Configurable time lag</td>
+              <td>Min 5 seconds for single region; 300 seconds minimum for multi-region</td>
+            </tr>
+            <tr>
+              <td>Max regions per account</td>
+              <td>Depends on region availability</td>
+              <td>No hard cap; all Azure regions supported. Cost scales linearly with regions added</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">&#9315; CLI / SDK Patterns</div>
+
+      <pre><code># Create a Cosmos DB account with Session consistency (default) in two regions
+az cosmosdb create \
+  --name mycosmosaccount \
+  --resource-group myRG \
+  --default-consistency-level Session \
+  --locations regionName=eastus failoverPriority=0 isZoneRedundant=false \
+  --locations regionName=westus failoverPriority=1 isZoneRedundant=false
+
+# Enable automatic failover (not on by default!)
+az cosmosdb update \
+  --name mycosmosaccount \
+  --resource-group myRG \
+  --enable-automatic-failover true
+
+# Create a Core (SQL) database
+az cosmosdb sql database create \
+  --account-name mycosmosaccount \
+  --resource-group myRG \
+  --name myDatabase
+
+# Create a container with partition key /userId and provisioned 400 RU/s
+az cosmosdb sql container create \
+  --account-name mycosmosaccount \
+  --resource-group myRG \
+  --database-name myDatabase \
+  --name myContainer \
+  --partition-key-path /userId \        # immutable — choose carefully
+  --throughput 400                      # min 400 RU/s for dedicated throughput
+
+# Enable TTL at container level (required before items can use TTL)
+az cosmosdb sql container update \
+  --account-name mycosmosaccount \
+  --resource-group myRG \
+  --database-name myDatabase \
+  --name myContainer \
+  --ttl -1                              # -1 = enabled but no default expiry; items set their own TTL
+                                        # positive integer = default TTL in seconds for all items
+</code></pre>
+
+      <div class="callout tip">
+        <div class="callout-icon">&#128161;</div>
+        <div class="callout-body">
+          <div class="callout-title">TTL value meanings</div>
+          <code>DefaultTimeToLive = null</code> means TTL is disabled (items never expire). <code>DefaultTimeToLive = -1</code> means TTL is enabled but no default — individual items must set their own <code>_ts</code>-relative TTL. <code>DefaultTimeToLive = N</code> (positive integer) means items expire after N seconds by default unless overridden at item level.
+        </div>
+      </div>
+
+      <div class="sec-lbl">&#9316; Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#128680;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "You can change the partition key by updating the container"</div>
+          This is completely false. The partition key is set at container creation and is immutable. The exam may offer "Update the container's partition key to /orderId" as a distractor. The only correct remediation for a bad partition key is to create a new container with the correct partition key and migrate the data using the Cosmos DB data migration tool, Azure Data Factory, or a custom script.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#128680;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Multi-region writes support Strong consistency"</div>
+          Strong consistency requires a single write region. When multi-region writes (multi-master) is enabled, the strongest supported consistency level is Bounded Staleness. The exam will describe a scenario requiring both multi-master and Strong consistency — this combination is not possible. You must choose one or the other.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#128680;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Adding more RU/s fixes a hot partition problem"</div>
+          Throwing more throughput at a hot partition is a temporary workaround at best and does not fix the underlying problem. The correct exam answer for a hot partition scenario is always to re-design the partition key to achieve better distribution. More RUs increase cost proportionally but the hot partition will still hit its per-partition limit once a physical partition fills up. Also note: RU/s scale across physical partitions equally — you cannot allocate more RUs to a specific partition.
+        </div>
+      </div>
+
+      <div class="sec-lbl">&#9317; Practice Q&amp;A</div>
+
+      <div class="qa-list">
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">A development team is building a new application on Cosmos DB. They want to read their own writes immediately after committing them, but do not require all global replicas to be up-to-date before a read succeeds. Which consistency level should they configure as the account default?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Correct Answer: Session</div>
+            <div class="qa-body">
+              <strong>Session consistency</strong> is the default and most commonly used level. It guarantees that within a single client session (identified by a session token), reads always reflect the writes made in that session — this is read-your-own-writes. Replicas in other regions may still be lagging.
+              <ul>
+                <li><strong>Eventual</strong> — no ordering or recency guarantee; reads may see older data even within the same session</li>
+                <li><strong>Consistent Prefix</strong> — guarantees ordering but not currency; would not guarantee reading your own writes</li>
+                <li><strong>Bounded Staleness</strong> — ensures global consistency within a lag window; stronger than needed and more expensive</li>
+                <li><strong>Strong</strong> — reads always return the latest committed write globally; overkill and not compatible with multi-region writes</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">An e-commerce platform stores orders in Cosmos DB using <code>status</code> as the partition key. After launch, the team observes HTTP 429 errors concentrated on the "pending" partition while all other partitions are idle. What is the root cause and the correct fix?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Correct Answer: Hot partition due to low-cardinality partition key — redesign the partition key</div>
+            <div class="qa-body">
+              <strong>Root cause:</strong> <code>status</code> has very low cardinality (only a few values: pending, shipped, delivered, cancelled). The vast majority of new orders land in the "pending" partition, creating a hot partition that exhausts its share of the provisioned RUs.
+              <ul>
+                <li>HTTP <strong>429 (TooManyRequests)</strong> is the Cosmos DB response when a partition exhausts its RU allocation</li>
+                <li>The fix is to redesign the container with a high-cardinality key such as <code>orderId</code> or a synthetic key combining <code>customerId + month</code></li>
+                <li>Increasing RU/s is a cost-inefficient workaround; the hot partition will still saturate relative to others</li>
+                <li>The partition key <strong>cannot be changed in place</strong> — a new container must be created and data migrated</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">A company runs a Cosmos DB account with multi-region writes enabled across three regions. A junior developer attempts to set the account's default consistency level to Strong. What will happen?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Correct Answer: The operation will fail — Strong consistency is not compatible with multi-region writes</div>
+            <div class="qa-body">
+              <strong>Strong consistency requires a single write region.</strong> When multi-region writes (multi-master) is enabled, the Azure portal and SDK both prevent setting Strong consistency and will return a validation error.
+              <ul>
+                <li>With multi-region writes, the strongest available consistency is <strong>Bounded Staleness</strong></li>
+                <li>This is a hard platform constraint, not a configuration recommendation</li>
+                <li>To use Strong consistency, the team must disable multi-region writes and designate a single write region</li>
+                <li>The exam will offer this exact scenario — do not select "Strong" when multi-master is enabled</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">A Cosmos DB container was created using the MongoDB API. Six months later, the team wants to switch to the Core (SQL) API to use stored procedures and server-side JavaScript. What is the correct approach?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Correct Answer: Create a new Core (SQL) API container and migrate the data</div>
+            <div class="qa-body">
+              <strong>The API is selected at container (and account) creation and is permanent.</strong> There is no in-place migration path between Cosmos DB APIs.
+              <ul>
+                <li>The team must provision a new Cosmos DB account with the Core (SQL) API</li>
+                <li>Data must be migrated using Azure Data Factory, the Cosmos DB Spark connector, or a custom migration script</li>
+                <li>This is an expensive and disruptive process — reinforcing why API selection is a critical upfront architectural decision</li>
+                <li>The exam will not offer "change the API setting on the existing account" as a valid answer — it does not exist</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">A container has TTL set to <code>-1</code> at the container level. An item is written with <code>"ttl": 300</code> in its JSON body. What happens to that item?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Correct Answer: The item expires and is deleted 300 seconds after its last modification timestamp (_ts)</div>
+            <div class="qa-body">
+              <strong>Container TTL = -1</strong> means TTL is enabled but there is no container-level default. Items that do not specify a <code>ttl</code> property will never expire. Items that set <code>"ttl": N</code> will expire N seconds after their <code>_ts</code> (last modified timestamp).
+              <ul>
+                <li>TTL expiry is background garbage collection — items may persist slightly beyond the exact TTL window</li>
+                <li>If container TTL is <code>null</code>, item-level TTL is <strong>ignored</strong> entirely — this is a common exam trap</li>
+                <li>Setting <code>"ttl": -1</code> on an item when the container has a positive default TTL overrides it, making that specific item never expire</li>
+                <li>TTL does not consume RUs when items are deleted by the system</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">A logical partition in a Cosmos DB container has grown to 19.8 GB. A developer is concerned about future writes. What is the correct statement about this situation?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Correct Answer: The partition is approaching the 20 GB limit; writes to this partition will start failing once the limit is exceeded</div>
+            <div class="qa-body">
+              <strong>The maximum size of a single logical partition is 20 GB.</strong> This is a hard limit that cannot be increased by adding more RUs or storage.
+              <ul>
+                <li>Once the limit is exceeded, write operations targeting that partition key value will return an error</li>
+                <li>Cosmos DB does <strong>not</strong> automatically split a logical partition — only physical partitions split automatically</li>
+                <li>The correct remediation is to change the partition key strategy to distribute data more finely (e.g., append a suffix or use a composite key)</li>
+                <li>This scenario is common in time-series data where all data for a given sensor or tenant accumulates under one partition key value</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">A team is comparing Azure Table Storage and the Cosmos DB Table API. Which of the following is a correct reason to migrate from Azure Table Storage to Cosmos DB Table API?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Correct Answer: Cosmos DB Table API provides global distribution, lower latency SLAs, and automatic indexing while remaining wire-protocol compatible with Azure Table Storage SDKs</div>
+            <div class="qa-body">
+              <strong>The Cosmos DB Table API is a superset of Azure Table Storage</strong> — it uses the same PartitionKey/RowKey model and is compatible with existing Azure Table Storage SDKs with only a connection string change.
+              <ul>
+                <li>Benefits: single-digit millisecond latency at the 99th percentile, global distribution, automatic secondary indexing on all properties</li>
+                <li>Azure Table Storage does not provide global distribution or guaranteed low-latency SLAs at the same level</li>
+                <li>Migration is low-friction — existing code using <code>Microsoft.Azure.Cosmos.Table</code> SDK works with both; switch by changing the connection string</li>
+                <li>Cosmos DB Table API is <strong>not</strong> cheaper for low-throughput workloads — Azure Table Storage may be more cost-effective for infrequently accessed data</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">8</div>
+            <div class="qa-text">Bounded Staleness is configured with K=100,000 versions. In a multi-region Cosmos DB account, what is the minimum allowed value for the time-based staleness (T) parameter?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Correct Answer: 300 seconds (5 minutes)</div>
+            <div class="qa-body">
+              <strong>For multi-region accounts, Bounded Staleness has minimum thresholds:</strong> K must be at least 100,000 versions, and T must be at least 300 seconds.
+              <ul>
+                <li>For single-region accounts, the minimums are much lower: K=1 version, T=5 seconds</li>
+                <li>These minimums exist because replication across regions introduces irreducible latency</li>
+                <li>Attempting to set T below 300 seconds on a multi-region account will be rejected by the platform</li>
+                <li>Bounded Staleness is the strongest consistency available when multi-region writes are enabled</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end qa-list -->
+
+    </section>
+    <!-- END MODULE 1 -->
+
+    <!-- MODULE 2 -->
+    <section class="module" id="m2">
+      <h2><span class="mod-num">02</span> Work with Azure Cosmos DB</h2>
+
+      <div class="sec-lbl">&#9312; Key Concepts</div>
+
+      <h3>SDK v3 Object Hierarchy</h3>
+      <p>The Cosmos DB .NET SDK v3 follows a strict hierarchy. <code>CosmosClient</code> is thread-safe and should be a <strong>singleton</strong> — creating one per request is a common and costly mistake.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Object</th>
+              <th>Created Via</th>
+              <th>Represents</th>
+              <th>Key Methods</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>CosmosClient</code></td>
+              <td><code>new CosmosClient(endpoint, key)</code></td>
+              <td>Connection to the account; singleton</td>
+              <td><code>GetDatabase()</code>, <code>CreateDatabaseIfNotExistsAsync()</code></td>
+            </tr>
+            <tr>
+              <td><code>Database</code></td>
+              <td><code>client.GetDatabase("dbName")</code></td>
+              <td>Cosmos DB database</td>
+              <td><code>GetContainer()</code>, <code>CreateContainerIfNotExistsAsync()</code></td>
+            </tr>
+            <tr>
+              <td><code>Container</code></td>
+              <td><code>db.GetContainer("cName")</code></td>
+              <td>Collection / container of items</td>
+              <td><code>CreateItemAsync()</code>, <code>ReadItemAsync()</code>, <code>GetItemQueryIterator()</code></td>
+            </tr>
+            <tr>
+              <td>Item operations</td>
+              <td>Methods on <code>Container</code></td>
+              <td>CRUD on individual documents</td>
+              <td><code>ReadItemAsync</code>, <code>UpsertItemAsync</code>, <code>PatchItemAsync</code>, <code>DeleteItemAsync</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Point Read vs Query — Cost Implications</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Operation</th>
+              <th>Method</th>
+              <th>Requires</th>
+              <th>RU Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Point Read</td>
+              <td><code>ReadItemAsync(id, partitionKey)</code></td>
+              <td>Both item id AND partition key value</td>
+              <td><strong>1 RU</strong> per 1 KB — cheapest possible read</td>
+            </tr>
+            <tr>
+              <td>Single-partition query</td>
+              <td><code>GetItemQueryIterator</code> with partition key filter</td>
+              <td>Query that includes partition key in WHERE clause</td>
+              <td>Higher than point read; depends on result set size and index usage</td>
+            </tr>
+            <tr>
+              <td>Cross-partition query</td>
+              <td><code>GetItemQueryIterator</code> without partition key filter</td>
+              <td>Fan-out across all physical partitions</td>
+              <td>Significantly higher; scales with number of partitions and data scanned</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">&#128161;</div>
+        <div class="callout-body">
+          <div class="callout-title">Always use ReadItemAsync when you have both id and partition key</div>
+          If your code has both the item's <code>id</code> and the partition key value, always use <code>ReadItemAsync</code> instead of a query. It is the cheapest operation in Cosmos DB — a 1 KB item costs exactly 1 RU. A query that returns the same single item will cost more because it goes through the query engine.
+        </div>
+      </div>
+
+      <h3>Throughput Modes</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Mode</th>
+              <th>How It Works</th>
+              <th>Min RU/s</th>
+              <th>Multi-Region</th>
+              <th>Best For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Manual Provisioned</td>
+              <td>Fixed RU/s you set; you pay regardless of utilization</td>
+              <td>400 RU/s per container (or 100 RU/s shared database)</td>
+              <td>Yes</td>
+              <td>Predictable, steady workloads</td>
+            </tr>
+            <tr>
+              <td>Autoscale</td>
+              <td>Scales automatically between 10% and 100% of max RU/s you set</td>
+              <td>10% of configured max (e.g., max=1000 → min=100)</td>
+              <td>Yes</td>
+              <td>Variable or unpredictable workloads; dev/test environments</td>
+            </tr>
+            <tr>
+              <td>Serverless</td>
+              <td>Pay-per-request; no reserved capacity</td>
+              <td>No minimum</td>
+              <td>No — single region only</td>
+              <td>Sporadic, low-volume workloads; new apps still being developed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Change Feed</h3>
+      <p>The change feed captures all <strong>inserts and updates</strong> to a container, ordered by modification time within each partition. It does <strong>not</strong> capture deletes by default.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Mechanism</th>
+              <th>Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Push model (Processor)</td>
+              <td><code>ChangeFeedProcessor</code> — lease container tracks position; workers pull and process</td>
+              <td>Event-driven processing, Azure Functions trigger, real-time pipelines</td>
+            </tr>
+            <tr>
+              <td>Pull model (Iterator)</td>
+              <td><code>GetChangeFeedIterator</code> — client controls when to poll and saves its own checkpoint</td>
+              <td>Batch jobs, custom retry logic, scenarios needing manual checkpoint control</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">&#128161;</div>
+        <div class="callout-body">
+          <div class="callout-title">Tracking deletes in change feed: soft-delete pattern</div>
+          Since change feed does not capture hard deletes, the standard pattern is: add an <code>isDeleted: true</code> flag to documents instead of deleting them, and set a short TTL on those documents. The change feed will emit the update (setting <code>isDeleted = true</code), downstream consumers process the logical delete, and then Cosmos DB removes the item after the TTL expires. This is the canonical exam answer when a scenario requires tracking deletes via change feed.
+        </div>
+      </div>
+
+      <h3>Server-Side Programming (Stored Procedures, Triggers, UDFs)</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Language</th>
+              <th>Scope</th>
+              <th>ACID</th>
+              <th>Key Limitation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Stored Procedures</td>
+              <td>JavaScript</td>
+              <td>Single logical partition only</td>
+              <td>Yes — within the partition</td>
+              <td>5-second execution limit; no cross-partition transactions</td>
+            </tr>
+            <tr>
+              <td>Pre-triggers</td>
+              <td>JavaScript</td>
+              <td>Item operation (before write)</td>
+              <td>Participates in item write transaction</td>
+              <td>Must be explicitly invoked per request; not automatic</td>
+            </tr>
+            <tr>
+              <td>Post-triggers</td>
+              <td>JavaScript</td>
+              <td>Item operation (after write)</td>
+              <td>Participates in item write transaction</td>
+              <td>Must be explicitly invoked per request; not automatic</td>
+            </tr>
+            <tr>
+              <td>UDFs</td>
+              <td>JavaScript</td>
+              <td>Query expressions</td>
+              <td>N/A (read-only)</td>
+              <td>Can only be used in SELECT; cannot modify data</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Partial Document Updates: PatchItemAsync</h3>
+      <p><code>PatchItemAsync</code> implements JSON Patch (RFC 6902) semantics. It updates specific fields without replacing the entire document, reducing payload size and RU cost compared to a full <code>ReplaceItemAsync</code>.</p>
+
+      <div class="sec-lbl">&#9313; Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;&#65039;</div>
+        <div class="callout-body">
+          <div class="callout-title">Gotcha: Change feed does NOT capture deletes</div>
+          This is one of the most frequently tested Cosmos DB facts. The change feed only records inserts and updates. A hard delete is invisible to change feed consumers. If a scenario asks how to detect when a document is deleted and downstream systems need to react, the answer is always the <strong>soft-delete pattern</strong>: mark the item with <code>isDeleted: true</code> (which generates a change feed event), then let TTL clean up the item. Any answer that claims "change feed captures deletes" is wrong.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;&#65039;</div>
+        <div class="callout-body">
+          <div class="callout-title">Gotcha: Stored procedures are NOT ACID across containers or partitions</div>
+          Stored procedures provide ACID transactions, but only within a <strong>single logical partition of a single container</strong>. All operations in a stored procedure must target the same partition key value. If you call a stored procedure with items from partition key "A" and try to modify an item with partition key "B", the operation will fail. Cross-container transactions are also not supported. This is a hard architectural constraint, not a configuration option.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;&#65039;</div>
+        <div class="callout-body">
+          <div class="callout-title">Gotcha: CosmosClient must be a singleton — recreating it per request causes connection pool exhaustion</div>
+          <code>CosmosClient</code> is designed to be instantiated once and reused for the lifetime of the application. Each instance maintains its own internal HTTP connection pool and caches endpoint routing information. Creating a new <code>CosmosClient</code> per HTTP request is a critical performance anti-pattern that causes port exhaustion, excessive TCP connection overhead, and dramatically inflated latency. In Azure Functions, register it as a singleton in DI or use a static field. The exam will present code samples where a client is created inside a method body and ask you to identify the problem.
+        </div>
+      </div>
+
+      <div class="sec-lbl">&#9314; Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Value</th>
+              <th>Exam Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Serverless max storage</td>
+              <td>1 TB per container</td>
+              <td>Serverless is also single-region only — both constraints together are exam-tested</td>
+            </tr>
+            <tr>
+              <td>Provisioned min RU/s per container</td>
+              <td>400 RU/s</td>
+              <td>Shared database throughput allows containers to share from a 100 RU/s minimum</td>
+            </tr>
+            <tr>
+              <td>Autoscale min RU/s</td>
+              <td>10% of configured max</td>
+              <td>If max is set to 4,000 RU/s, the min is 400 RU/s — you always pay at least 10%</td>
+            </tr>
+            <tr>
+              <td>Point read cost</td>
+              <td>1 RU per 1 KB</td>
+              <td>A 5 KB item costs 5 RUs to read with ReadItemAsync</td>
+            </tr>
+            <tr>
+              <td>Stored procedure timeout</td>
+              <td>5 seconds</td>
+              <td>If not completed in 5 seconds, the transaction rolls back — partial commits do NOT persist</td>
+            </tr>
+            <tr>
+              <td>Change feed ordering guarantee</td>
+              <td>Per partition key</td>
+              <td>Order is guaranteed within a partition; across partitions there is no global ordering</td>
+            </tr>
+            <tr>
+              <td>PatchItemAsync operations</td>
+              <td>Up to 10 patch operations per call</td>
+              <td>Supports Add, Remove, Replace, Set, Increment, Move, Copy, Test operations (JSON Patch)</td>
+            </tr>
+            <tr>
+              <td>Max request size (SDK write)</td>
+              <td>2 MB</td>
+              <td>Same as max item size; applies to the entire request payload including headers</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">&#9315; CLI / SDK Patterns</div>
+
+      <pre><code>// CosmosClient as a singleton — register in DI (ASP.NET Core / Azure Functions)
+// Program.cs / Startup.cs
+builder.Services.AddSingleton(sp =&gt;
+    new CosmosClient(
+        builder.Configuration["CosmosDb:Endpoint"],
+        builder.Configuration["CosmosDb:Key"],
+        new CosmosClientOptions
+        {
+            ApplicationRegion = Regions.EastUS,   // preferred read region
+            SerializerOptions = new CosmosSerializationOptions
+            {
+                PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
+            }
+        }
+    )
+);
+
+// --- CRUD operations ---
+Container container = client.GetDatabase("myDb").GetContainer("myContainer");
+
+// Point read — cheapest (1 RU/KB), requires BOTH id and partition key value
+ItemResponse&lt;MyItem&gt; response = await container.ReadItemAsync&lt;MyItem&gt;(
+    id: "item-123",
+    partitionKey: new PartitionKey("user-456")  // must be the exact partition key value
+);
+Console.WriteLine($"RU cost: {response.RequestCharge}");
+
+// Create item — partition key value must match the field in the item
+await container.CreateItemAsync(
+    item: new MyItem { Id = "item-124", UserId = "user-456", Name = "Widget" },
+    partitionKey: new PartitionKey("user-456")
+);
+
+// Upsert (insert or replace)
+await container.UpsertItemAsync(myItem, new PartitionKey("user-456"));
+
+// Partial update with PatchItemAsync (JSON Patch — no full document replacement needed)
+List&lt;PatchOperation&gt; ops = new()
+{
+    PatchOperation.Replace("/status", "shipped"),       // update existing field
+    PatchOperation.Add("/shippedDate", DateTime.UtcNow), // add new field
+    PatchOperation.Increment("/retryCount", 1)           // atomic increment
+};
+await container.PatchItemAsync&lt;MyItem&gt;("item-123", new PartitionKey("user-456"), ops);
+
+// Query — single partition (cheaper; include partition key in filter)
+QueryDefinition query = new QueryDefinition(
+    "SELECT * FROM c WHERE c.userId = @uid AND c.status = @s"
+).WithParameter("@uid", "user-456")
+ .WithParameter("@s", "pending");
+
+FeedIterator&lt;MyItem&gt; iter = container.GetItemQueryIterator&lt;MyItem&gt;(
+    query,
+    requestOptions: new QueryRequestOptions
+    {
+        PartitionKey = new PartitionKey("user-456"),  // enables single-partition query
+        MaxItemCount = 50
+    }
+);
+while (iter.HasMoreResults)
+{
+    FeedResponse&lt;MyItem&gt; page = await iter.ReadNextAsync();
+    foreach (var item in page) { /* process */ }
+}
+</code></pre>
+
+      <pre><code>// Change feed processor — push model (recommended for event-driven scenarios)
+// Requires a separate "lease" container to track processing state
+
+var processor = container
+    .GetChangeFeedProcessorBuilder&lt;MyItem&gt;(
+        processorName: "myProcessor",
+        onChangesDelegate: async (changes, cancellationToken) =&gt;
+        {
+            foreach (var item in changes)
+            {
+                // Note: deletes are NOT visible here
+                // Only inserts and updates appear
+                Console.WriteLine($"Changed item: {item.Id}");
+            }
+        })
+    .WithInstanceName(Environment.MachineName)
+    .WithLeaseContainer(leaseContainer)  // dedicated lease container required
+    .WithStartTime(DateTime.MinValue.ToUniversalTime()) // process from beginning
+    .Build();
+
+await processor.StartAsync();
+
+// Soft-delete pattern to track deletes via change feed
+// Step 1: instead of deleting, mark isDeleted and set TTL
+var patch = new[]
+{
+    PatchOperation.Set("/isDeleted", true),
+    PatchOperation.Set("/ttl", 3600) // expire in 1 hour after soft-delete
+};
+await container.PatchItemAsync&lt;MyItem&gt;(id, partitionKey, patch);
+// Step 2: change feed consumer sees isDeleted=true and processes the logical delete
+// Step 3: after TTL expires, Cosmos DB physically removes the item (silent, no change feed event)
+</code></pre>
+
+      <pre><code>// Stored procedure — ACID within a single partition only
+// Registered in Cosmos DB, called from client code
+
+// Client-side invocation (JavaScript stored proc targeting partition key "user-456")
+var sprocResponse = await container.Scripts.ExecuteStoredProcedureAsync&lt;string&gt;(
+    storedProcedureId: "bulkCreate",
+    partitionKey: new PartitionKey("user-456"),  // ALL operations in the sproc must use this partition
+    parameters: new dynamic[] { itemsArray }
+);
+
+// Example stored procedure body (registered server-side, runs in JS sandbox)
+/*
+function bulkCreate(items) {
+    var context = getContext();
+    var collection = context.getCollection();
+    var response = context.getResponse();
+    var count = 0;
+
+    function processNext(i) {
+        if (i === items.length) { response.setBody(count); return; }
+        collection.createDocument(collection.getSelfLink(), items[i],
+            function(err, doc) {
+                if (err) throw err;
+                count++;
+                processNext(i + 1);
+            }
+        );
+    }
+    processNext(0);
+    // If this times out (> 5 seconds), entire transaction rolls back
+}
+*/
+</code></pre>
+
+      <div class="sec-lbl">&#9316; Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#128680;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Use GetItemQueryIterator when you have the id and partition key to get a single item"</div>
+          Any time you have both the item's <code>id</code> and the partition key value, you must use <code>ReadItemAsync</code>, not a query. A query that filters by <code>WHERE c.id = 'x'</code> still goes through the query engine and costs more RUs than a point read. The exam will show code that uses a query for a single known item and ask you to identify the inefficiency — the answer is always to replace it with <code>ReadItemAsync</code>.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#128680;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "ReplaceItemAsync and PatchItemAsync are equivalent for updating a single field"</div>
+          They are not equivalent in cost or behavior. <code>ReplaceItemAsync</code> requires sending the entire document payload, replacing everything (including fields you did not intend to change — a race condition risk if another write happened between read and replace). <code>PatchItemAsync</code> sends only the operations to apply, is more bandwidth-efficient, costs fewer RUs for large documents, and is atomic at the server without a read-modify-write cycle. For updating one or two fields on a large document, <code>PatchItemAsync</code> is the correct choice.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#128680;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Serverless Cosmos DB can be deployed to multiple regions for high availability"</div>
+          Serverless mode is <strong>single-region only</strong>. It does not support global distribution or multi-region replication. If a scenario requires global distribution, high availability across regions, or multi-region writes, Serverless is immediately disqualified regardless of cost or throughput considerations. The correct mode is either Manual Provisioned or Autoscale, both of which support multi-region configurations.
+        </div>
+      </div>
+
+      <div class="sec-lbl">&#9317; Practice Q&amp;A</div>
+
+      <div class="qa-list">
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">A developer writes the following code in an Azure Function that processes HTTP requests:<br><br><code>public async Task&lt;IActionResult&gt; Run(HttpRequest req) { var client = new CosmosClient(endpoint, key); var item = await client.GetDatabase("db").GetContainer("c").ReadItemAsync&lt;MyItem&gt;(id, pk); return new OkObjectResult(item.Resource); }</code><br><br>What is the critical problem with this code?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Correct Answer: CosmosClient is instantiated per request instead of being a singleton</div>
+            <div class="qa-body">
+              <strong>CosmosClient is heavyweight</strong> — it maintains connection pools, caches endpoint routing information, and establishes TCP connections. Creating a new instance per request causes:
+              <ul>
+                <li>TCP port exhaustion under load (each instance opens new sockets)</li>
+                <li>Significant latency from connection establishment on every request</li>
+                <li>Excessive memory pressure from non-disposed connection pools</li>
+                <li>The fix is to register <code>CosmosClient</code> as a singleton in DI or use a static readonly field at the class level</li>
+                <li>In Azure Functions, use <code>builder.Services.AddSingleton&lt;CosmosClient&gt;(...)</code> in <code>Program.cs</code></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">A Cosmos DB change feed consumer processes events and needs to detect when documents are deleted. The developer adds logic to handle items where the change type is "Delete". After deployment, no delete events are ever received. What is wrong?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Correct Answer: Cosmos DB change feed does not emit events for deletes — only inserts and updates</div>
+            <div class="qa-body">
+              <strong>Hard deletes are invisible to the change feed.</strong> The change feed processor will never emit a "delete" event regardless of how the consumer is configured.
+              <ul>
+                <li>The canonical solution is the <strong>soft-delete pattern</strong>: instead of deleting, set a flag <code>"isDeleted": true</code> and optionally set a TTL on the item</li>
+                <li>This generates an <em>update</em> event in the change feed, which the consumer processes as a logical delete</li>
+                <li>After the TTL expires, Cosmos DB physically removes the item — this removal also does not appear in the change feed</li>
+                <li>This limitation applies to all change feed consumption models (both push and pull)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">An application must update only the <code>status</code> and <code>updatedAt</code> fields of a 500 KB document stored in Cosmos DB. A developer proposes using <code>ReplaceItemAsync</code>. A senior engineer suggests <code>PatchItemAsync</code> instead. What is the strongest argument for using PatchItemAsync?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Correct Answer: PatchItemAsync sends only the patch operations, avoiding a full document read and replace, reducing RU cost and eliminating the read-modify-write race condition</div>
+            <div class="qa-body">
+              <strong>ReplaceItemAsync requires sending the entire 500 KB document</strong>, which is both expensive in bandwidth and RU cost. It also requires a prior read to get the current document state before replacing it, introducing a time window where concurrent writes could overwrite each other.
+              <ul>
+                <li><code>PatchItemAsync</code> sends only the JSON Patch operations (e.g., Replace <code>/status</code>, Set <code>/updatedAt</code>), which is a tiny payload</li>
+                <li>No prior read is required — the patch is applied atomically on the server</li>
+                <li>This eliminates the read-modify-write race condition entirely</li>
+                <li>RU cost is dramatically lower for large documents where only a few fields change</li>
+                <li>Supports operations: Add, Remove, Replace, Set, Increment, Move, Copy, Test</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">A startup expects very uneven traffic — quiet during weekdays and heavy bursts on weekends. The application is global and must serve users in North America and Europe. Which Cosmos DB throughput mode is most appropriate?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Correct Answer: Autoscale provisioned throughput</div>
+            <div class="qa-body">
+              <strong>Autoscale</strong> automatically scales RU/s between 10% and 100% of the configured maximum, paying only for what is consumed (billed at the peak RU/s within each hour). This handles variable traffic without over-provisioning.
+              <ul>
+                <li><strong>Serverless</strong> is eliminated because it is single-region only — the requirement for North America and Europe means multi-region is needed</li>
+                <li><strong>Manual provisioned</strong> would require setting RUs at the weekend peak and paying that rate 24/7, making weekday periods expensive and wasteful</li>
+                <li>Autoscale works with multi-region deployments, satisfying both the global distribution and cost-efficiency requirements</li>
+                <li>Set the max RU/s to the expected weekend peak; the system will scale down automatically during quiet periods</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">A stored procedure in Cosmos DB is designed to process a batch of 1,000 documents as a single transaction. During testing, the procedure consistently times out. What is the maximum execution window and what should the developer do?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Correct Answer: Stored procedures have a 5-second maximum execution window; the developer should implement continuation tokens to process in smaller batches</div>
+            <div class="qa-body">
+              <strong>All stored procedures must complete within 5 seconds</strong> or the entire transaction is rolled back — no partial commits are preserved.
+              <ul>
+                <li>The standard pattern for processing large batches is to implement a <strong>continuation token</strong> within the stored procedure: process as many items as time allows, return a continuation token, and have the client call the procedure again with the token to resume from where it left off</li>
+                <li>Each invocation is its own ACID transaction; the batch is split into sequential transactional chunks</li>
+                <li>Alternatively, if atomicity across all 1,000 documents is not required, process them individually or in smaller groups from the client side</li>
+                <li>There is no way to extend the 5-second limit — it is a hard platform constraint</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">A Cosmos DB change feed processor is running on three worker nodes. A developer notices that some change events are being processed twice. What component is most likely misconfigured?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Correct Answer: The lease container — each processor instance must use a unique instance name and share the same lease container</div>
+            <div class="qa-body">
+              <strong>The lease container is the coordination mechanism</strong> for the change feed processor. It tracks which partitions have been processed and by which worker.
+              <ul>
+                <li>If multiple processor instances share the same lease container but use the <strong>same instance name</strong>, they compete for the same leases and may process events multiple times</li>
+                <li>Each processor instance must be initialized with a <strong>unique <code>WithInstanceName()</code></strong> value (e.g., machine name, pod name)</li>
+                <li>All instances of the same logical processor group must point to the <strong>same lease container</strong> — this is how work is distributed among them</li>
+                <li>If each instance uses a different lease container, they each process all partitions independently, resulting in duplicate processing</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">An application reads a document, modifies it locally, and then calls <code>ReplaceItemAsync</code> to write it back. Another client modifies the same document between the read and the write. The second write silently overwrites the first client's changes. How should the developer prevent this?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Correct Answer: Use optimistic concurrency control with ETags via the IfMatchEtag request option</div>
+            <div class="qa-body">
+              <strong>Every Cosmos DB item has an <code>_etag</code> property</strong> that changes every time the item is modified. By passing the original ETag in the <code>IfMatchEtag</code> request option, the write will only succeed if the item has not been modified since it was read.
+              <ul>
+                <li>If the ETag no longer matches (another client modified the item), Cosmos DB returns HTTP <strong>412 Precondition Failed</strong></li>
+                <li>The client should catch this error, re-read the latest version, reapply their changes, and retry the write</li>
+                <li>This is the standard optimistic concurrency pattern — no locks are held, so performance is not degraded for non-conflicting operations</li>
+                <li><code>PatchItemAsync</code> with the <code>FilterPredicate</code> option can also implement conditional updates without a separate read step</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">8</div>
+            <div class="qa-text">A developer is choosing between Autoscale at max 10,000 RU/s and Manual Provisioned at 5,000 RU/s for a Cosmos DB container. The workload is stable with brief daily peaks that reach 9,000 RU/s for about one hour. Which option minimizes cost while meeting throughput requirements?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Correct Answer: Autoscale at max 10,000 RU/s is likely more cost-effective given the brief peak pattern</div>
+            <div class="qa-body">
+              <strong>With Autoscale</strong>, you are billed for the highest RU/s consumed within each hour, scaled to 10% increments. During the 23 off-peak hours, if the workload uses ~1,000 RU/s, Autoscale charges for ~1,000 RU/s (10% of 10,000). Manual at 5,000 RU/s charges the full 5,000 RU/s 24 hours a day.
+              <ul>
+                <li>Manual Provisioned at 5,000 cannot handle the 9,000 RU/s peak — this would cause 429 throttling, making it not a valid option at all</li>
+                <li>Manual at 10,000 RU/s would cost significantly more than Autoscale during the 23 off-peak hours</li>
+                <li>Autoscale pricing: you pay for the <strong>peak RU/s consumed per hour</strong>, meaning off-peak hours are cheap</li>
+                <li>Rule of thumb: Autoscale is cost-effective when utilization is below ~60% of max for most of the day; Manual Provisioned is cheaper for steady high-utilization workloads</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end qa-list -->
+
+    </section>
+    <!-- END MODULE 2 -->
+
+    <div class="nav-end">
+      <a href="learn-03-blob-storage.html" class="btn-link">&#8592; Blob Storage</a>
+      <a href="learn-05-containers.html" class="btn-link fwd">Containers &#8594;</a>
+    </div>
+  </main>
+</div>
+
+<script>
+
+(function(){
+  // Q&A accordion
+  document.querySelectorAll('.qa-q').forEach(function(q){
+    q.addEventListener('click',function(){
+      this.closest('.qa-item').classList.toggle('open');
+    });
+  });
+  // Sidebar scroll-spy
+  var links=document.querySelectorAll('.sb-link[data-m]');
+  var sections=document.querySelectorAll('.module[id]');
+  if(links.length&&sections.length){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var n=e.target.id.replace('m','');
+          links.forEach(function(l){l.classList.toggle('active',l.dataset.m===n);});
+        }
+      });
+    },{rootMargin:'-8% 0px -72% 0px'});
+    sections.forEach(function(s){obs.observe(s);});
+  }
+  // Sidebar click scroll
+  links.forEach(function(l){
+    l.addEventListener('click',function(e){
+      e.preventDefault();
+      var t=document.getElementById('m'+this.dataset.m);
+      if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+})();
+
+</script>
+</body>
+</html>
