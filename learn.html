@@ -84,7 +84,8 @@ a:hover{text-decoration:underline}
   transition:transform .15s,box-shadow .15s,border-color .15s
 }
 .topic-card:hover{transform:translateY(-2px);box-shadow:var(--shm);border-color:var(--azure);text-decoration:none}
-.tc-icon{font-size:28px;display:block;line-height:1;margin-bottom:10px}
+.tc-icon{display:block;margin-bottom:10px;width:28px;height:28px}
+.tc-icon svg{display:block;width:28px;height:28px}
 .tc-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
 .tc-meta{font-size:11px;color:var(--text-muted);margin-bottom:8px}
 .tc-badge{
@@ -203,7 +204,7 @@ a:hover{text-decoration:underline}
   <div class="topic-grid">
 
     <a href="learn-01-app-service.html" class="topic-card">
-      <span class="tc-icon">⚙️</span>
+      <span class="tc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span>
       <div class="tc-title">App Service Web Apps</div>
       <div class="tc-meta">4 modules</div>
       <span class="tc-badge">~15% exam weight</span>
@@ -211,7 +212,7 @@ a:hover{text-decoration:underline}
     </a>
 
     <a href="learn-02-functions.html" class="topic-card">
-      <span class="tc-icon">⚡</span>
+      <span class="tc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
       <div class="tc-title">Azure Functions</div>
       <div class="tc-meta">2 modules</div>
       <span class="tc-badge">~10% exam weight</span>
@@ -219,7 +220,7 @@ a:hover{text-decoration:underline}
     </a>
 
     <a href="learn-03-blob-storage.html" class="topic-card">
-      <span class="tc-icon">🗄️</span>
+      <span class="tc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg></span>
       <div class="tc-title">Blob Storage</div>
       <div class="tc-meta">3 modules</div>
       <span class="tc-badge">~10% exam weight</span>
@@ -227,7 +228,7 @@ a:hover{text-decoration:underline}
     </a>
 
     <a href="learn-04-cosmos-db.html" class="topic-card">
-      <span class="tc-icon">🌐</span>
+      <span class="tc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></span>
       <div class="tc-title">Cosmos DB</div>
       <div class="tc-meta">2 modules</div>
       <span class="tc-badge">~10% exam weight</span>
@@ -235,7 +236,7 @@ a:hover{text-decoration:underline}
     </a>
 
     <a href="learn-05-containers.html" class="topic-card">
-      <span class="tc-icon">🐳</span>
+      <span class="tc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
       <div class="tc-title">Containerised Solutions</div>
       <div class="tc-meta">3 modules</div>
       <span class="tc-badge">~10% exam weight</span>
@@ -243,7 +244,7 @@ a:hover{text-decoration:underline}
     </a>
 
     <a href="learn-06-auth.html" class="topic-card">
-      <span class="tc-icon">🔑</span>
+      <span class="tc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="M21 2l-9.6 9.6M15 8l3 3"/></svg></span>
       <div class="tc-title">Authentication &amp; Authorisation</div>
       <div class="tc-meta">4 modules</div>
       <span class="tc-badge">~15% exam weight</span>
@@ -251,7 +252,7 @@ a:hover{text-decoration:underline}
     </a>
 
     <a href="learn-07-security.html" class="topic-card">
-      <span class="tc-icon">🔐</span>
+      <span class="tc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
       <div class="tc-title">Secure Cloud Solutions</div>
       <div class="tc-meta">3 modules</div>
       <span class="tc-badge">~10% exam weight</span>
@@ -259,7 +260,7 @@ a:hover{text-decoration:underline}
     </a>
 
     <a href="learn-08-api-management.html" class="topic-card">
-      <span class="tc-icon">🔀</span>
+      <span class="tc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg></span>
       <div class="tc-title">API Management</div>
       <div class="tc-meta">1 module</div>
       <span class="tc-badge">~10% exam weight</span>
@@ -267,7 +268,7 @@ a:hover{text-decoration:underline}
     </a>
 
     <a href="learn-09-events.html" class="topic-card">
-      <span class="tc-icon">📡</span>
+      <span class="tc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0114.08 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0M12 20h.01"/></svg></span>
       <div class="tc-title">Event-based Solutions</div>
       <div class="tc-meta">2 modules</div>
       <span class="tc-badge">~10% exam weight</span>
@@ -275,7 +276,7 @@ a:hover{text-decoration:underline}
     </a>
 
     <a href="learn-10-messaging.html" class="topic-card">
-      <span class="tc-icon">📨</span>
+      <span class="tc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
       <div class="tc-title">Message-based Solutions</div>
       <div class="tc-meta">1 module</div>
       <span class="tc-badge">~5% exam weight</span>
@@ -283,7 +284,7 @@ a:hover{text-decoration:underline}
     </a>
 
     <a href="learn-11-monitoring.html" class="topic-card">
-      <span class="tc-icon">📊</span>
+      <span class="tc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg></span>
       <div class="tc-title">Monitoring &amp; Logging</div>
       <div class="tc-meta">1 module</div>
       <span class="tc-badge">~5% exam weight</span>
