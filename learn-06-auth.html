@@ -538,3 +538,358 @@ var result = await app.AcquireTokenByAuthorizationCode(
       </div>
     </section>
     <!-- END MODULE 1 -->
+
+    <!-- ═══════════════════════════════════════════════════════════ MODULE 2 -->
+    <section class="module" id="m2">
+      <h2><span class="mod-num">02</span> Microsoft Authentication Library (MSAL)</h2>
+
+      <div class="sec-lbl">&#9312; Key Concepts</div>
+
+      <h3>PublicClientApplication vs ConfidentialClientApplication</h3>
+      <p>MSAL's two root client types map directly to the OAuth 2.0 public vs confidential client distinction. Choosing the wrong one is a common exam trap.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Class</th><th>Has client secret / cert?</th><th>Runs on</th><th>Use for</th></tr></thead>
+          <tbody>
+            <tr><td>PublicClientApplication</td><td>No — cannot safely hold secrets</td><td>User's device (desktop, mobile, browser)</td><td>Desktop apps, mobile apps, SPAs</td></tr>
+            <tr><td>ConfidentialClientApplication</td><td>Yes — server-side secret or cert</td><td>Server you control</td><td>Web apps, web APIs, daemon services</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>AcquireToken Methods</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Method</th><th>Client type</th><th>Flow</th><th>When to use</th></tr></thead>
+          <tbody>
+            <tr><td>AcquireTokenSilent</td><td>Both</td><td>Cache lookup</td><td>ALWAYS try first — returns cached token if valid</td></tr>
+            <tr><td>AcquireTokenInteractive</td><td>Public</td><td>Auth Code + PKCE (browser pop-up)</td><td>After silent fails with MsalUiRequiredException</td></tr>
+            <tr><td>AcquireTokenByDeviceCode</td><td>Public</td><td>Device Code</td><td>CLI tools, IoT devices with no browser</td></tr>
+            <tr><td>AcquireTokenByUsernamePassword</td><td>Public</td><td>ROPC (legacy)</td><td>Avoid — plain-text password, no MFA support</td></tr>
+            <tr><td>AcquireTokenForClient</td><td>Confidential</td><td>Client Credentials</td><td>Daemon/service — no user context</td></tr>
+            <tr><td>AcquireTokenOnBehalfOf</td><td>Confidential</td><td>On-Behalf-Of</td><td>Web API calling downstream API as the user</td></tr>
+            <tr><td>AcquireTokenByAuthorizationCode</td><td>Confidential</td><td>Auth Code exchange</td><td>Web app server-side after receiving auth code from redirect</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">&#128161;</div>
+        <div class="callout-body">
+          <div class="callout-title">Always call AcquireTokenSilent first — the correct pattern</div>
+          The canonical MSAL pattern is: (1) call <code>AcquireTokenSilent</code>, (2) catch <code>MsalUiRequiredException</code>, (3) fall back to <code>AcquireTokenInteractive</code>. Skipping the silent step wastes a round-trip and forces unnecessary user prompts. The token cache handles expiry and refresh token redemption automatically.
+        </div>
+      </div>
+
+      <h3>Token Cache</h3>
+      <p>MSAL maintains an in-memory token cache that automatically handles access token refresh (using the refresh token) before expiry. The cache is per-application-instance by default.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Environment</th><th>Default cache</th><th>Recommended for production</th></tr></thead>
+          <tbody>
+            <tr><td>Desktop apps (.NET)</td><td>In-memory (lost on restart)</td><td>Implement ITokenCache serialization (encrypted file or OS credential store)</td></tr>
+            <tr><td>Web apps (ASP.NET Core)</td><td>In-memory (not shared across instances)</td><td>IDistributedTokenCache backed by Redis or SQL</td></tr>
+            <tr><td>Daemon / functions</td><td>In-memory</td><td>Distributed cache for multi-instance scale-out</td></tr>
+            <tr><td>SPAs (MSAL.js)</td><td>sessionStorage (default) or localStorage</td><td>sessionStorage for single-tab, localStorage for cross-tab persistence</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Authority and Tenant Configuration</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Authority URL</th><th>Accepts sign-ins from</th><th>Use when</th></tr></thead>
+          <tbody>
+            <tr><td>https://login.microsoftonline.com/{tenantId}</td><td>Single tenant only</td><td>LOB app, single organisation</td></tr>
+            <tr><td>https://login.microsoftonline.com/common</td><td>Work, school, and personal Microsoft accounts</td><td>Multi-tenant + personal accounts</td></tr>
+            <tr><td>https://login.microsoftonline.com/organizations</td><td>Work and school accounts (any AAD tenant)</td><td>Multi-tenant, no personal accounts</td></tr>
+            <tr><td>https://login.microsoftonline.com/consumers</td><td>Personal Microsoft accounts only</td><td>Consumer-facing apps</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">&#9313; Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">AcquireTokenSilent can fail even when the user previously signed in</div>
+          <code>AcquireTokenSilent</code> throws <code>MsalUiRequiredException</code> if the refresh token has expired or been revoked; the user's password changed; an admin revoked the session; or Conditional Access policies now require MFA. You <strong>must</strong> catch <code>MsalUiRequiredException</code> and fall back to interactive — do not assume silent always works because the user previously consented. The exam will present a broken scenario where the developer only calls silent and never handles the exception.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Web apps need distributed token cache — in-memory cache breaks on scale-out</div>
+          If a web app is deployed to multiple instances (e.g., App Service with auto-scale), each instance has its own in-memory MSAL cache. When a request hits a different instance than the one that acquired the token, <code>AcquireTokenSilent</code> finds no token and forces a re-login. Fix: register <code>services.AddDistributedTokenCaches()</code> with a Redis or SQL backing store using Microsoft.Identity.Web. Exam scenario: "Users are intermittently forced to re-login after you scaled App Service to 3 instances. Root cause?"
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">AcquireTokenForClient requires .default scope and application permissions — not delegated scopes</div>
+          <code>AcquireTokenForClient</code> (client credentials) fails with AADSTS70011 if you pass individual delegated scopes like <code>User.Read</code>. You must use <code>https://graph.microsoft.com/.default</code>. Additionally, the app must have <strong>application permissions</strong> (not delegated permissions) configured and admin-consented. The resulting token carries <code>roles</code>, not <code>scp</code>. An API that validates <code>scp</code> will return 403 to a daemon calling with application permissions.
+        </div>
+      </div>
+
+      <div class="sec-lbl">&#9314; Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Metric</th><th>Value</th><th>Exam Note</th></tr></thead>
+          <tbody>
+            <tr><td>Token cache default storage</td><td>In-memory, process-scoped</td><td>Not persisted; must implement serialization for desktop or distributed cache for web</td></tr>
+            <tr><td>MSAL proactive refresh window</td><td>5 minutes before expiry</td><td>MSAL refreshes the token automatically if expiry is within 5 minutes</td></tr>
+            <tr><td>MSAL.js default storage</td><td>sessionStorage</td><td>sessionStorage = single tab; localStorage = cross-tab, survives browser restart</td></tr>
+            <tr><td>Client secrets per app</td><td>No hard limit (best practice: 2 for rotation)</td><td>Secrets expire; use certificates for longer-lived daemon credentials</td></tr>
+            <tr><td>Microsoft.Identity.Web NuGet</td><td>ASP.NET Core integration package</td><td>Wraps MSAL for web apps — provides AddMicrosoftIdentityWebAppAuthentication()</td></tr>
+            <tr><td>Microsoft.Identity.Client NuGet</td><td>Core MSAL library</td><td>Used directly in desktop, daemon, and non-ASP.NET scenarios</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">&#9315; CLI / SDK Patterns</div>
+
+<pre><code>// ConfidentialClientApplication — web app Authorization Code exchange
+var confidentialApp = ConfidentialClientApplicationBuilder
+    .Create(clientId)
+    .WithClientSecret(clientSecret)           // or .WithCertificate(cert)
+    .WithAuthority(AzureCloudInstance.AzurePublic, tenantId)
+    .WithRedirectUri("https://myapp.example.com/signin-oidc")
+    .Build();
+
+// Exchange auth code for tokens after redirect
+AuthenticationResult result = await confidentialApp
+    .AcquireTokenByAuthorizationCode(
+        scopes: new[] { "https://graph.microsoft.com/.default" },
+        authorizationCode: Request.Query["code"])
+    .ExecuteAsync();
+
+string accessToken = result.AccessToken;
+DateTimeOffset expiry = result.ExpiresOn;</code></pre>
+
+<pre><code>// PublicClientApplication — desktop app with silent + interactive fallback
+var publicApp = PublicClientApplicationBuilder
+    .Create(clientId)
+    .WithAuthority(AzureCloudInstance.AzurePublic, tenantId)
+    .WithDefaultRedirectUri()                // http://localhost for desktop
+    .Build();
+
+var accounts = await publicApp.GetAccountsAsync();
+AuthenticationResult result;
+
+try {
+    // ALWAYS try silent first
+    result = await publicApp
+        .AcquireTokenSilent(
+            scopes: new[] { "User.Read" },
+            account: accounts.FirstOrDefault())
+        .ExecuteAsync();
+}
+catch (MsalUiRequiredException) {
+    // Silent failed — must prompt user interactively
+    result = await publicApp
+        .AcquireTokenInteractive(scopes: new[] { "User.Read" })
+        .WithPrompt(Prompt.SelectAccount)
+        .ExecuteAsync();
+}</code></pre>
+
+<pre><code>// Daemon — ConfidentialClientApplication with client credentials
+var daemonApp = ConfidentialClientApplicationBuilder
+    .Create(clientId)
+    .WithClientSecret(clientSecret)
+    .WithAuthority($"https://login.microsoftonline.com/{tenantId}")
+    .Build();
+
+// Use .default scope — individual delegated scopes will fail here
+var result = await daemonApp
+    .AcquireTokenForClient(
+        scopes: new[] { "https://graph.microsoft.com/.default" })
+    .ExecuteAsync();
+// Token has 'roles' claim (application permissions), NOT 'scp'</code></pre>
+
+<pre><code>// ASP.NET Core — distributed token cache (Microsoft.Identity.Web)
+// Program.cs
+services.AddMicrosoftIdentityWebAppAuthentication(Configuration, "AzureAd")
+    .EnableTokenAcquisitionToCallDownstreamApi()
+    .AddDistributedTokenCaches();   // use IDistributedCache backing
+
+// Configure Redis as the distributed cache
+services.AddStackExchangeRedisCache(options => {
+    options.Configuration = Configuration["Redis:ConnectionString"];
+});</code></pre>
+
+      <div class="sec-lbl">&#9316; Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "PublicClientApplication stores tokens securely on disk by default"</div>
+          <strong>False.</strong> MSAL stores tokens in memory only by default. Tokens are lost when the process exits. Desktop apps must implement token cache serialization using <code>MsalCacheHelper</code> (from Microsoft.Identity.Client.Extensions.Msal) or manual <code>SetBeforeAccess</code> / <code>SetAfterAccess</code> callbacks. MSAL's cache helper uses the OS credential store (Windows Credential Manager, macOS Keychain, Linux SecretService) for secure at-rest storage.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Use AcquireTokenByUsernamePassword for automated testing — it avoids browser prompts"</div>
+          ROPC (Resource Owner Password Credentials) should be avoided in all scenarios. It does not support MFA, Conditional Access, or federated identity — it simply fails if any are enforced. Use <code>AcquireTokenForClient</code> (daemon pattern) for automated/unattended scenarios. ROPC sends the user's plain-text password to the library, violating zero-trust principles. Microsoft explicitly recommends against ROPC even for testing.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "The .default scope requests only the minimum required permissions"</div>
+          <strong>False.</strong> The <code>.default</code> scope requests <em>all</em> API permissions pre-configured on the app registration — it is a shortcut that says "give me everything this app is configured for." It does not select a minimal set. For client credentials flows you have no choice but to use <code>.default</code> because there is no user to prompt for incremental consent. For delegated flows you may request individual scopes for principle of least privilege.
+        </div>
+      </div>
+
+      <div class="sec-lbl">&#9317; Practice Q&amp;A</div>
+
+      <div class="qa-list">
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">Your ASP.NET Core web API calls Microsoft Graph using MSAL. After deploying to App Service with 4 instances, users intermittently get 401 errors from Graph. Logs show "No account or login hint was passed." What is the root cause and fix?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; In-memory token cache not shared across instances — implement distributed token cache</div>
+            <div class="qa-body">
+              <strong>Root cause:</strong> MSAL's default in-memory token cache is per-process. A follow-up request hitting a different App Service instance has no cached token and fails <code>AcquireTokenSilent</code>.
+              <ul>
+                <li>Fix: Use <code>AddDistributedTokenCaches()</code> in Microsoft.Identity.Web, backed by Azure Cache for Redis or Azure SQL.</li>
+                <li>"No account or login hint" confirms <code>GetAccountsAsync()</code> returned empty — confirming a cache miss on that instance.</li>
+                <li>All instances share the same external cache store, so any instance can serve a cached token.</li>
+                <li>Sticky sessions (ARR affinity) can mask the problem but is not the right fix at scale.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">A daemon service uses <code>AcquireTokenForClient</code> with scope <code>https://graph.microsoft.com/User.Read</code>. The call fails with AADSTS70011. What is wrong?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Client credentials must use the .default scope — individual delegated scopes are not valid</div>
+            <div class="qa-body">
+              AADSTS70011 = "The provided value for the input parameter 'scope' is not valid."
+              <ul>
+                <li><code>AcquireTokenForClient</code> only accepts resource-level <code>.default</code> scopes: <code>https://graph.microsoft.com/.default</code>.</li>
+                <li>Individual scopes like <code>User.Read</code> are delegated — they require a user and are not valid in client credentials.</li>
+                <li>The app also needs <code>User.Read.All</code> configured as an <strong>application permission</strong> (Role type) with admin consent.</li>
+                <li>The token will carry <code>roles: ["User.Read.All"]</code>, not <code>scp</code>.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">Your middle-tier web API receives a user's delegated access token scoped for your API. It needs to call Azure Key Vault on behalf of the same user. Which MSAL method should it use?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; AcquireTokenOnBehalfOf</div>
+            <div class="qa-body">
+              <strong>On-Behalf-Of (OBO)</strong> flow propagates user identity from one API to another.
+              <ul>
+                <li>Your API (confidential client) uses the incoming access token as the "user assertion" plus its own credentials to request a new token for Key Vault.</li>
+                <li>Azure AD validates the chain and issues a Key Vault token still representing the original user.</li>
+                <li>Key Vault access is then subject to the user's RBAC roles on the vault — not the API's identity.</li>
+                <li>Wrong answer: <code>AcquireTokenForClient</code> would produce an app-only token, losing user context entirely.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">A console tool uses PublicClientApplication. Users must not be re-prompted on every launch. What must the developer implement?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Token cache serialization using MsalCacheHelper or manual ITokenCache callbacks</div>
+            <div class="qa-body">
+              MSAL's in-memory cache is lost when the process exits.
+              <ul>
+                <li>Use <code>MsalCacheHelper</code> from Microsoft.Identity.Client.Extensions.Msal — handles cross-platform encrypted storage.</li>
+                <li>Or manually implement <code>app.UserTokenCache.SetBeforeAccess</code> / <code>SetAfterAccess</code> to read/write an encrypted file.</li>
+                <li>On subsequent launches: call <code>GetAccountsAsync()</code>, find the saved account, call <code>AcquireTokenSilent</code> — no user prompt if refresh token is still valid.</li>
+                <li>Tokens must be encrypted at rest — never store in plain text.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">AcquireTokenSilent throws MsalUiRequiredException with reason ConditionalAccessRequired. What should you do?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Call AcquireTokenInteractive and pass the Claims from the exception</div>
+            <div class="qa-body">
+              Conditional Access requires user interaction even after a previous successful sign-in.
+              <ul>
+                <li>The exception's <code>Claims</code> property contains the CA challenge details (e.g., MFA required, device compliance needed).</li>
+                <li>Pass those claims: <code>.AcquireTokenInteractive(scopes).WithClaims(ex.Claims).ExecuteAsync()</code>.</li>
+                <li>Without passing the claims challenge, the interactive flow may not communicate the CA requirement correctly to Azure AD.</li>
+                <li>After the user satisfies the CA requirement (e.g., completes MFA), a new token is issued.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">6</div>
+            <div class="qa-text">Which MSAL application type and method should an Azure Function use to periodically sync data from Graph with no user involved?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; ConfidentialClientApplication + AcquireTokenForClient (or use Managed Identity)</div>
+            <div class="qa-body">
+              Unattended background process = daemon pattern.
+              <ul>
+                <li>Use <code>ConfidentialClientApplication</code> with client secret or certificate, <code>AcquireTokenForClient</code>, scope <code>https://graph.microsoft.com/.default</code>.</li>
+                <li>Application permissions (e.g., <code>User.Read.All</code>) must be pre-consented by an admin.</li>
+                <li><strong>Preferred approach for Azure Functions:</strong> use Managed Identity + <code>DefaultAzureCredential</code> — avoids storing client secrets entirely.</li>
+                <li>Wrong: <code>PublicClientApplication</code> cannot use client credentials and cannot hold secrets.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">7</div>
+            <div class="qa-text">A developer sets <code>WithAuthority("https://login.microsoftonline.com/common")</code>. Can a personal Microsoft account user sign in?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Only if the app registration has signInAudience = AzureADandPersonalMicrosoftAccount</div>
+            <div class="qa-body">
+              The <code>/common</code> endpoint routes to the appropriate STS based on account type — but the app registration must permit personal accounts.
+              <ul>
+                <li>If <code>signInAudience = AzureADMultipleOrgs</code>, personal account sign-ins fail even with <code>/common</code>.</li>
+                <li><code>AzureADandPersonalMicrosoftAccount</code> must be set on the app registration to allow MSA accounts.</li>
+                <li>Use <code>/organizations</code> to allow only work/school accounts across all tenants (excludes personal accounts).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END MODULE 2 -->
