@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -24,19 +24,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
 a{color:var(--azure);text-decoration:none}
 a:hover{text-decoration:underline}
 #top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
-.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
-.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
-.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
-.nav-bc a{color:rgba(255,255,255,.75)}
-.nav-bc a:hover{color:#fff;text-decoration:none}
-.nav-bc span{color:rgba(255,255,255,.35)}
-.nav-bc strong{color:#fff}
-.nav-acts{display:flex;align-items:center;gap:8px}
-.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
-.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
-.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
-.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
-.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.nav-brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:600;font-size:16px}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.nav-badge{background:var(--azure);color:#fff;font-size:11px;padding:2px 9px;border-radius:20px;font-weight:600}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.btn-nav{padding:.4rem 1rem;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-nav-outline{background:transparent;color:#e2e8f0;border:1px solid rgba(255,255,255,.25)}
+.btn-nav-outline:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-nav-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-nav-primary:hover{background:var(--azure-dark);text-decoration:none}
 .page-layout{display:flex;min-height:calc(100vh - 54px)}
 .sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
 .sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
@@ -50,7 +46,7 @@ a:hover{text-decoration:underline}
 .sb-next:hover{color:var(--azure);text-decoration:none}
 .main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
 .topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
-.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-icon-lg{width:40px;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.topic-icon-lg img{display:block}
 .topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
 .topic-header p{font-size:13px;color:var(--text-muted);margin:0}
 .topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
@@ -75,7 +71,7 @@ td:first-child{color:var(--text);font-weight:500}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafafa}
 .callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
-.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-icon{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.callout-icon img{width:16px;height:16px;display:block}
 .callout-body{flex:1}
 .callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
 .callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
@@ -108,21 +104,17 @@ tr:hover td{background:#fafafa}
 @media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
 
 </style>
-</head>
+<link rel="icon" type="image/svg+xml" href="svg/favicon.svg"></head>
 <body>
 
 <nav id="top-nav">
   <div class="nav-brand">
     <div class="nav-brand-icon">Az</div>
-    <div class="nav-bc">
-      <a href="learn.html">Study Notes</a>
-      <span>/</span>
-      <strong>Containerised Solutions</strong>
-    </div>
+    <span>Containerised Solutions</span>
+    <span class="nav-badge">AZ-204</span>
   </div>
-  <div class="nav-acts">
-    <a href="learn.html" class="btn btn-ghost">← All Topics</a>
-    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  <div class="nav-actions">
+    <a href="learn.html" class="btn-nav btn-nav-outline">&#8592; Study Notes</a>
   </div>
 </nav>
 
@@ -130,15 +122,15 @@ tr:hover td{background:#fafafa}
   <aside class="sidebar">
     <a href="learn.html" class="sb-back">← All Topics</a>
     <div class="sb-label">Containerised Solutions</div>
-    <a href="#m1" class="sb-link" data-m="1">📦 Azure Container Registry (ACR)<span class="sb-num">6 sections</span></a>
-    <a href="#m2" class="sb-link" data-m="2">📦 Azure Container Instances (ACI)<span class="sb-num">6 sections</span></a>
-    <a href="#m3" class="sb-link" data-m="3">🚀 Azure Container Apps<span class="sb-num">6 sections</span></a>
+    <a href="#m1" class="sb-link" data-m="1"><img src="svg/sec-container.svg" width="14" height="14" alt="" style="flex-shrink:0"> Azure Container Registry (ACR)<span class="sb-num">6 sections</span></a>
+    <a href="#m2" class="sb-link" data-m="2"><img src="svg/sec-container.svg" width="14" height="14" alt="" style="flex-shrink:0"> Azure Container Instances (ACI)<span class="sb-num">6 sections</span></a>
+    <a href="#m3" class="sb-link" data-m="3"><img src="svg/sec-launch.svg" width="14" height="14" alt="" style="flex-shrink:0"> Azure Container Apps<span class="sb-num">6 sections</span></a>
     <a href="learn-06-auth.html" class="sb-next">Next: Authentication →</a>
   </aside>
 
   <main class="main">
     <div class="topic-header">
-      <div class="topic-icon-lg">🐳</div>
+      <div class="topic-icon-lg"><img src="svg/topic-containers.svg" width="36" height="36" alt=""></div>
       <div>
         <h1>Containerised Solutions</h1>
         <p>3 modules · Azure Container Registry (ACR) · Azure Container Instances (ACI) · Azure Container Apps</p>
@@ -219,7 +211,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Premium = All the enterprise features</div>
           The exam reliably tests "which SKU supports X?" where X is one of: private endpoints, geo-replication, customer-managed keys, or dedicated data endpoints. The answer is always <strong>Premium</strong>. Basic and Standard are functionally similar, differing only in storage and webhook count.
@@ -273,7 +265,7 @@ tr:hover td{background:#fafafa}
       </ul>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Geo-replication behaviour</div>
           With a geo-replicated Premium registry, a single <code>docker push</code> automatically replicates the image to all configured replica regions. Pull requests are served from the nearest replica — but this only works automatically when the client's DNS resolves to the regional endpoint. The global registry endpoint always works but may incur cross-region latency.
@@ -284,7 +276,7 @@ tr:hover td{background:#fafafa}
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Geo-replication: push replicates automatically, pull does NOT guarantee closest replica</div>
           When you push an image to a geo-replicated ACR, Azure replicates the image to all replica regions automatically — you do not need to push to each region separately. However, when pulling, the client is served from the nearest replica only if DNS routing is configured. If the client always uses the global registry FQDN (e.g., <code>myacr.azurecr.io</code>), geo-replication still works but may not reduce pull latency. The exam distinguishes between "automatic replication on push" (always true) and "latency reduction on pull" (requires DNS/routing).
@@ -292,7 +284,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Admin user: disabled by default, not "enabled by default"</div>
           The ACR admin user is <strong>disabled by default</strong> when you create a registry. It provides a single username and two passwords (for rotation). Because it is a shared credential with no per-user audit trail, Microsoft explicitly recommends against it for production. Exam questions often frame scenarios where "you need ACI to pull from ACR" and list admin user as an option — the correct answer is managed identity or service principal, not admin user, even though admin user technically works.
@@ -300,7 +292,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">ACR Tasks do not require a local Docker daemon</div>
           <code>az acr build</code> uploads the build context (Dockerfile and source) to ACR and builds the image entirely in the cloud. There is no requirement to have Docker Desktop or any local container runtime installed. This is a deliberate distractor — the exam may describe a developer scenario where Docker is unavailable and ask "which approach allows them to build and push an image?" The answer is ACR Tasks / <code>az acr build</code>.
@@ -426,7 +418,7 @@ az acr repository list --name myacr --output table
 az acr repository show-tags --name myacr --repository myimage</code></pre>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">az acr build vs docker build + docker push</div>
           <code>az acr build</code> is a single command that uploads the build context, builds the image server-side in ACR, and pushes it to the registry — all without a local Docker daemon. The exam loves to present scenarios where Docker is unavailable or you need a "cloud-native" build process.
@@ -437,7 +429,7 @@ az acr repository show-tags --name myacr --repository myimage</code></pre>
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Admin user is required for ACI to pull images from ACR"</div>
           FALSE. ACI can authenticate to ACR using a <strong>managed identity</strong> (system-assigned or user-assigned) or a <strong>service principal</strong>. The admin user is a legacy option that works but is explicitly not recommended. When the exam offers "enable admin user" as an option alongside "assign managed identity", the managed identity answer is correct.
@@ -445,7 +437,7 @@ az acr repository show-tags --name myacr --repository myimage</code></pre>
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Standard SKU supports geo-replication for high availability"</div>
           FALSE. Geo-replication is a <strong>Premium-only</strong> feature. Standard does not support geo-replication, private endpoints, customer-managed keys, or dedicated data endpoints. If an exam scenario describes a requirement for low-latency pulls across multiple regions, the required SKU is always Premium.
@@ -453,7 +445,7 @@ az acr repository show-tags --name myacr --repository myimage</code></pre>
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "You must push to each geo-replicated region separately"</div>
           FALSE. With a geo-replicated Premium ACR, a single push to the primary registry endpoint automatically replicates the image to all configured replica regions. There is no need to push to each region's endpoint individually — ACR handles replication transparently behind the scenes.
@@ -645,7 +637,7 @@ az acr repository show-tags --name myacr --repository myimage</code></pre>
       </ul>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Container groups share an IP — port conflicts matter</div>
           Because all containers in a group share the same IP address, two containers in the same group cannot bind to the same port number. If container A listens on port 80 and container B also tries to listen on port 80, the group will fail to start. External traffic is routed to containers by the port number specified in the group's port configuration.
@@ -728,7 +720,7 @@ az acr repository show-tags --name myacr --repository myimage</code></pre>
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Secure environment variables: key is visible, value is permanently hidden</div>
           When you set a secure environment variable with <code>--secure-environment-variables KEY=SECRET_VALUE</code>, the <strong>key name</strong> appears in <code>az container show</code> output under <code>secureEnvironmentVariables</code>, but the <strong>value is blank/masked</strong> and can never be retrieved through the management plane. This is by design — you cannot inspect the value after creation. The exam may ask: "What happens when you run <code>az container show</code> on a container with a secure environment variable?" The answer is that the key is shown but the value is not.
@@ -736,7 +728,7 @@ az acr repository show-tags --name myacr --repository myimage</code></pre>
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">emptyDir volumes are lost on container restart — not on group restart</div>
           An <code>emptyDir</code> volume is shared between all containers in the group and survives if only one container in the group restarts (the volume persists as long as the group is alive). However, if the <strong>container group itself is stopped and restarted</strong> (e.g., deallocated and reallocated), the <code>emptyDir</code> content is lost. For durable scratch storage that survives group restarts, use an Azure Files volume mount instead.
@@ -744,7 +736,7 @@ az acr repository show-tags --name myacr --repository myimage</code></pre>
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">ACI has no built-in autoscaling — it cannot scale out dynamically</div>
           ACI runs a fixed container group. There is no mechanism to automatically add more container groups in response to load — ACI has no equivalent of Kubernetes HPA or App Service autoscale. For scenarios that require scaling out to handle variable traffic, ACI is the wrong choice. Use Azure Container Apps (with KEDA-based autoscaling) or AKS. The exam may describe a traffic burst scenario and ask which service automatically scales — ACI is not the answer.
@@ -868,7 +860,7 @@ az container exec --resource-group myRG --name mycontainer --exec-command "/bin/
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "ACI is suitable for long-running stateful applications"</div>
           FALSE. ACI is designed for short-lived, burst, or task workloads. While ACI containers can technically run indefinitely, there is no built-in autoscaling, no rolling update mechanism, and the storage model is not designed for stateful workloads (only Azure Files mounts provide durability). For stateful long-running applications, use <strong>AKS</strong> (for container orchestration) or <strong>App Service</strong> (for web apps with persistent storage). The exam will describe a stateful or highly-available workload and offer ACI as a distractor.
@@ -876,7 +868,7 @@ az container exec --resource-group myRG --name mycontainer --exec-command "/bin/
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Two containers in the same ACI group can both listen on port 80"</div>
           FALSE. All containers in an ACI container group share a single IP address. Port numbers within the group must be unique — two containers cannot bind to the same port. The exam may present a multi-container group scenario where one sidecar conflicts on a port. The correct solution is to change one container's listening port so there is no conflict within the group.
@@ -884,7 +876,7 @@ az container exec --resource-group myRG --name mycontainer --exec-command "/bin/
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "You can mix Linux and Windows containers in the same ACI container group"</div>
           FALSE. An ACI container group must be entirely Linux or entirely Windows. You cannot mix OS types within a single group. This is different from AKS, which supports mixed node pools. If an exam scenario requires a Linux container and a Windows container working together under one IP, ACI cannot satisfy that requirement in a single group.
@@ -1118,7 +1110,7 @@ az container exec --resource-group myRG --name mycontainer --exec-command "/bin/
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Rollback = set traffic weight to the old revision</div>
           Container Apps does not have a "rollback" button. To roll back, switch to Multiple revision mode (if not already) and use <code>az containerapp ingress traffic set</code> to send 100% of traffic back to a previous revision. Old revisions are retained and remain available until you explicitly deactivate or delete them.
@@ -1175,7 +1167,7 @@ az container exec --resource-group myRG --name mycontainer --exec-command "/bin/
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Updates create new revisions — the current revision is never modified</div>
           When you run <code>az containerapp update</code>, Azure Container Apps creates a brand new revision with the updated configuration. The existing revision is not modified — it is immutable by definition. In Single revision mode, traffic automatically shifts to the new revision. In Multiple mode, you must manually adjust traffic weights. The exam will ask "what happens when you update a container app?" — the answer is always "a new revision is created".
@@ -1183,7 +1175,7 @@ az container exec --resource-group myRG --name mycontainer --exec-command "/bin/
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Scale to zero means zero cost but also cold start latency</div>
           When minimum replicas = 0, the app scales down to zero running instances during idle periods. The first request after the scale-to-zero event will experience a cold start — there is latency while Container Apps spins up a new replica. If the scenario requires zero cold starts (e.g., a latency-sensitive API), set minimum replicas to 1 or more. The exam tests this trade-off: scale-to-zero saves cost but introduces cold start latency.
@@ -1191,7 +1183,7 @@ az container exec --resource-group myRG --name mycontainer --exec-command "/bin/
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Container Apps abstracts Kubernetes — you do NOT use kubectl or K8s manifests</div>
           Although Container Apps runs on Kubernetes internally, you do not interact with the underlying cluster via <code>kubectl</code>, Helm charts, or Kubernetes YAML manifests. All management is done through <code>az containerapp</code> CLI commands, ARM/Bicep templates, or the Azure portal. The exam may describe a scenario where a developer with K8s experience tries to apply a Deployment manifest to Container Apps — this does not work. Container Apps is a PaaS abstraction on top of K8s.
@@ -1338,7 +1330,7 @@ az containerapp update \
   --scale-rule-cron-end-schedule "0 18 * * 1-5"       # 6 PM Mon-Fri</code></pre>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">DAPR app-id is the service discovery key</div>
           The <code>--dapr-app-id</code> is how other DAPR-enabled services in the same environment find and call this service. For DAPR service-to-service invocation, service A calls <code>http://localhost:3500/v1.0/invoke/&lt;app-id&gt;/method/&lt;method&gt;</code> through the local DAPR sidecar. The DAPR sidecar handles routing to the correct container app by <code>app-id</code>.
@@ -1349,7 +1341,7 @@ az containerapp update \
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Container Apps uses Kubernetes YAML manifests for deployment"</div>
           FALSE. Container Apps completely abstracts the underlying Kubernetes cluster. You deploy using <code>az containerapp create/update</code> CLI commands, ARM/Bicep templates, or Terraform. You cannot use <code>kubectl apply</code>, Helm charts, or raw Kubernetes Deployment/Service YAML files to manage Container Apps. The K8s cluster exists, but Microsoft owns it — you have no access to it. This is a major differentiator from AKS.
@@ -1357,7 +1349,7 @@ az containerapp update \
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "To roll back a Container Apps deployment, run az containerapp rollback"</div>
           FALSE. There is no <code>az containerapp rollback</code> command. Rollback is achieved by manipulating traffic weights on revisions. Switch to Multiple revision mode, then use <code>az containerapp ingress traffic set</code> to route 100% of traffic to a previous (still-retained) revision. Old revisions persist until you explicitly deactivate or delete them — they are always available for rollback by re-routing traffic.
@@ -1365,7 +1357,7 @@ az containerapp update \
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "DAPR must be enabled at the environment level to work"</div>
           FALSE. DAPR is enabled and configured at the <strong>individual container app level</strong>, not at the environment level. Each app independently opts in to DAPR with its own <code>app-id</code>, <code>app-port</code>, and <code>app-protocol</code>. An environment can contain a mix of DAPR-enabled and non-DAPR apps. The environment hosts the DAPR control plane components, but you enable DAPR on a per-app basis.

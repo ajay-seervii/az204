@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -24,19 +24,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
 a{color:var(--azure);text-decoration:none}
 a:hover{text-decoration:underline}
 #top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
-.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
-.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
-.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
-.nav-bc a{color:rgba(255,255,255,.75)}
-.nav-bc a:hover{color:#fff;text-decoration:none}
-.nav-bc span{color:rgba(255,255,255,.35)}
-.nav-bc strong{color:#fff}
-.nav-acts{display:flex;align-items:center;gap:8px}
-.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
-.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
-.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
-.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
-.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.nav-brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:600;font-size:16px}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.nav-badge{background:var(--azure);color:#fff;font-size:11px;padding:2px 9px;border-radius:20px;font-weight:600}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.btn-nav{padding:.4rem 1rem;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-nav-outline{background:transparent;color:#e2e8f0;border:1px solid rgba(255,255,255,.25)}
+.btn-nav-outline:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-nav-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-nav-primary:hover{background:var(--azure-dark);text-decoration:none}
 .page-layout{display:flex;min-height:calc(100vh - 54px)}
 .sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
 .sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
@@ -50,7 +46,7 @@ a:hover{text-decoration:underline}
 .sb-next:hover{color:var(--azure);text-decoration:none}
 .main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
 .topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
-.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-icon-lg{width:40px;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.topic-icon-lg img{display:block}
 .topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
 .topic-header p{font-size:13px;color:var(--text-muted);margin:0}
 .topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
@@ -75,7 +71,7 @@ td:first-child{color:var(--text);font-weight:500}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafafa}
 .callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
-.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-icon{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.callout-icon img{width:16px;height:16px;display:block}
 .callout-body{flex:1}
 .callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
 .callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
@@ -108,21 +104,17 @@ tr:hover td{background:#fafafa}
 @media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
 
 </style>
-</head>
+<link rel="icon" type="image/svg+xml" href="svg/favicon.svg"></head>
 <body>
 
 <nav id="top-nav">
   <div class="nav-brand">
     <div class="nav-brand-icon">Az</div>
-    <div class="nav-bc">
-      <a href="learn.html">Study Notes</a>
-      <span>/</span>
-      <strong>Azure Functions</strong>
-    </div>
+    <span>Azure Functions</span>
+    <span class="nav-badge">AZ-204</span>
   </div>
-  <div class="nav-acts">
-    <a href="learn.html" class="btn btn-ghost">← All Topics</a>
-    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  <div class="nav-actions">
+    <a href="learn.html" class="btn-nav btn-nav-outline">&#8592; Study Notes</a>
   </div>
 </nav>
 
@@ -130,14 +122,14 @@ tr:hover td{background:#fafafa}
   <aside class="sidebar">
     <a href="learn.html" class="sb-back">← All Topics</a>
     <div class="sb-label">Azure Functions</div>
-    <a href="#m1" class="sb-link" data-m="1">🔍 Explore Azure Functions<span class="sb-num">6 sections</span></a>
-    <a href="#m2" class="sb-link" data-m="2">💻 Develop Azure Functions<span class="sb-num">6 sections</span></a>
+    <a href="#m1" class="sb-link" data-m="1"><img src="svg/sec-explore.svg" width="14" height="14" alt="" style="flex-shrink:0"> Explore Azure Functions<span class="sb-num">6 sections</span></a>
+    <a href="#m2" class="sb-link" data-m="2"><img src="svg/sec-develop.svg" width="14" height="14" alt="" style="flex-shrink:0"> Develop Azure Functions<span class="sb-num">6 sections</span></a>
     <a href="learn-03-blob-storage.html" class="sb-next">Next: Blob Storage →</a>
   </aside>
 
   <main class="main">
     <div class="topic-header">
-      <div class="topic-icon-lg">⚡</div>
+      <div class="topic-icon-lg"><img src="svg/topic-functions.svg" width="36" height="36" alt=""></div>
       <div>
         <h1>Azure Functions</h1>
         <p>2 modules · Explore Azure Functions · Develop Azure Functions</p>
@@ -202,7 +194,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Consumption Instance Resources</div>
           Each Consumption plan instance is allocated <strong>1.5 GB RAM</strong> and <strong>1 vCPU</strong>. You cannot configure these. If your function needs more memory or CPU, move to Premium or Dedicated.
@@ -295,7 +287,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Why Fan-out / Fan-in Uses Task.WhenAll</div>
           In fan-out, you build a list of <code>Task&lt;T&gt;</code> objects by calling <code>CallActivityAsync</code> without awaiting each one, then await <code>Task.WhenAll(tasks)</code>. Awaiting inside the loop would serialize the calls into chaining, not parallelism.
@@ -305,7 +297,7 @@ tr:hover td{background:#fafafa}
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Orchestrator Determinism — The Most Common Durable Functions Trap</div>
           Orchestrator functions <strong>replay from the beginning</strong> every time they are resumed after an await. If your orchestrator calls <code>DateTime.Now</code>, <code>Guid.NewGuid()</code>, or makes a direct HTTP call, the replayed value will differ from the original, causing non-deterministic behavior and potential workflow corruption. Always delegate non-deterministic operations to Activity functions, and use <code>context.CurrentUtcDateTime</code> instead of <code>DateTime.UtcNow</code> inside orchestrators.
@@ -313,7 +305,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Changing Orchestrator Code While Instances Are Running</div>
           If you deploy a new version of an orchestrator function while existing instances are mid-execution, those instances will fail on replay because the history no longer matches the new code path. The exam may describe this scenario as "orchestration instances failing after a deployment" — the correct mitigation is versioning strategies: use side-by-side deployment slots, wait for existing instances to complete, or implement versioning logic inside the orchestrator to handle both old and new code paths.
@@ -321,7 +313,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Dedicated Plan — "Always On" Is Not Automatic</div>
           In a Dedicated (App Service) plan, Azure Functions will time out and unload if the app is idle — just like a regular App Service web app. You <strong>must</strong> enable the "Always On" setting in the App Service configuration to prevent this. Without Always On, timer-triggered functions on a Dedicated plan may silently miss scheduled executions because the host is not running.
@@ -459,7 +451,7 @@ public static async Task&lt;HttpResponseData&gt; HttpStart(
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">🪤</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Use Consumption plan for a time-critical scheduled function that must fire exactly on schedule"</div>
           <strong>Wrong.</strong> Consumption plan functions can experience cold starts — the host must spin up from zero before the timer trigger fires, which can delay execution by several seconds or more. For functions that must execute precisely on schedule (financial jobs, SLA-bound operations), use the <strong>Premium plan</strong> with pre-warmed instances, or the <strong>Dedicated plan</strong> with Always On enabled.
@@ -467,7 +459,7 @@ public static async Task&lt;HttpResponseData&gt; HttpStart(
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">🪤</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Durable orchestrators can call external HTTP APIs directly to avoid an extra function call"</div>
           <strong>Wrong.</strong> Making direct HTTP calls (or any I/O) inside an orchestrator violates the determinism requirement. When the orchestrator replays, the HTTP call would fire again, potentially causing duplicate operations or returning a different result than the original run. Always wrap external calls in an Activity function and invoke it via <code>CallActivityAsync</code>.
@@ -475,7 +467,7 @@ public static async Task&lt;HttpResponseData&gt; HttpStart(
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">🪤</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "The Scale Controller manages scaling for all Azure Functions hosting plans"</div>
           <strong>Wrong.</strong> The Scale Controller is specific to <strong>Consumption</strong> and <strong>Premium (Elastic)</strong> plans, where it monitors event sources (queue depth, event hub offset lag, etc.) and dynamically adds or removes worker instances. Functions on a <strong>Dedicated (App Service)</strong> plan are governed by standard <strong>App Service autoscale rules</strong> — the Scale Controller plays no role there.
@@ -810,7 +802,7 @@ public static async Task&lt;HttpResponseData&gt; HttpStart(
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Connection Property = App Setting Name, Not the Value</div>
           In <code>function.json</code> (and in binding attributes), the <code>"connection"</code> property must contain the <strong>name of an app setting</strong> that holds the connection string — not the connection string itself. For example: <code>"connection": "MyStorageAccount"</code> tells the runtime to look up the app setting named <code>MyStorageAccount</code> and use its value as the connection string. Writing the actual connection string in the <code>"connection"</code> field will cause the binding to fail.
@@ -846,7 +838,7 @@ public static async Task&lt;HttpResponseData&gt; HttpStart(
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">The "connection" Property Holds an App Setting Name — Not the Connection String</div>
           This is one of the most common exam traps for binding configuration. A question shows <code>function.json</code> with something like: <code>"connection": "DefaultEndpointsProtocol=https;AccountName=..."</code> — a real connection string inline in the binding configuration. This is <strong>incorrect</strong>. The runtime looks up an app setting by the value in <code>"connection"</code>. The app setting itself holds the connection string. If you put the literal connection string in <code>"connection"</code>, Azure cannot resolve it and the binding fails. The correct pattern: store <code>MyStorageConnection=DefaultEndpointsProtocol=https;...;</code> in App Settings, then use <code>"connection": "MyStorageConnection"</code> in the binding.
@@ -854,7 +846,7 @@ public static async Task&lt;HttpResponseData&gt; HttpStart(
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">local.settings.json Is Never Deployed to Azure</div>
           Developers often assume that <code>local.settings.json</code> is deployed with <code>func azure functionapp publish</code>. It is not. This file is intentionally excluded from deployment — it is for local development only and is listed in <code>.gitignore</code> by default. Any connection strings or app settings in <code>local.settings.json</code> must be separately configured as Application Settings in the Azure portal, ARM template, or via Azure CLI. Forgetting this causes "works locally, fails in Azure" bugs — a scenario the exam specifically tests.
@@ -862,7 +854,7 @@ public static async Task&lt;HttpResponseData&gt; HttpStart(
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">HTTP Trigger Timeout Is Capped at 230 Seconds by Azure Load Balancer</div>
           Even on Premium or Dedicated plans where Functions support unlimited timeout, HTTP-triggered functions face a hard 230-second (~3.8 minute) timeout enforced by the Azure load balancer upstream. The load balancer will close the connection after 230 seconds regardless of the Functions runtime timeout setting. For long-running HTTP-initiated work, use the <strong>Async HTTP API (Durable Functions)</strong> pattern: return a 202 Accepted with a polling URL immediately, process the work asynchronously, and let the client poll for completion.
@@ -1027,7 +1019,7 @@ public static string Run(
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">🪤</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Put the connection string directly in the 'connection' field of function.json to simplify configuration"</div>
           <strong>Wrong.</strong> The <code>"connection"</code> property in <code>function.json</code> or binding attributes is resolved as an <strong>application setting name</strong>. The runtime calls <code>Environment.GetEnvironmentVariable("YourConnectionName")</code> and uses the result as the actual connection string. Placing a raw connection string directly in the <code>"connection"</code> field means the runtime tries to look up an environment variable with that entire connection string as its name — which does not exist — and the binding fails at startup.
@@ -1035,7 +1027,7 @@ public static string Run(
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">🪤</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Configure the function's local connection strings in local.settings.json and they will be available after deployment"</div>
           <strong>Wrong.</strong> <code>local.settings.json</code> is a local development tool only. The Azure Functions Core Tools explicitly excludes it from the <code>func azure functionapp publish</code> deployment package. You must separately configure all required Application Settings in Azure — through the Azure portal, Azure CLI (<code>az functionapp config appsettings set</code>), ARM template, or Bicep. A function that works locally but fails in Azure almost always has this root cause.
@@ -1043,7 +1035,7 @@ public static string Run(
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">🪤</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "For a function that takes 10 minutes via HTTP trigger, set the host.json timeout to 00:10:00 on the Premium plan"</div>
           <strong>Wrong — or incomplete at best.</strong> Even with a generous <code>functionTimeout</code> in <code>host.json</code>, the HTTP trigger is hard-capped at <strong>230 seconds</strong> by the Azure infrastructure load balancer. No host.json setting overrides this. The correct architectural response is to use the <strong>Async HTTP API (Durable Functions)</strong> pattern: the HTTP trigger immediately returns 202 Accepted with a polling URL, the long-running logic executes in an orchestrator/activity, and the client polls for completion. The exam will offer increasing the host.json timeout as a plausible distractor.

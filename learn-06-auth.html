@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -24,19 +24,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
 a{color:var(--azure);text-decoration:none}
 a:hover{text-decoration:underline}
 #top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
-.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
-.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
-.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
-.nav-bc a{color:rgba(255,255,255,.75)}
-.nav-bc a:hover{color:#fff;text-decoration:none}
-.nav-bc span{color:rgba(255,255,255,.35)}
-.nav-bc strong{color:#fff}
-.nav-acts{display:flex;align-items:center;gap:8px}
-.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
-.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
-.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
-.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
-.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.nav-brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:600;font-size:16px}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.nav-badge{background:var(--azure);color:#fff;font-size:11px;padding:2px 9px;border-radius:20px;font-weight:600}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.btn-nav{padding:.4rem 1rem;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-nav-outline{background:transparent;color:#e2e8f0;border:1px solid rgba(255,255,255,.25)}
+.btn-nav-outline:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-nav-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-nav-primary:hover{background:var(--azure-dark);text-decoration:none}
 .page-layout{display:flex;min-height:calc(100vh - 54px)}
 .sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
 .sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
@@ -50,7 +46,7 @@ a:hover{text-decoration:underline}
 .sb-next:hover{color:var(--azure);text-decoration:none}
 .main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
 .topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
-.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-icon-lg{width:40px;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.topic-icon-lg img{display:block}
 .topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
 .topic-header p{font-size:13px;color:var(--text-muted);margin:0}
 .topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
@@ -75,7 +71,7 @@ td:first-child{color:var(--text);font-weight:500}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafafa}
 .callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
-.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-icon{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.callout-icon img{width:16px;height:16px;display:block}
 .callout-body{flex:1}
 .callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
 .callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
@@ -108,21 +104,17 @@ tr:hover td{background:#fafafa}
 @media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
 
 </style>
-</head>
+<link rel="icon" type="image/svg+xml" href="svg/favicon.svg"></head>
 <body>
 
 <nav id="top-nav">
   <div class="nav-brand">
     <div class="nav-brand-icon">Az</div>
-    <div class="nav-bc">
-      <a href="learn.html">Study Notes</a>
-      <span>/</span>
-      <strong>Authentication &amp; Authorisation</strong>
-    </div>
+    <span>Authentication &amp; Authorisation</span>
+    <span class="nav-badge">AZ-204</span>
   </div>
-  <div class="nav-acts">
-    <a href="learn.html" class="btn btn-ghost">&#8592; All Topics</a>
-    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  <div class="nav-actions">
+    <a href="learn.html" class="btn-nav btn-nav-outline">&#8592; Study Notes</a>
   </div>
 </nav>
 
@@ -130,16 +122,16 @@ tr:hover td{background:#fafafa}
   <aside class="sidebar">
     <a href="learn.html" class="sb-back">&#8592; All Topics</a>
     <div class="sb-label">Authentication &amp; Authorisation</div>
-    <a href="#m1" class="sb-link" data-m="1">&#127962; Microsoft Identity Platform<span class="sb-num">6 sections</span></a>
-    <a href="#m2" class="sb-link" data-m="2">&#128272; Microsoft Authentication Library (MSAL)<span class="sb-num">6 sections</span></a>
-    <a href="#m3" class="sb-link" data-m="3">&#128271; Shared Access Signatures (SAS)<span class="sb-num">6 sections</span></a>
-    <a href="#m4" class="sb-link" data-m="4">&#128202; Microsoft Graph<span class="sb-num">6 sections</span></a>
+    <a href="#m1" class="sb-link" data-m="1"><img src="svg/sec-identity.svg" width="14" height="14" alt="" style="flex-shrink:0"> Microsoft Identity Platform<span class="sb-num">6 sections</span></a>
+    <a href="#m2" class="sb-link" data-m="2"><img src="svg/sec-key.svg" width="14" height="14" alt="" style="flex-shrink:0"> Microsoft Authentication Library (MSAL)<span class="sb-num">6 sections</span></a>
+    <a href="#m3" class="sb-link" data-m="3"><img src="svg/sec-key.svg" width="14" height="14" alt="" style="flex-shrink:0"> Shared Access Signatures (SAS)<span class="sb-num">6 sections</span></a>
+    <a href="#m4" class="sb-link" data-m="4"><img src="svg/sec-chart.svg" width="14" height="14" alt="" style="flex-shrink:0"> Microsoft Graph<span class="sb-num">6 sections</span></a>
     <a href="learn-07-security.html" class="sb-next">Next: Security &#8594;</a>
   </aside>
 
   <main class="main">
     <div class="topic-header">
-      <div class="topic-icon-lg">&#128273;</div>
+      <div class="topic-icon-lg"><img src="svg/topic-auth.svg" width="36" height="36" alt=""></div>
       <div>
         <h1>Authentication &amp; Authorisation</h1>
         <p>4 modules &middot; Microsoft Identity Platform &middot; Microsoft Authentication Library (MSAL) &middot; Shared Access Signatures (SAS) &middot; Microsoft Graph</p>

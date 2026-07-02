@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -24,19 +24,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
 a{color:var(--azure);text-decoration:none}
 a:hover{text-decoration:underline}
 #top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
-.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
-.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
-.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
-.nav-bc a{color:rgba(255,255,255,.75)}
-.nav-bc a:hover{color:#fff;text-decoration:none}
-.nav-bc span{color:rgba(255,255,255,.35)}
-.nav-bc strong{color:#fff}
-.nav-acts{display:flex;align-items:center;gap:8px}
-.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
-.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
-.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
-.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
-.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.nav-brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:600;font-size:16px}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.nav-badge{background:var(--azure);color:#fff;font-size:11px;padding:2px 9px;border-radius:20px;font-weight:600}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.btn-nav{padding:.4rem 1rem;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-nav-outline{background:transparent;color:#e2e8f0;border:1px solid rgba(255,255,255,.25)}
+.btn-nav-outline:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-nav-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-nav-primary:hover{background:var(--azure-dark);text-decoration:none}
 .page-layout{display:flex;min-height:calc(100vh - 54px)}
 .sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
 .sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
@@ -50,7 +46,7 @@ a:hover{text-decoration:underline}
 .sb-next:hover{color:var(--azure);text-decoration:none}
 .main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
 .topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
-.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-icon-lg{width:40px;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.topic-icon-lg img{display:block}
 .topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
 .topic-header p{font-size:13px;color:var(--text-muted);margin:0}
 .topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
@@ -75,7 +71,7 @@ td:first-child{color:var(--text);font-weight:500}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafafa}
 .callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
-.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-icon{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.callout-icon img{width:16px;height:16px;display:block}
 .callout-body{flex:1}
 .callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
 .callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
@@ -108,21 +104,17 @@ tr:hover td{background:#fafafa}
 @media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
 
 </style>
-</head>
+<link rel="icon" type="image/svg+xml" href="svg/favicon.svg"></head>
 <body>
 
 <nav id="top-nav">
   <div class="nav-brand">
     <div class="nav-brand-icon">Az</div>
-    <div class="nav-bc">
-      <a href="learn.html">Study Notes</a>
-      <span>/</span>
-      <strong>Blob Storage</strong>
-    </div>
+    <span>Blob Storage</span>
+    <span class="nav-badge">AZ-204</span>
   </div>
-  <div class="nav-acts">
-    <a href="learn.html" class="btn btn-ghost">← All Topics</a>
-    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  <div class="nav-actions">
+    <a href="learn.html" class="btn-nav btn-nav-outline">&#8592; Study Notes</a>
   </div>
 </nav>
 
@@ -130,15 +122,15 @@ tr:hover td{background:#fafafa}
   <aside class="sidebar">
     <a href="learn.html" class="sb-back">← All Topics</a>
     <div class="sb-label">Blob Storage</div>
-    <a href="#m1" class="sb-link" data-m="1">🔍 Explore Azure Blob Storage<span class="sb-num">6 sections</span></a>
-    <a href="#m2" class="sb-link" data-m="2">♻️ Manage the Blob Storage Lifecycle<span class="sb-num">6 sections</span></a>
-    <a href="#m3" class="sb-link" data-m="3">💻 Work with Azure Blob Storage<span class="sb-num">6 sections</span></a>
+    <a href="#m1" class="sb-link" data-m="1"><img src="svg/sec-explore.svg" width="14" height="14" alt="" style="flex-shrink:0"> Explore Azure Blob Storage<span class="sb-num">6 sections</span></a>
+    <a href="#m2" class="sb-link" data-m="2"><img src="svg/sec-lifecycle.svg" width="14" height="14" alt="" style="flex-shrink:0"> Manage the Blob Storage Lifecycle<span class="sb-num">6 sections</span></a>
+    <a href="#m3" class="sb-link" data-m="3"><img src="svg/sec-develop.svg" width="14" height="14" alt="" style="flex-shrink:0"> Work with Azure Blob Storage<span class="sb-num">6 sections</span></a>
     <a href="learn-04-cosmos-db.html" class="sb-next">Next: Cosmos DB →</a>
   </aside>
 
   <main class="main">
     <div class="topic-header">
-      <div class="topic-icon-lg">🗄️</div>
+      <div class="topic-icon-lg"><img src="svg/topic-storage.svg" width="36" height="36" alt=""></div>
       <div>
         <h1>Blob Storage</h1>
         <p>3 modules · Explore Azure Blob Storage · Manage the Blob Storage Lifecycle · Work with Azure Blob Storage</p>
@@ -195,7 +187,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">GPv2 is always the recommended default</div>
           If an exam question asks which account type to use and does not specify performance or pricing constraints, choose <strong>General-purpose v2</strong>. It supports every feature including lifecycle management, all redundancy tiers, and all access tiers.
@@ -241,7 +233,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Append blobs cannot be overwritten — only appended</div>
           This is the defining exam trap for append blobs. Once a block is committed, it cannot be modified. You can <em>append</em> new blocks (each up to 4 MB), but you cannot update bytes in an existing block. This makes append blobs ideal for log ingestion where you never need to correct past entries.
@@ -299,7 +291,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Account-level vs. blob-level tiering</div>
           The <strong>account-level default tier</strong> (Hot or Cool) applies to blobs with no explicit tier set. <strong>Cold</strong> and <strong>Archive</strong> tiers can only be set at the <em>individual blob level</em> — they cannot be set as the account default. This distinction appears on exams.
@@ -355,7 +347,7 @@ tr:hover td{background:#fafafa}
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Archive blobs cannot be read directly — rehydration is mandatory</div>
           A blob in the Archive tier is stored offline. Any attempt to read, copy, or download it returns a <code>409 BlobArchived</code> error until the blob is rehydrated. Rehydration means either: (a) changing the blob's tier back to Hot or Cool using <code>Set Blob Tier</code>, or (b) copying the archived blob to a new blob in a Hot or Cool tier. Standard rehydration priority takes <strong>up to 15 hours</strong>. High priority takes <strong>under 1 hour</strong> for blobs smaller than 10 GB and costs more.
@@ -363,7 +355,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Premium storage accounts do NOT support Archive tier or lifecycle management</div>
           Premium Block Blob, Premium Page Blob, and Premium File Share accounts are optimized for low latency — they only support Hot tier. You cannot tier blobs to Cool, Cold, or Archive in a Premium account, and lifecycle management policies do not apply to Premium accounts at all. If an exam scenario says the app needs lifecycle tiering, the answer is GPv2, not Premium.
@@ -371,7 +363,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">ZRS does NOT protect against regional disasters</div>
           ZRS replicates across three availability zones in the same Azure region. If the entire region experiences a disaster (power, network, or natural disaster affecting all zones), ZRS data is at risk. Only GRS, GZRS, RA-GRS, or RA-GZRS replicate data to a geographically distant paired region. Exam distractors often describe ZRS as "protecting against regional outages" — that is false.
@@ -512,7 +504,7 @@ await blobClient.SetAccessTierAsync(AccessTier.Archive);</code></pre>
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Use a Premium Block Blob account for infrequently accessed data to save costs"</div>
           Premium Block Blob accounts only support Hot tier. They have higher storage costs than GPv2 in exchange for sub-millisecond latency. They do not support Cool, Cold, or Archive tiers. Premium accounts are only appropriate for latency-sensitive workloads, not cost-optimized cold storage.
@@ -520,7 +512,7 @@ await blobClient.SetAccessTierAsync(AccessTier.Archive);</code></pre>
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "RA-GRS provides two independent write endpoints for load balancing writes"</div>
           RA-GRS (Read-Access Geo-Redundant Storage) provides a <em>read-only</em> secondary endpoint. You can read from the secondary endpoint at any time using the <code>-secondary</code> URL suffix (e.g., <code>mystorageacct-secondary.blob.core.windows.net</code>), but all <em>writes</em> still go to the primary region only. RA-GRS is for read scale-out and disaster recovery reads, not write load balancing.
@@ -528,7 +520,7 @@ await blobClient.SetAccessTierAsync(AccessTier.Archive);</code></pre>
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "You can update bytes within an existing append blob block to fix a log entry"</div>
           Append blobs are write-once per block. Once a block is appended and committed, its content is immutable. The only operation allowed after creation is appending new blocks. To "correct" data in an append blob, you would need to create a new blob. This is by design — it makes append blobs suitable for tamper-evident audit logs.
@@ -783,7 +775,7 @@ await blobClient.SetAccessTierAsync(AccessTier.Archive);</code></pre>
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Multiple actions can exist in one rule — the most cost-effective wins</div>
           If a blob qualifies for multiple actions in the same rule (e.g., both <code>tierToCool</code> and <code>tierToArchive</code>), the lifecycle engine applies the action that results in the lowest storage cost — typically the deepest tier. This is important: you don't need separate rules to cascade through Hot → Cool → Archive; a single rule with multiple <code>daysAfterModificationGreaterThan</code> thresholds works.
@@ -791,7 +783,7 @@ await blobClient.SetAccessTierAsync(AccessTier.Archive);</code></pre>
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Blob index tags can filter lifecycle rules without relying on naming conventions</div>
           Instead of filtering by prefix (which requires you to organize blobs by name), you can attach <strong>blob index tags</strong> (e.g., <code>retention=7years</code>) and write lifecycle rules that match on those tags. This decouples storage organization from lifecycle behavior and is more flexible when blobs from different prefixes share the same retention policy.
@@ -801,7 +793,7 @@ await blobClient.SetAccessTierAsync(AccessTier.Archive);</code></pre>
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Lifecycle policies do NOT apply to Premium storage accounts</div>
           This is one of the most commonly tested limitations. Premium Block Blob, Premium Page Blob, and Premium File Share accounts do not support lifecycle management policies at all. If a question says the customer is using a Premium account and asks how to automatically tier blobs to Archive, the correct answer is that this is not possible — the account type must be changed to GPv2.
@@ -809,7 +801,7 @@ await blobClient.SetAccessTierAsync(AccessTier.Archive);</code></pre>
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Snapshots are NOT included in lifecycle actions unless explicitly declared</div>
           Lifecycle rules for <code>baseBlob</code> do not automatically cascade to snapshots or blob versions. To apply a lifecycle action (tier or delete) to snapshots, you must include a <code>"snapshot": {}</code> block within the rule's actions. Similarly, blob versions require a <code>"version": {}</code> block. Forgetting this is a common exam trap — if a question asks why snapshots are not being archived by a lifecycle policy, the answer is the missing snapshot block.
@@ -817,7 +809,7 @@ await blobClient.SetAccessTierAsync(AccessTier.Archive);</code></pre>
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Early deletion fees apply even when lifecycle policy moves the blob</div>
           When a lifecycle rule automatically moves a blob from Cool to Archive, the early deletion fee still applies if the blob has been in Cool for fewer than 30 days. The policy engine does not waive fees based on the fact that the movement was policy-driven. Similarly, deleting a Cool blob via a lifecycle policy before 30 days incurs a prorated fee. Planning policies must account for minimum durations to avoid unexpected charges.
@@ -963,7 +955,7 @@ az storage account management-policy delete \
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Creating a lifecycle policy immediately moves blobs to Archive"</div>
           Lifecycle policies run <strong>once per day</strong>. Even if a policy is configured with a condition of <code>daysAfterModificationGreaterThan: 0</code>, the policy engine will not process blobs until its next scheduled run (up to 24 hours after creation). Additionally, conditions must actually evaluate to true — if no blobs have been modified more than N days ago, no blobs move. There is no way to trigger a manual immediate execution of a lifecycle policy.
@@ -971,7 +963,7 @@ az storage account management-policy delete \
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "You can pass lifecycle policy rules as --rule arguments on the CLI"</div>
           The <code>az storage account management-policy create</code> command requires the policy to be a <strong>complete JSON document</strong> passed via <code>--policy @filename.json</code> (file reference) or <code>--policy '{...}'</code> (inline JSON string). There are no individual <code>--rule</code>, <code>--action</code>, or <code>--filter</code> flag arguments. Attempting to build the policy from CLI flags is not supported — the entire policy must be expressed as JSON.
@@ -979,7 +971,7 @@ az storage account management-policy delete \
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "A lifecycle rule that moves blobs from Hot to Cool at 30 days will also tier snapshots"</div>
           Actions defined under <code>"baseBlob"</code> do not affect snapshots or blob versions. Snapshots require their own <code>"snapshot": {}</code> action block, and blob versions require a <code>"version": {}</code> block. This is a frequent source of confusion — customers configure rules and then discover their snapshots are consuming storage in Hot tier indefinitely because the snapshot section was omitted from the policy.
@@ -1249,7 +1241,7 @@ az storage account management-policy delete \
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">User Delegation SAS is the most secure SAS type — prefer it when possible</div>
           Because it is backed by Azure AD credentials rather than a storage account key, it avoids the risk of key exposure. The maximum validity of 7 days limits blast radius if a token is leaked. Use a <strong>Stored Access Policy</strong> with Service SAS if you need the ability to revoke a token before expiry without rotating the account key.
@@ -1298,7 +1290,7 @@ az storage account management-policy delete \
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Lease duration: 15–60 seconds (fixed) or -1 (infinite)</div>
           Fixed leases auto-expire if the client crashes — preventing deadlocks. Infinite leases (<code>-1</code>) require an explicit <code>ReleaseLease</code> call. Use infinite leases only when the client lifecycle is well-managed (e.g., a distributed lock manager). In exam scenarios asking how to prevent concurrent writes from two processes, the answer is usually: acquire a fixed-duration lease, pass the lease ID on all writes, and renew the lease before it expires.
@@ -1348,7 +1340,7 @@ az storage account management-policy delete \
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">UploadAsync silently overwrites existing blobs — no error is thrown</div>
           Unlike databases where an INSERT to an existing key fails, <code>BlobClient.UploadAsync()</code> by default overwrites any existing blob with the same name without throwing an exception. To prevent accidental overwrites, pass an <code>overwrite: false</code> parameter, or use an HTTP conditional header <code>If-None-Match: *</code> (which fails if the blob already exists). This is a classic exam trap: "What happens when UploadAsync is called on a blob that already exists?" — the answer is the existing blob is overwritten silently.
@@ -1356,7 +1348,7 @@ az storage account management-policy delete \
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Metadata keys are case-insensitive; metadata values are case-sensitive</div>
           When you set metadata with key <code>Author</code> and retrieve it with key <code>author</code>, you get the same value — keys are case-insensitive. However, the value <code>John</code> is different from <code>john</code> — values are case-sensitive. This asymmetry is a subtle exam point. Also: <strong>metadata is not searchable</strong> — you cannot query "find all blobs where Author=John" using metadata alone. For cross-blob searching, you must use blob index tags.
@@ -1364,7 +1356,7 @@ az storage account management-policy delete \
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">User Delegation SAS maximum validity is 7 days — not unlimited</div>
           A User Delegation SAS token is backed by a <strong>user delegation key</strong> obtained from Azure AD. The user delegation key itself has a maximum validity of 7 days, which means the SAS token's expiry cannot exceed 7 days from the delegation key's start time. If an exam question asks for a SAS that must be valid for 30 days and must be backed by Azure AD, that is not currently possible with User Delegation SAS — you would need a Service SAS or Account SAS with a Stored Access Policy for revocation.
@@ -1554,7 +1546,7 @@ az storage blob lease acquire \
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "To search blobs by custom attribute, store the attribute in blob metadata"</div>
           Blob metadata is not indexed and cannot be searched across blobs. There is no API to query "find all blobs where metadata['department'] equals 'Finance'". The correct answer for cross-blob attribute searching is <strong>blob index tags</strong>, which are indexed by Azure Storage and support the <code>Find Blobs By Tags</code> operation. Metadata is only useful when you already know which blob you want and need to read its properties.
@@ -1562,7 +1554,7 @@ az storage blob lease acquire \
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Soft delete prevents all data loss — blobs deleted during the retention period are always recoverable"</div>
           Soft delete protects against <em>accidental deletion</em> by standard delete operations, but it does NOT protect against: (a) overwriting a blob with <code>UploadAsync</code> (the new content replaces the old; if versioning is off, the old content is lost); (b) immutability policies that are locked (delete is blocked entirely regardless of soft delete); or (c) deleting the storage account itself. For full data protection against overwrites, enable <strong>blob versioning</strong> in addition to soft delete.
@@ -1570,7 +1562,7 @@ az storage blob lease acquire \
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "A Stored Access Policy lets you revoke any SAS token before it expires"</div>
           A Stored Access Policy can revoke SAS tokens — but only <strong>Service SAS tokens</strong> that reference that policy. A Stored Access Policy cannot revoke: Account SAS tokens (they don't support stored policies), or ad-hoc Service SAS tokens that do not reference a stored policy. User Delegation SAS tokens are revoked by revoking or expiring the user delegation key. The exam often pairs "SAS revocation" with "Stored Access Policy" — the correct answer depends on which SAS type is in scope.

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -24,19 +24,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
 a{color:var(--azure);text-decoration:none}
 a:hover{text-decoration:underline}
 #top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
-.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
-.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
-.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
-.nav-bc a{color:rgba(255,255,255,.75)}
-.nav-bc a:hover{color:#fff;text-decoration:none}
-.nav-bc span{color:rgba(255,255,255,.35)}
-.nav-bc strong{color:#fff}
-.nav-acts{display:flex;align-items:center;gap:8px}
-.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
-.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
-.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
-.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
-.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.nav-brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:600;font-size:16px}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.nav-badge{background:var(--azure);color:#fff;font-size:11px;padding:2px 9px;border-radius:20px;font-weight:600}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.btn-nav{padding:.4rem 1rem;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-nav-outline{background:transparent;color:#e2e8f0;border:1px solid rgba(255,255,255,.25)}
+.btn-nav-outline:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-nav-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-nav-primary:hover{background:var(--azure-dark);text-decoration:none}
 .page-layout{display:flex;min-height:calc(100vh - 54px)}
 .sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
 .sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
@@ -50,7 +46,7 @@ a:hover{text-decoration:underline}
 .sb-next:hover{color:var(--azure);text-decoration:none}
 .main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
 .topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
-.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-icon-lg{width:40px;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.topic-icon-lg img{display:block}
 .topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
 .topic-header p{font-size:13px;color:var(--text-muted);margin:0}
 .topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
@@ -75,7 +71,7 @@ td:first-child{color:var(--text);font-weight:500}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafafa}
 .callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
-.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-icon{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.callout-icon img{width:16px;height:16px;display:block}
 .callout-body{flex:1}
 .callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
 .callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
@@ -108,21 +104,17 @@ tr:hover td{background:#fafafa}
 @media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
 
 </style>
-</head>
+<link rel="icon" type="image/svg+xml" href="svg/favicon.svg"></head>
 <body>
 
 <nav id="top-nav">
   <div class="nav-brand">
     <div class="nav-brand-icon">Az</div>
-    <div class="nav-bc">
-      <a href="learn.html">Study Notes</a>
-      <span>/</span>
-      <strong>Message-based Solutions</strong>
-    </div>
+    <span>Message Queues</span>
+    <span class="nav-badge">AZ-204</span>
   </div>
-  <div class="nav-acts">
-    <a href="learn.html" class="btn btn-ghost">← All Topics</a>
-    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  <div class="nav-actions">
+    <a href="learn.html" class="btn-nav btn-nav-outline">&#8592; Study Notes</a>
   </div>
 </nav>
 
@@ -130,13 +122,13 @@ tr:hover td{background:#fafafa}
   <aside class="sidebar">
     <a href="learn.html" class="sb-back">← All Topics</a>
     <div class="sb-label">Message-based Solutions</div>
-    <a href="#m1" class="sb-link" data-m="1">🔄 Azure Message Queues: Storage Queue vs Service Bus<span class="sb-num">6 sections</span></a>
+    <a href="#m1" class="sb-link" data-m="1"><img src="svg/sec-queue.svg" width="14" height="14" alt="" style="flex-shrink:0"> Azure Message Queues: Storage Queue vs Service Bus<span class="sb-num">6 sections</span></a>
     <a href="learn-11-monitoring.html" class="sb-next">Next: Monitoring →</a>
   </aside>
 
   <main class="main">
     <div class="topic-header">
-      <div class="topic-icon-lg">📨</div>
+      <div class="topic-icon-lg"><img src="svg/topic-messaging.svg" width="36" height="36" alt=""></div>
       <div>
         <h1>Message-based Solutions</h1>
         <p>1 module · Azure Message Queues: Storage Queue vs Service Bus</p>
@@ -181,7 +173,7 @@ tr:hover td{background:#fafafa}
       </ul>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Peek-Lock is the safe default</div>
           In Peek-Lock mode the message is not removed from the queue when received. It is merely invisible (locked) while you process it. You must call <code>CompleteMessageAsync()</code> to permanently delete it. If your processing code crashes, the lock expires and the message becomes visible again for retry — giving you at-least-once delivery semantics. Receive-and-Delete removes the message immediately on receipt; if your code then crashes, the message is lost.
@@ -348,7 +340,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Topic Subscription Filters</div>
           Service Bus subscriptions support two filter types: <strong>SQL filters</strong> (arbitrary property expressions, e.g. <code>sys.Label = 'order' AND Priority &gt; 3</code>) and <strong>Correlation filters</strong> (match specific properties like CorrelationId, Label, To, ReplyTo — faster and cheaper to evaluate). A third type, <strong>True/False filters</strong>, either passes all messages or none. The default filter on a new subscription is TrueFilter (pass all).
@@ -359,7 +351,7 @@ tr:hover td{background:#fafafa}
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Gotcha: Peek-Lock Does NOT Delete the Message</div>
           In Peek-Lock mode, receiving a message does not remove it. The message is locked (invisible to other consumers) for the duration of <code>lockDuration</code> (default 60 seconds). If your code receives the message but then throws an exception before calling <code>CompleteMessageAsync()</code>, the lock will eventually expire and the message will reappear in the queue — incrementing the delivery count. After 10 delivery attempts (default <code>maxDeliveryCount</code>), the message is automatically moved to the dead-letter queue. This is by design for at-least-once delivery. If you process a message successfully but forget to call <code>CompleteAsync()</code>, you will process the same message 10 times before it is dead-lettered.
@@ -367,7 +359,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Gotcha: Storage Queue Has NO Built-in Dead-Letter Queue</div>
           This is one of the highest-frequency traps on the exam. Azure Storage Queue does not have a dead-letter queue. If a message fails processing repeatedly, it simply continues to reappear after the visibility timeout expires — forever, until its TTL (max 7 days) elapses. To implement poison message handling with Storage Queue you must: (1) read the <code>DequeueCount</code> property on the retrieved message, (2) compare it against your threshold (e.g., 5), (3) if exceeded, explicitly enqueue it into a separate queue you name (e.g., <code>myqueue-poison</code>), and (4) delete it from the original queue. This is entirely manual. Contrast this with Service Bus which automatically moves messages to <code>&lt;queue&gt;/$DeadLetterQueue</code> after <code>maxDeliveryCount</code> is exhausted.
@@ -375,7 +367,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Gotcha: Sessions Cannot Be Enabled on an Existing Queue</div>
           Service Bus sessions must be enabled at queue or subscription creation time. You cannot enable sessions on an existing entity — not through the portal, not through ARM, not through the SDK. The property <code>requiresSession</code> is immutable after creation. If a question asks how to add session support to an existing Standard-tier queue, the correct answer is: delete the queue and recreate it with sessions enabled, then replay any lost messages. This is also why you should design session requirements upfront. Additionally, session-enabled queues/subscriptions require session-aware receivers (<code>ServiceBusSessionReceiver</code> or <code>ServiceBusSessionProcessor</code>), not regular receivers.
@@ -645,7 +637,7 @@ az servicebus topic subscription rule create \
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Service Bus guarantees strict FIFO ordering across all messages"</div>
           Service Bus guarantees FIFO ordering only <strong>within a session</strong>. Without sessions enabled, the queue delivers messages in roughly FIFO order but makes no formal guarantee — concurrent receivers, network retries, and redelivery after lock expiry can all disrupt ordering. The exam will present a scenario requiring strict ordered processing and list "use Service Bus Queue" as a distractor. The correct answer is always "use Service Bus Queue with sessions enabled, assigning the same SessionId to all related messages." Without sessions, even Service Bus is best-effort FIFO.
@@ -653,7 +645,7 @@ az servicebus topic subscription rule create \
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Storage Queue automatically moves failed messages to a dead-letter queue"</div>
           This is false. Storage Queue has no dead-letter queue, period. The queue only has a visibility timeout mechanism — if a message is not deleted within the visibility timeout, it reappears. If your code consistently fails to process it, the message keeps reappearing until its TTL (max 7 days) elapses and it is automatically deleted by the service. There is no automatic movement to any other queue. You must implement poison message handling yourself using <code>DequeueCount</code>. Answers referencing <code>/$DeadLetterQueue</code> or any automatic DLQ behavior for Storage Queue are wrong.
@@ -661,7 +653,7 @@ az servicebus topic subscription rule create \
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "You can read the dead-letter queue the same way as the main queue"</div>
           The Service Bus dead-letter queue is a sub-queue with a fixed naming convention: <code>&lt;queue-name&gt;/$DeadLetterQueue</code>. To read from it you must explicitly target that path. In the SDK, use <code>ServiceBusReceiver</code> with the sub-queue option: <code>client.CreateReceiver("myqueue", new ServiceBusReceiverOptions { SubQueue = SubQueue.DeadLetter })</code>. Simply creating a receiver for <code>"myqueue"</code> will never see dead-lettered messages — they live in a separate sub-queue and accumulate there until you explicitly process or delete them. The DLQ itself also has a max size and can fill up.

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -24,19 +24,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
 a{color:var(--azure);text-decoration:none}
 a:hover{text-decoration:underline}
 #top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
-.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
-.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
-.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
-.nav-bc a{color:rgba(255,255,255,.75)}
-.nav-bc a:hover{color:#fff;text-decoration:none}
-.nav-bc span{color:rgba(255,255,255,.35)}
-.nav-bc strong{color:#fff}
-.nav-acts{display:flex;align-items:center;gap:8px}
-.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
-.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
-.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
-.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
-.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.nav-brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:600;font-size:16px}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.nav-badge{background:var(--azure);color:#fff;font-size:11px;padding:2px 9px;border-radius:20px;font-weight:600}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.btn-nav{padding:.4rem 1rem;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-nav-outline{background:transparent;color:#e2e8f0;border:1px solid rgba(255,255,255,.25)}
+.btn-nav-outline:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-nav-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-nav-primary:hover{background:var(--azure-dark);text-decoration:none}
 .page-layout{display:flex;min-height:calc(100vh - 54px)}
 .sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
 .sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
@@ -50,7 +46,7 @@ a:hover{text-decoration:underline}
 .sb-next:hover{color:var(--azure);text-decoration:none}
 .main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
 .topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
-.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-icon-lg{width:40px;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.topic-icon-lg img{display:block}
 .topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
 .topic-header p{font-size:13px;color:var(--text-muted);margin:0}
 .topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
@@ -75,7 +71,7 @@ td:first-child{color:var(--text);font-weight:500}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafafa}
 .callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
-.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-icon{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.callout-icon img{width:16px;height:16px;display:block}
 .callout-body{flex:1}
 .callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
 .callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
@@ -108,21 +104,17 @@ tr:hover td{background:#fafafa}
 @media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
 
 </style>
-</head>
+<link rel="icon" type="image/svg+xml" href="svg/favicon.svg"></head>
 <body>
 
 <nav id="top-nav">
   <div class="nav-brand">
     <div class="nav-brand-icon">Az</div>
-    <div class="nav-bc">
-      <a href="learn.html">Study Notes</a>
-      <span>/</span>
-      <strong>Secure Cloud Solutions</strong>
-    </div>
+    <span>Secure Cloud Solutions</span>
+    <span class="nav-badge">AZ-204</span>
   </div>
-  <div class="nav-acts">
-    <a href="learn.html" class="btn btn-ghost">← All Topics</a>
-    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  <div class="nav-actions">
+    <a href="learn.html" class="btn-nav btn-nav-outline">&#8592; Study Notes</a>
   </div>
 </nav>
 
@@ -130,15 +122,15 @@ tr:hover td{background:#fafafa}
   <aside class="sidebar">
     <a href="learn.html" class="sb-back">← All Topics</a>
     <div class="sb-label">Secure Cloud Solutions</div>
-    <a href="#m1" class="sb-link" data-m="1">🔑 Azure Key Vault<span class="sb-num">6 sections</span></a>
-    <a href="#m2" class="sb-link" data-m="2">🤖 Managed Identities<span class="sb-num">6 sections</span></a>
-    <a href="#m3" class="sb-link" data-m="3">⚙️ Azure App Configuration<span class="sb-num">6 sections</span></a>
+    <a href="#m1" class="sb-link" data-m="1"><img src="svg/sec-key.svg" width="14" height="14" alt="" style="flex-shrink:0"> Azure Key Vault<span class="sb-num">6 sections</span></a>
+    <a href="#m2" class="sb-link" data-m="2"><img src="svg/sec-identity.svg" width="14" height="14" alt="" style="flex-shrink:0"> Managed Identities<span class="sb-num">6 sections</span></a>
+    <a href="#m3" class="sb-link" data-m="3"><img src="svg/sec-settings.svg" width="14" height="14" alt="" style="flex-shrink:0"> Azure App Configuration<span class="sb-num">6 sections</span></a>
     <a href="learn-08-api-management.html" class="sb-next">Next: API Management →</a>
   </aside>
 
   <main class="main">
     <div class="topic-header">
-      <div class="topic-icon-lg">🔐</div>
+      <div class="topic-icon-lg"><img src="svg/topic-security.svg" width="36" height="36" alt=""></div>
       <div>
         <h1>Secure Cloud Solutions</h1>
         <p>3 modules · Azure Key Vault · Managed Identities · Azure App Configuration</p>
@@ -265,7 +257,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Exam tip: Purge protection is required for CMK with Azure Storage and Disk Encryption</div>
           When you use a customer-managed key (CMK) in Key Vault to encrypt Azure Storage accounts or Azure Managed Disks, Azure requires purge protection to be enabled on the vault. If you try to configure CMK encryption without purge protection, the operation will fail. This is a common scenario in exam questions.
@@ -275,7 +267,7 @@ tr:hover td{background:#fafafa}
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Key Vault Contributor does NOT grant secret read access</div>
           <strong>Key Vault Contributor</strong> is a management-plane role. It lets you create vaults, configure access policies, and view vault properties. It does <strong>not</strong> allow reading, writing, or listing secrets, keys, or certificates. To read a secret you need either: (a) <strong>Key Vault Secrets User</strong> (RBAC model) — provides Get + List on secrets only, or (b) the <strong>Get</strong> permission in a Vault Access Policy. Exam questions frequently offer "Key Vault Contributor" as a tempting wrong answer when asking how to give an app access to secrets.
@@ -283,7 +275,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">HSM-backed keys require the Premium SKU — not Standard</div>
           Software-protected keys (stored encrypted in Azure storage) are available on both Standard and Premium SKUs. <strong>HSM-backed keys require Premium SKU</strong>. When you run <code>az keyvault key create --protection HSM</code> against a Standard SKU vault, the call will succeed but Azure silently downgrades the key to software protection — the <code>--protection</code> flag is ignored. To truly guarantee HSM protection, you must create a Premium SKU vault first. BYOK (Bring Your Own Key) also requires Premium.
@@ -291,7 +283,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Access policy and RBAC models cannot be mixed for the same scope</div>
           A vault is configured in either <strong>Vault Access Policy mode</strong> or <strong>Azure RBAC mode</strong>, set via the <code>--enable-rbac-authorization</code> flag. When RBAC mode is active, vault access policies are ignored entirely — assigning a vault access policy has no effect. When you migrate a vault from access policy to RBAC, all existing access policies stop working immediately. Exam questions may describe both an RBAC role assignment and an access policy on the same vault and ask which takes effect.
@@ -390,7 +382,7 @@ EncryptResult result = await cryptoClient.EncryptAsync(EncryptionAlgorithm.RsaOa
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Enable purge protection, then disable it to urgently delete a secret"</div>
           <strong>FALSE.</strong> Purge protection is a one-way door. Once enabled on a vault, it cannot be disabled by anyone — including subscription owners and Microsoft support. You must wait for the full soft-delete retention period (up to 90 days) to expire before the vault or its objects can be permanently deleted. There is no override, no support ticket, and no ARM property that undoes it.
@@ -398,7 +390,7 @@ EncryptResult result = await cryptoClient.EncryptAsync(EncryptionAlgorithm.RsaOa
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Assign Key Vault Contributor to the app's service principal so it can read secrets at runtime"</div>
           <strong>FALSE.</strong> Key Vault Contributor grants management-plane access only (create/update/delete vaults, manage policies). It has zero data-plane permissions. At runtime, to read a secret value, the identity needs <strong>Key Vault Secrets User</strong> (RBAC mode) or the <strong>Get</strong> permission on secrets in an access policy. Giving Contributor to an application service principal is both insecure and non-functional for secret retrieval.
@@ -406,7 +398,7 @@ EncryptResult result = await cryptoClient.EncryptAsync(EncryptionAlgorithm.RsaOa
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Use the Encrypt key operation to protect a 50 MB file with a vault key"</div>
           <strong>FALSE — and impractical.</strong> The Encrypt operation on a Key Vault key is designed for small payloads (limited to the key size minus padding overhead; for RSA-2048 with OAEP that is about 214 bytes of plaintext). For large data, use <strong>envelope encryption</strong>: generate a random symmetric key (AES-256) locally, encrypt the file with it, then use Key Vault's <strong>Wrap</strong> operation to encrypt the symmetric key. Store the wrapped key alongside the ciphertext.
@@ -668,7 +660,7 @@ EncryptResult result = await cryptoClient.EncryptAsync(EncryptionAlgorithm.RsaOa
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Production behavior: EnvironmentCredential takes priority over ManagedIdentityCredential</div>
           If you set <code>AZURE_CLIENT_ID</code>, <code>AZURE_TENANT_ID</code>, and <code>AZURE_CLIENT_SECRET</code> as environment variables in an App Service that also has a managed identity, <code>DefaultAzureCredential</code> will use the service principal from the env vars — NOT the managed identity. This is a common misconfiguration. In production, either use managed identity (and set no env vars) or service principal env vars (and disable MI). Do not mix.
@@ -678,7 +670,7 @@ EncryptResult result = await cryptoClient.EncryptAsync(EncryptionAlgorithm.RsaOa
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Owner role does NOT grant access to Key Vault secrets</div>
           Assigning the <strong>Owner</strong> role to a managed identity does not allow it to read Key Vault secrets or keys. Owner is a management-plane role — it can manage resources, assign roles to others, and configure vault properties. Data-plane access (reading secret values) requires an explicit data-plane role: <strong>Key Vault Secrets User</strong> (RBAC) or a vault access policy with <strong>Get</strong> permission. Exam questions phrase this as: "The function app has Owner on the vault but gets 403 on GetSecret — what must you add?"
@@ -686,7 +678,7 @@ EncryptResult result = await cryptoClient.EncryptAsync(EncryptionAlgorithm.RsaOa
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">System-assigned identity's role assignments do NOT survive resource deletion</div>
           When a resource with a system-assigned managed identity is deleted, the service principal is automatically deleted. If you recreate the resource, a brand-new service principal is created with a different object ID. <strong>All previous role assignments are now orphaned</strong> — they pointed to the old deleted principal and have no effect. You must reassign every RBAC role to the new identity. This is a significant operational hazard and an exam scenario: "After redeploying the App Service, secrets access stopped working."
@@ -694,7 +686,7 @@ EncryptResult result = await cryptoClient.EncryptAsync(EncryptionAlgorithm.RsaOa
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">IMDS endpoint is only reachable from within an Azure resource</div>
           <code>http://169.254.169.254</code> is a link-local address that is only routable from inside an Azure VM, App Service, Container Instance, or similar compute. Code that calls IMDS will work in Azure and fail silently (connection refused or timeout) on a local developer machine. <code>DefaultAzureCredential</code> handles this gracefully by falling through to CLI/VS credentials locally. However, if you call the IMDS endpoint directly in code without using the SDK, you must implement fallback logic yourself — the exam may ask about this.
@@ -787,7 +779,7 @@ curl "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Set AZURE_CLIENT_ID to the managed identity's client ID to ensure it is used in production"</div>
           <strong>FALSE — this backfires.</strong> Setting <code>AZURE_CLIENT_ID</code> alone triggers <code>EnvironmentCredential</code> to attempt a service principal login, which requires <code>AZURE_CLIENT_SECRET</code> or <code>AZURE_CLIENT_CERTIFICATE_PATH</code> as well. Without those, <code>EnvironmentCredential</code> fails, and <code>DefaultAzureCredential</code> will try the next credential in the chain. However, some SDK versions may throw an error instead of falling through. The safe pattern is: do NOT set any <code>AZURE_*</code> env vars in production when you want managed identity. Let <code>DefaultAzureCredential</code> discover the MI automatically via IMDS.
@@ -795,7 +787,7 @@ curl "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "A function app can only have one managed identity — system-assigned or user-assigned, not both"</div>
           <strong>FALSE.</strong> Azure resources support having <strong>both</strong> a system-assigned MI and one or more user-assigned MIs simultaneously. The types are not mutually exclusive. A common pattern: use system-assigned MI for the app's own resource-specific access (e.g., its own Key Vault), and a shared user-assigned MI for cross-cutting concerns (e.g., a centralized logging storage account shared by many services).
@@ -803,7 +795,7 @@ curl "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Use principalId and clientId interchangeably when assigning RBAC roles"</div>
           <strong>FALSE.</strong> These are different identifiers with different uses. <strong>principalId</strong> (also called the object ID) is what you pass to <code>az role assignment create --assignee</code> — it is the AAD object ID of the service principal. <strong>clientId</strong> (application ID) is what you pass to SDK options like <code>ManagedIdentityClientId</code> when specifying which user-assigned MI to use for token acquisition. Confusing them causes role assignments to fail silently or the SDK to authenticate with the wrong identity.
@@ -1047,7 +1039,7 @@ curl "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Sentinel key pattern for efficient dynamic refresh</div>
           Instead of polling every configuration key for changes (expensive), add a single "sentinel" key (e.g., <code>Sentinel</code> with value <code>1</code>) to your App Config store. Configure the SDK to watch only this key. When you update configuration, increment the sentinel value. The SDK detects the sentinel change and reloads all keys. This minimizes API calls and gives you explicit control over when a refresh is triggered.
@@ -1057,7 +1049,7 @@ curl "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">App Configuration does NOT store secret values — dual access is required</div>
           A Key Vault Reference in App Configuration stores only the URI pointing to a Key Vault secret. When the application reads that configuration key, the App Config SDK fetches the URI from App Config and then makes a <strong>separate call to Key Vault</strong> to retrieve the actual value. This means the application needs <strong>both</strong>: access to the App Configuration store (App Configuration Data Reader role or connection string) AND access to Key Vault (Key Vault Secrets User role or access policy). Removing Key Vault access while keeping App Config access will cause runtime failures when resolving KV references.
@@ -1065,7 +1057,7 @@ curl "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Dynamic config refresh is NOT automatic — it requires a sentinel key and polling interval</div>
           App Configuration does <strong>not</strong> push configuration changes to applications, and the SDK does not check for changes on every request (that would be prohibitively expensive). You must explicitly configure: (1) a refresh interval via <code>options.SetRefreshInterval(TimeSpan)</code>, (2) a sentinel key for the SDK to watch, and (3) call <code>refresher.TryRefreshAsync()</code> in a middleware or background service. A configuration change in the portal does NOT propagate to running applications until the next polling cycle triggers a refresh.
@@ -1073,7 +1065,7 @@ curl "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Feature flags in App Config are managed by a separate feature management library</div>
           Reading feature flags is NOT done with the standard key-value API. Feature flags use the <code>Microsoft.FeatureManagement</code> library. In .NET, you inject <code>IFeatureManager</code> and call <code>await featureManager.IsEnabledAsync("MyFeature")</code>. The flag value stored in App Configuration (<code>.appconfig.featureflag/MyFeature</code>) is a JSON object with conditions and filters — it is not a simple boolean. Do not attempt to read feature flags as ordinary key-value pairs.
@@ -1199,7 +1191,7 @@ public class DashboardController : ControllerBase
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Using a Key Vault Reference in App Config means the app only needs App Config access"</div>
           <strong>FALSE.</strong> A Key Vault Reference is exactly that — a reference. The secret value lives in Key Vault, and the App Config SDK makes a live call to Key Vault to retrieve it at runtime. The application's identity must have explicit data-plane access to Key Vault (<strong>Key Vault Secrets User</strong> role or <strong>Get</strong> access policy) in addition to the <strong>App Configuration Data Reader</strong> role on the App Config store. Both access grants are required; neither alone is sufficient.
@@ -1207,7 +1199,7 @@ public class DashboardController : ControllerBase
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Updating a value in App Configuration immediately refreshes it in all running applications"</div>
           <strong>FALSE.</strong> App Configuration has no push mechanism to notify running applications. Configuration changes only reach a running app when: (1) the configured refresh interval has elapsed since the last check, (2) a request arrives (triggering the <code>UseAzureAppConfiguration</code> middleware), and (3) the sentinel key has changed. If an application is idle (no incoming requests), configuration changes will not propagate until the next request after the refresh interval expires. For time-sensitive updates, use a background refresh timer instead of the request-based middleware.
@@ -1215,7 +1207,7 @@ public class DashboardController : ControllerBase
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Feature flags can be read using the standard IConfiguration key-value API"</div>
           <strong>FALSE.</strong> Feature flags are stored in App Configuration as structured JSON objects under the key prefix <code>.appconfig.featureflag/</code>. Reading them as a plain string via <code>IConfiguration["FeatureName"]</code> returns the raw JSON — not a boolean. To properly evaluate feature flags including conditional activation rules (time windows, percentage rollouts, user targeting), you must use the <code>Microsoft.FeatureManagement</code> library and inject <code>IFeatureManager</code>. The <code>IsEnabledAsync</code> method evaluates all filters configured on the flag.

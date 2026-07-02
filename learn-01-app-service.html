@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -24,19 +24,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
 a{color:var(--azure);text-decoration:none}
 a:hover{text-decoration:underline}
 #top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
-.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
-.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
-.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
-.nav-bc a{color:rgba(255,255,255,.75)}
-.nav-bc a:hover{color:#fff;text-decoration:none}
-.nav-bc span{color:rgba(255,255,255,.35)}
-.nav-bc strong{color:#fff}
-.nav-acts{display:flex;align-items:center;gap:8px}
-.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
-.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
-.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
-.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
-.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.nav-brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:600;font-size:16px}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.nav-badge{background:var(--azure);color:#fff;font-size:11px;padding:2px 9px;border-radius:20px;font-weight:600}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.btn-nav{padding:.4rem 1rem;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-nav-outline{background:transparent;color:#e2e8f0;border:1px solid rgba(255,255,255,.25)}
+.btn-nav-outline:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-nav-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-nav-primary:hover{background:var(--azure-dark);text-decoration:none}
 .page-layout{display:flex;min-height:calc(100vh - 54px)}
 .sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
 .sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
@@ -50,7 +46,7 @@ a:hover{text-decoration:underline}
 .sb-next:hover{color:var(--azure);text-decoration:none}
 .main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
 .topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
-.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-icon-lg{width:40px;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.topic-icon-lg img{display:block}
 .topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
 .topic-header p{font-size:13px;color:var(--text-muted);margin:0}
 .topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
@@ -75,7 +71,7 @@ td:first-child{color:var(--text);font-weight:500}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafafa}
 .callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
-.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-icon{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.callout-icon img{width:16px;height:16px;display:block}
 .callout-body{flex:1}
 .callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
 .callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
@@ -108,21 +104,17 @@ tr:hover td{background:#fafafa}
 @media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
 
 </style>
-</head>
+<link rel="icon" type="image/svg+xml" href="svg/favicon.svg"></head>
 <body>
 
 <nav id="top-nav">
   <div class="nav-brand">
     <div class="nav-brand-icon">Az</div>
-    <div class="nav-bc">
-      <a href="learn.html">Study Notes</a>
-      <span>/</span>
-      <strong>App Service Web Apps</strong>
-    </div>
+    <span>App Service Web Apps</span>
+    <span class="nav-badge">AZ-204</span>
   </div>
-  <div class="nav-acts">
-    <a href="learn.html" class="btn btn-ghost">← All Topics</a>
-    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  <div class="nav-actions">
+    <a href="learn.html" class="btn-nav btn-nav-outline">&#8592; Study Notes</a>
   </div>
 </nav>
 
@@ -130,16 +122,16 @@ tr:hover td{background:#fafafa}
   <aside class="sidebar">
     <a href="learn.html" class="sb-back">← All Topics</a>
     <div class="sb-label">App Service Web Apps</div>
-    <a href="#m1" class="sb-link" data-m="1">🏗️ Explore Azure App Service<span class="sb-num">6 sections</span></a>
-    <a href="#m2" class="sb-link" data-m="2">⚙️ Configure Web App Settings<span class="sb-num">6 sections</span></a>
-    <a href="#m3" class="sb-link" data-m="3">📈 Scale Apps in Azure App Service<span class="sb-num">6 sections</span></a>
-    <a href="#m4" class="sb-link" data-m="4">🔄 Deployment Slots<span class="sb-num">6 sections</span></a>
+    <a href="#m1" class="sb-link" data-m="1"><img src="svg/sec-build.svg" width="14" height="14" alt="" style="flex-shrink:0"> Explore Azure App Service<span class="sb-num">6 sections</span></a>
+    <a href="#m2" class="sb-link" data-m="2"><img src="svg/sec-settings.svg" width="14" height="14" alt="" style="flex-shrink:0"> Configure Web App Settings<span class="sb-num">6 sections</span></a>
+    <a href="#m3" class="sb-link" data-m="3"><img src="svg/sec-scale.svg" width="14" height="14" alt="" style="flex-shrink:0"> Scale Apps in Azure App Service<span class="sb-num">6 sections</span></a>
+    <a href="#m4" class="sb-link" data-m="4"><img src="svg/sec-deploy.svg" width="14" height="14" alt="" style="flex-shrink:0"> Deployment Slots<span class="sb-num">6 sections</span></a>
     <a href="learn-02-functions.html" class="sb-next">Next: Azure Functions →</a>
   </aside>
 
   <main class="main">
     <div class="topic-header">
-      <div class="topic-icon-lg">⚙️</div>
+      <div class="topic-icon-lg"><img src="svg/topic-app-service.svg" width="36" height="36" alt=""></div>
       <div>
         <h1>App Service Web Apps</h1>
         <p>4 modules · Explore Azure App Service · Configure Web App Settings · Scale Apps in Azure App Service · Deployment Slots</p>
@@ -149,7 +141,7 @@ tr:hover td{background:#fafafa}
 
     <!-- MODULE 1 -->
     <section class="module" id="m1">
-      <h2><span class="mod-num">M1</span> 🏗️ Explore Azure App Service</h2>
+      <h2><span class="mod-num">M1</span> <img src="svg/sec-build.svg" width="14" height="14" alt="" style="flex-shrink:0"> Explore Azure App Service</h2>
 
       <div class="sec-lbl">① Key Concepts</div>
 
@@ -215,7 +207,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Plan vs App distinction</div>
           When you scale a plan (e.g., from S1 to S2), <strong>every app on that plan</strong> gets the larger VM. When you scale out a plan (add instances), all apps distribute load across all instances. There is no per-app instance control within a shared plan.
@@ -230,7 +222,7 @@ tr:hover td{background:#fafafa}
       </ul>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">WebJobs vs Azure Functions</div>
           The exam may ask when to prefer WebJobs over Functions. Prefer WebJobs when you need the code to run in the <strong>same process as the web app</strong> (access to HttpContext, same deployment unit), or when migrating legacy background tasks from an on-premises app. For new greenfield background processing, prefer Azure Functions.
@@ -250,7 +242,7 @@ tr:hover td{background:#fafafa}
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Free/Shared Tiers Cannot Use VNet or Custom SSL</div>
           Free (F1) and Shared (D1) plans run on <strong>shared VMs that Microsoft owns</strong> — they are multi-tenant at the VM level. This means you cannot inject them into a VNet, cannot bind a custom SSL certificate, and cannot set IP restrictions. The exam presents scenarios like "you need to restrict inbound traffic to your app — which is the minimum tier?" The answer is <strong>Basic</strong> (B1), which runs on dedicated VMs and supports IP-based access restrictions and custom SSL via SNI or IP-based binding.
@@ -258,7 +250,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Basic Tier: Dedicated VMs but NO Autoscale and NO Slots</div>
           Basic (B1–B3) is the first dedicated-VM tier, so it supports custom domains, SSL, and manual instance count increases. However, <strong>Basic does NOT support autoscale rules and has zero deployment slots</strong>. The exam exploits this boundary frequently: a scenario will describe an app that needs SSL and the ability to auto-scale — the answer requires Standard (S1+), not Basic. Students who know Basic is dedicated often assume it has all Standard features.
@@ -266,7 +258,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Contributor Role Does NOT Grant Secret Access</div>
           The Contributor role on an App Service resource gives full <strong>management-plane</strong> access (create, configure, delete the resource) but <strong>zero data-plane access</strong> to secrets stored in Azure Key Vault. A common trap question: "A developer has Contributor on the App Service but cannot read the Key Vault secrets the app uses. What role should you assign?" The answer is <strong>Key Vault Secrets User</strong> (data plane), assigned on the Key Vault resource. Contributor on the Key Vault itself would also be wrong — that still doesn't grant data-plane access in the new RBAC model.
@@ -377,7 +369,7 @@ az webapp webjob continuous add \
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Use Free tier for dev/test with custom domain"</div>
           The Free (F1) tier does <strong>not support custom domains</strong>. The minimum tier for a custom domain is <strong>Shared (D1)</strong>. For a custom domain <em>plus</em> SSL, you need <strong>Basic (B1)</strong>. The exam places these options close together to test whether you know the exact tier boundary.
@@ -385,7 +377,7 @@ az webapp webjob continuous add \
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Scaling a single app on a shared plan only affects that app"</div>
           This is <strong>false</strong>. When you scale up or out an App Service Plan, <strong>all apps on that plan</strong> are affected — they all move to the new VM size or gain the new instances. There is no per-app isolation within a single plan. If you want to scale one app independently, it must be on its own plan.
@@ -393,7 +385,7 @@ az webapp webjob continuous add \
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "EasyAuth requires changes to application code"</div>
           EasyAuth is a <strong>platform-level middleware</strong> — it requires zero application code changes. It intercepts requests before they reach your app and injects claims as HTTP headers. Your app can read those headers if needed, but doesn't have to. If a question asks for the approach with the least code changes for authentication, EasyAuth is the answer over MSAL-based custom authentication.
@@ -552,7 +544,7 @@ az webapp webjob continuous add \
 
     <!-- MODULE 2 -->
     <section class="module" id="m2">
-      <h2><span class="mod-num">M2</span> ⚙️ Configure Web App Settings</h2>
+      <h2><span class="mod-num">M2</span> <img src="svg/sec-settings.svg" width="14" height="14" alt="" style="flex-shrink:0"> Configure Web App Settings</h2>
 
       <div class="sec-lbl">① Key Concepts</div>
 
@@ -602,7 +594,7 @@ az webapp webjob continuous add \
       <p>By default, app settings <strong>travel with the code during a swap</strong> — they move to the other slot. Marking a setting as <strong>slot-sticky</strong> (deployment slot setting) causes it to stay bound to the slot it's defined on, regardless of swaps.</p>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">When to use slot-sticky settings</div>
           Use slot-sticky for environment-specific values: production database connection string, production API keys, feature flags that differ per environment. If <code>DB_CONNECTION_STRING</code> is slot-sticky on production, after a code swap the new code in production still connects to the production database — not the staging database that traveled with the code.
@@ -657,7 +649,7 @@ az webapp webjob continuous add \
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">App Settings Override appsettings.json — the App Service Value Always Wins</div>
           If your <code>appsettings.json</code> defines <code>"ConnectionStrings:MyDb": "dev-connection-string"</code> and you also define a <code>MyDb</code> connection string in App Service configuration, the <strong>App Service value completely overrides the file</strong>. The file-based value is never used at runtime. This is intentional — it allows environment-specific overrides without code changes — but it catches developers who add a new key to appsettings.json and wonder why it isn't taking effect in production (because an identically named App Service setting is shadowing it).
@@ -665,7 +657,7 @@ az webapp webjob continuous add \
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">WEBSITE_RUN_FROM_PACKAGE=1 Makes wwwroot Read-Only</div>
           Setting <code>WEBSITE_RUN_FROM_PACKAGE=1</code> mounts the deployment zip as a read-only virtual filesystem at <code>/home/site/wwwroot</code>. Any application code that writes files to that path at runtime (log files, temp caches, generated assets) will fail with <code>access denied</code>. The fix is to write to <code>/home/LogFiles</code> or <code>/tmp</code> instead, or disable run-from-package if write access to wwwroot is genuinely required. The exam presents this as a scenario where a previously-working app suddenly gets file-write failures after a deployment change.
@@ -673,7 +665,7 @@ az webapp webjob continuous add \
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Non-Sticky Settings Travel with Code — Wrong DB After Swap</div>
           A classic exam scenario: staging has <code>DB_HOST=staging-db</code> (non-sticky). Production has <code>DB_HOST=prod-db</code> (also non-sticky). After a swap, the code that was in staging is now in production — but it brought its <code>DB_HOST=staging-db</code> setting with it. Production is now pointing at the staging database. The fix: mark <code>DB_HOST</code> as <strong>slot-sticky</strong> on both slots. Then <code>DB_HOST</code> stays bound to its slot regardless of which code is running there.
@@ -775,7 +767,7 @@ az webapp config appsettings list \
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "To keep different DB connections per slot, set them as regular (non-sticky) app settings"</div>
           This is the <strong>opposite</strong> of correct. Non-sticky settings travel with the code on swap, so after a swap, your production slot would have the staging DB connection. You must mark environment-specific settings as <strong>slot-sticky</strong> so they remain bound to their slot regardless of which deployment is running there.
@@ -783,7 +775,7 @@ az webapp config appsettings list \
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "SCM_DO_BUILD_DURING_DEPLOYMENT=true runs a build on every request"</div>
           This setting runs the <strong>Oryx build system once, during deployment</strong> — not on every request. It's used for Node.js, Python, Ruby apps where you want the server to run <code>npm install</code> or <code>pip install</code> as part of the deployment process rather than pre-building locally. It has no effect on runtime request handling.
@@ -791,7 +783,7 @@ az webapp config appsettings list \
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Key Vault references work with any identity type — no special configuration needed"</div>
           Key Vault references in App Service require the app to have a <strong>system-assigned or user-assigned Managed Identity</strong> enabled, and that identity must have the <strong>Key Vault Secrets User</strong> role (or access policy with <code>get</code> permission) on the Key Vault. Without this, the app setting will show as a failed reference and the environment variable will be empty or contain an error string at runtime.
@@ -926,7 +918,7 @@ az webapp config appsettings list \
 
     <!-- MODULE 3 -->
     <section class="module" id="m3">
-      <h2><span class="mod-num">M3</span> 📈 Scale Apps in Azure App Service</h2>
+      <h2><span class="mod-num">M3</span> <img src="svg/sec-scale.svg" width="14" height="14" alt="" style="flex-shrink:0"> Scale Apps in Azure App Service</h2>
 
       <div class="sec-lbl">① Key Concepts</div>
 
@@ -975,7 +967,7 @@ az webapp config appsettings list \
       </ul>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Autoscale does not trigger instantly on threshold breach</div>
           The metric must <strong>sustain the threshold for the entire observation window</strong> before autoscale fires. A 10-minute window means CPU must be above your threshold for a continuous 10-minute period. A 5-minute spike during a 10-minute window will NOT trigger scale-out. This is by design to prevent over-scaling on transient spikes.
@@ -1025,7 +1017,7 @@ az webapp config appsettings list \
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">The Observation Window Trap — Spike Duration vs Window Duration</div>
           Classic exam scenario: "CPU spikes to 85% for 5 minutes. The autoscale rule has a threshold of 75% CPU with a 10-minute observation window. Does autoscale trigger?" Answer: <strong>No</strong>. The spike must sustain the threshold for the <em>full</em> 10-minute window. A 5-minute spike followed by a return to normal resets the window. The exam will sometimes say "the rule is correctly configured" and ask why it didn't fire — the answer is always the observation window vs spike duration mismatch. To catch shorter spikes, reduce the observation window (minimum: 1 minute).
@@ -1033,7 +1025,7 @@ az webapp config appsettings list \
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Scaling the Plan Scales ALL Apps on It</div>
           An App Service Plan is a shared compute resource. When you scale out the plan (add instances), <strong>every app hosted on that plan</strong> runs on all instances — not just the app you configured autoscale for. This means a single bursty app on a shared plan can trigger scale-out that benefits all apps. Conversely, all apps incur the cost of the extra instances. For cost isolation, put high-traffic apps on their own dedicated plan.
@@ -1041,7 +1033,7 @@ az webapp config appsettings list \
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Cooldown Prevents Back-to-Back Scale Actions</div>
           After a scale-out fires, the cooldown period (default 5 minutes) must elapse before another scale action (in or out) can trigger. The exam presents a scenario: traffic spikes for 3 minutes, drops, spikes again 2 minutes later. If cooldown is 5 minutes and the first scale-out already fired, the second spike won't trigger another scale-out even if CPU is above threshold — the cooldown hasn't expired. The platform logs the cooldown as a "scale action suppressed" event in the Activity Log.
@@ -1159,7 +1151,7 @@ az monitor autoscale show \
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "You can configure autoscale for a specific app within a shared plan"</div>
           Autoscale operates at the <strong>App Service Plan level</strong>, not the individual app level. There is no per-app autoscale within a plan — when you configure autoscale, you configure it for the plan, and the scaling affects all apps on that plan equally. To scale a specific app independently, it must be on its own dedicated App Service Plan.
@@ -1167,7 +1159,7 @@ az monitor autoscale show \
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Setting max-count to 50 on a Standard S1 plan allows up to 50 instances"</div>
           The <strong>plan SKU hard limit</strong> overrides the autoscale max setting. Standard S1 has a hard ceiling of 10 instances. Even if you configure the autoscale max at 50, the plan will never exceed 10. To get more instances, you must upgrade the plan to Premium v3 (max 30) or Isolated v2 (max 100).
@@ -1175,7 +1167,7 @@ az monitor autoscale show \
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "A shorter cooldown period improves response to traffic spikes"</div>
           A very short cooldown (e.g., 1 minute) allows rapid successive scale-out actions, which <em>sounds</em> better for spikes. However, it also means rapid scale-in once the spike ends, which can cause <strong>thrashing</strong> — constantly adding and removing instances. The recommendation is to have a longer scale-in cooldown (15–30 minutes) and a shorter scale-out cooldown (5 minutes) to respond quickly to demand but scale in conservatively to avoid repeated churn.
@@ -1311,7 +1303,7 @@ az monitor autoscale show \
 
     <!-- MODULE 4 -->
     <section class="module" id="m4">
-      <h2><span class="mod-num">M4</span> 🔄 Deployment Slots</h2>
+      <h2><span class="mod-num">M4</span> <img src="svg/sec-deploy.svg" width="14" height="14" alt="" style="flex-shrink:0"> Deployment Slots</h2>
 
       <div class="sec-lbl">① Key Concepts</div>
 
@@ -1319,7 +1311,7 @@ az monitor autoscale show \
       <p>Deployment slots are <strong>live, named instances</strong> of your web app within the same App Service Plan. Each slot has its own hostname (<code>myapp-staging.azurewebsites.net</code>), its own configuration, and its own running code. Slots share the same plan resources (compute, memory).</p>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Slots are not separate apps</div>
           A slot is not billed as an additional app — it runs within your existing plan allocation. However, each slot does consume VM instances from your plan. Running 3 instances on production + 3 instances on staging = 6 instance-hours of billing, even though it's one app with two slots.
@@ -1378,7 +1370,7 @@ az monitor autoscale show \
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">After a Swap, the Staging Slot Has the OLD Production Code</div>
           This is the most-tested deployment slot concept. After you swap staging → production: staging now contains what was in production, and production contains what was in staging. To <strong>rollback</strong> a bad deployment, you do <strong>another swap</strong> — you swap production back to staging. No re-deployment needed. The exam asks: "You discover a bug after swapping staging to production. How do you roll back?" The answer is: perform another swap (production ↔ staging). The old code is still warm in the staging slot, so the rollback is instant.
@@ -1386,7 +1378,7 @@ az monitor autoscale show \
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Minimum Tier for Slots Is Standard — NOT Premium</div>
           Many candidates assume deployment slots require Premium tier because slots are an "advanced" feature. The minimum tier is actually <strong>Standard (S1)</strong>. Standard provides up to 5 slots total (4 non-production). Premium v3 provides up to 20 slots. Basic provides <strong>zero</strong> deployment slots. A question asking for the minimum tier to enable a staging slot has the answer Standard, not Premium.
@@ -1394,7 +1386,7 @@ az monitor autoscale show \
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Non-Sticky Connection String After Swap Causes Wrong Database</div>
           Scenario: production has <code>DB=prod-db</code> (non-sticky) and staging has <code>DB=staging-db</code> (non-sticky). After swap, production now has <code>DB=staging-db</code> — it's pointing at the staging database in the production environment. This is a data integrity disaster. The fix is to mark the <code>DB</code> connection string as <strong>slot-sticky</strong> on both slots. With slot-sticky settings, the production slot always uses <code>DB=prod-db</code> and the staging slot always uses <code>DB=staging-db</code>, regardless of which code revision is active. The exam presents this exact scenario and asks "why is production connecting to the wrong database after a slot swap?"
@@ -1515,7 +1507,7 @@ az webapp deployment slot list \
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "To roll back after a bad swap, redeploy the last good build to production"</div>
           Redeployment is slower and unnecessary. The old production code is <strong>still running warm in the staging slot</strong> immediately after the swap. The correct rollback is to <strong>swap again</strong> — swap production back to staging. This is instant (no warmup needed for already-warm instances) and restores the previous state atomically. Only redeploy if you have overwritten the staging slot with a third deployment since the original swap.
@@ -1523,7 +1515,7 @@ az webapp deployment slot list \
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Auto-swap works on both Linux and Windows App Service plans"</div>
           Auto-swap is a <strong>Windows-only</strong> feature. Linux App Service plans do not support auto-swap. If a question asks how to automatically promote a deployment to production on a Linux App Service, the correct approach is to use a CI/CD pipeline (e.g., GitHub Actions, Azure Pipelines) that performs the swap step, not the built-in auto-swap feature.
@@ -1531,7 +1523,7 @@ az webapp deployment slot list \
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Traffic routing to a slot changes the slot's own configuration"</div>
           Traffic routing only affects <strong>which slot receives incoming requests</strong> — it does not modify any slot's settings, code, or configuration. The routing percentage can be set without any swap taking place. Users are pinned to a slot via cookie, but both slots continue running their respective configurations independently. Routing is purely a load-distribution feature for A/B testing, not a deployment mechanism.

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -24,19 +24,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
 a{color:var(--azure);text-decoration:none}
 a:hover{text-decoration:underline}
 #top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
-.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
-.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
-.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
-.nav-bc a{color:rgba(255,255,255,.75)}
-.nav-bc a:hover{color:#fff;text-decoration:none}
-.nav-bc span{color:rgba(255,255,255,.35)}
-.nav-bc strong{color:#fff}
-.nav-acts{display:flex;align-items:center;gap:8px}
-.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
-.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
-.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
-.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
-.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.nav-brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:600;font-size:16px}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.nav-badge{background:var(--azure);color:#fff;font-size:11px;padding:2px 9px;border-radius:20px;font-weight:600}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.btn-nav{padding:.4rem 1rem;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-nav-outline{background:transparent;color:#e2e8f0;border:1px solid rgba(255,255,255,.25)}
+.btn-nav-outline:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-nav-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-nav-primary:hover{background:var(--azure-dark);text-decoration:none}
 .page-layout{display:flex;min-height:calc(100vh - 54px)}
 .sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
 .sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
@@ -50,7 +46,7 @@ a:hover{text-decoration:underline}
 .sb-next:hover{color:var(--azure);text-decoration:none}
 .main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
 .topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
-.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-icon-lg{width:40px;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.topic-icon-lg img{display:block}
 .topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
 .topic-header p{font-size:13px;color:var(--text-muted);margin:0}
 .topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
@@ -75,7 +71,7 @@ td:first-child{color:var(--text);font-weight:500}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafafa}
 .callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
-.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-icon{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.callout-icon img{width:16px;height:16px;display:block}
 .callout-body{flex:1}
 .callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
 .callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
@@ -108,21 +104,17 @@ tr:hover td{background:#fafafa}
 @media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
 
 </style>
-</head>
+<link rel="icon" type="image/svg+xml" href="svg/favicon.svg"></head>
 <body>
 
 <nav id="top-nav">
   <div class="nav-brand">
     <div class="nav-brand-icon">Az</div>
-    <div class="nav-bc">
-      <a href="learn.html">Study Notes</a>
-      <span>/</span>
-      <strong>Event-based Solutions</strong>
-    </div>
+    <span>Event-based Solutions</span>
+    <span class="nav-badge">AZ-204</span>
   </div>
-  <div class="nav-acts">
-    <a href="learn.html" class="btn btn-ghost">← All Topics</a>
-    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  <div class="nav-actions">
+    <a href="learn.html" class="btn-nav btn-nav-outline">&#8592; Study Notes</a>
   </div>
 </nav>
 
@@ -130,14 +122,14 @@ tr:hover td{background:#fafafa}
   <aside class="sidebar">
     <a href="learn.html" class="sb-back">← All Topics</a>
     <div class="sb-label">Event-based Solutions</div>
-    <a href="#m1" class="sb-link" data-m="1">🌐 Azure Event Grid<span class="sb-num">6 sections</span></a>
-    <a href="#m2" class="sb-link" data-m="2">📊 Azure Event Hubs<span class="sb-num">6 sections</span></a>
+    <a href="#m1" class="sb-link" data-m="1"><img src="svg/sec-globe.svg" width="14" height="14" alt="" style="flex-shrink:0"> Azure Event Grid<span class="sb-num">6 sections</span></a>
+    <a href="#m2" class="sb-link" data-m="2"><img src="svg/sec-hub.svg" width="14" height="14" alt="" style="flex-shrink:0"> Azure Event Hubs<span class="sb-num">6 sections</span></a>
     <a href="learn-10-messaging.html" class="sb-next">Next: Messaging →</a>
   </aside>
 
   <main class="main">
     <div class="topic-header">
-      <div class="topic-icon-lg">📡</div>
+      <div class="topic-icon-lg"><img src="svg/topic-events.svg" width="36" height="36" alt=""></div>
       <div>
         <h1>Event-based Solutions</h1>
         <p>2 modules · Azure Event Grid · Azure Event Hubs</p>
@@ -232,7 +224,7 @@ tr:hover td{background:#fafafa}
       </ul>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Advanced filter limit</div>
           Each event subscription supports a maximum of <strong>25 advanced filter values</strong> per subscription. If you need more, split the logic across multiple subscriptions or pre-filter in a Function.
@@ -243,7 +235,7 @@ tr:hover td{background:#fafafa}
       <p>When Event Grid cannot deliver an event (handler returns 4xx/5xx, or the endpoint is unreachable), it enters a <strong>retry cycle</strong>. Events that exhaust retries or exceed the TTL are either dropped or sent to a <strong>dead-letter destination</strong> (a Blob Storage container you configure on the subscription).</p>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Dead-letter is opt-in per subscription</div>
           Dead-lettering is <strong>not enabled by default</strong>. You must specify a storage container when creating the subscription. Without it, events that fail delivery are silently discarded after the retry window.
@@ -254,7 +246,7 @@ tr:hover td{background:#fafafa}
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Webhook Validation Handshake — Custom Endpoints Must Handle It</div>
           When you create an event subscription pointing to a custom Webhook URL, Event Grid sends a <strong>SubscriptionValidationEvent</strong> (POST with <code>eventType: "Microsoft.EventGrid.SubscriptionValidationEvent"</code>) to that endpoint. Your handler must extract the <code>validationCode</code> from the event data and respond with <code>{"validationResponse": "&lt;validationCode&gt;"}</code> within 30 seconds. If it does not, subscription creation fails with a validation error. <strong>Azure-native handlers (Azure Functions with EventGrid trigger, Logic Apps) handle this automatically</strong> — the exam distinguishes these from plain Webhooks. For newer endpoints, there is also an asynchronous validation path using a <code>validationUrl</code> that the endpoint owner visits in a browser.
@@ -262,7 +254,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">At-least-once Delivery Does NOT Mean Ordered Delivery</div>
           Event Grid guarantees <strong>at-least-once delivery</strong> — not exactly-once, and not ordered. A single event may be delivered more than once (your handler must be idempotent). Events within the same topic can arrive at different subscribers in different orders, and even the same subscriber can receive events out of publication order. If your exam scenario says "events must be processed in strict order", Event Grid is the wrong answer — use <strong>Event Hubs with a single consumer per partition</strong>, or Service Bus sessions.
@@ -270,7 +262,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">System Topics Are Per-Resource, Not Per-Subscription</div>
           A system topic is tied to a specific Azure resource (e.g., a specific Storage account). To receive events from <em>all</em> storage accounts in a subscription, you need to subscribe to the Azure subscription-level system topic or create separate subscriptions per account. The exam may present a scenario where a developer creates one system topic and wonders why they're not seeing events from a second storage account — the answer is that system topics are scoped per source resource.
@@ -378,7 +370,7 @@ await client.SendEventAsync(eventToPublish);   // Single event
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Event Grid guarantees ordered, exactly-once event delivery"</div>
           Both parts are wrong. Event Grid guarantees <strong>at-least-once</strong> delivery (not exactly-once — duplicate delivery is possible) and makes <strong>no ordering guarantee</strong>. Exam distractors often frame this as "Event Grid ensures events are processed in the order they were published" — this is false. For ordered processing, use Event Hubs (partition-level ordering) or Service Bus (sessions for ordered message groups).
@@ -386,7 +378,7 @@ await client.SendEventAsync(eventToPublish);   // Single event
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "My Azure Function didn't receive the subscription validation event — I need to handle it in code"</div>
           When you use an <strong>Azure Functions EventGrid trigger binding</strong> (not an HTTP trigger), the Functions runtime handles the SubscriptionValidationEvent response automatically. You only need to implement the validation handshake if you are using a <strong>plain HTTP endpoint / Webhook</strong> as the destination. The exam frequently tests whether candidates know this distinction — choosing the wrong trigger type (HTTP trigger instead of EventGrid trigger) for an Azure Function Webhook would require manual validation logic.
@@ -394,7 +386,7 @@ await client.SendEventAsync(eventToPublish);   // Single event
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Event Grid is the right service for processing 100,000 sensor telemetry events per second"</div>
           Event Grid is designed for <strong>reactive event routing</strong> at low-to-moderate volumes where you need fan-out to multiple handlers. For <strong>high-throughput streaming telemetry</strong> (IoT sensors, clickstreams, log aggregation), <strong>Event Hubs</strong> is the correct answer. Event Grid does not provide consumer groups, checkpointing, event replay, or the sustained ingestion throughput that Event Hubs does.
@@ -690,7 +682,7 @@ await client.SendEventAsync(eventToPublish);   // Single event
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Partition key determines which partition an event goes to</div>
           If you specify a <strong>partition key</strong> when publishing, Event Grid hashes it to assign the event to a consistent partition. All events with the same partition key land in the same partition, guaranteeing relative ordering for that key. If you omit the partition key (or use round-robin), events are distributed across all partitions — higher throughput but no key-based ordering.
@@ -698,7 +690,7 @@ await client.SendEventAsync(eventToPublish);   // Single event
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">EventProcessorClient is the modern SDK for consuming</div>
           The <code>EventProcessorClient</code> (in <code>Azure.Messaging.EventHubs.Processor</code>) handles partition ownership, load balancing across multiple consumer instances, and checkpointing to a Blob Storage container. The older <code>EventProcessorHost</code> is legacy. The exam may reference both — prefer EventProcessorClient in modern scenarios.
@@ -709,7 +701,7 @@ await client.SendEventAsync(eventToPublish);   // Single event
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Partition Count Is Effectively Immutable for Standard Tier</div>
           For <strong>Standard tier</strong>, partition count is set at Event Hub creation and <strong>cannot be changed</strong> (neither increased nor decreased) after the fact. If you need more parallelism later, you must delete and recreate the Event Hub (losing all retained events) or migrate to Premium/Dedicated where dynamic partition increases are supported. The exam tests this directly: "your throughput is insufficient and you need more parallelism — what do you do with a Standard namespace?" The answer is: you cannot simply increase partitions; you must add more TUs for throughput, and for true partition parallelism increases, you must recreate the hub or upgrade to Premium.
@@ -717,7 +709,7 @@ await client.SendEventAsync(eventToPublish);   // Single event
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Consumer Groups Grant Independent Views — Consumers Within a Group Split Partitions</div>
           This is the most frequently misunderstood Event Hubs concept on the exam. A <strong>consumer group</strong> as a whole reads the entire event stream (all partitions). But <strong>within a consumer group</strong>, each active consumer instance owns a subset of partitions — no partition is read by two consumers in the same group simultaneously. With 4 partitions and 2 consumers in the same group, each consumer reads 2 partitions. If you add a 5th consumer when there are only 4 partitions, the 5th consumer is idle (no partitions to own). Adding more consumers than partitions does NOT increase throughput — you need more partitions first.
@@ -725,7 +717,7 @@ await client.SendEventAsync(eventToPublish);   // Single event
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Event Hubs Capture Uses Avro Format — Downstream Consumers Must Deserialize</div>
           Event Hubs Capture writes event data to Blob Storage or ADLS Gen2 in <strong>Apache Avro binary format</strong>, not plain JSON. Files are organized by a configurable naming convention: <code>{Namespace}/{EventHub}/{PartitionId}/{Year}/{Month}/{Day}/{Hour}/{Minute}/{Second}.avro</code>. A scenario where a developer claims they can directly read Capture files as JSON is incorrect — they need an Avro reader (e.g., the <code>Apache.Avro</code> NuGet package, or Azure Data Factory, or Azure Synapse). Also: Capture is enabled <strong>per Event Hub</strong>, not at the namespace level.
@@ -866,7 +858,7 @@ await foreach (PartitionEvent pe in consumer.ReadEventsFromPartitionAsync(
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Adding more consumers to a consumer group increases read throughput"</div>
           Not beyond the partition count. Each partition can only be owned by <strong>one consumer instance per consumer group</strong>. If you have 4 partitions and spin up 6 consumer instances in the same consumer group, 2 of those instances will be idle with no partitions assigned. To increase read parallelism, you need more partitions — and for Standard tier you cannot add partitions after creation, so you would need to recreate the hub (or use Premium/Dedicated and increase partitions dynamically).
@@ -874,7 +866,7 @@ await foreach (PartitionEvent pe in consumer.ReadEventsFromPartitionAsync(
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Event Hubs Basic supports multiple consumer groups"</div>
           Basic tier only supports the single built-in <code>$Default</code> consumer group. You <strong>cannot create additional consumer groups</strong> on a Basic namespace. The exam frequently presents a scenario where you need multiple independent applications to read the same stream (requiring separate consumer groups) and asks which tier is required — the answer is Standard or higher. If the question says "Basic tier is already deployed", the fix is to upgrade to Standard, not add consumer groups.
@@ -882,7 +874,7 @@ await foreach (PartitionEvent pe in consumer.ReadEventsFromPartitionAsync(
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Event Hubs guarantees exactly-once delivery"</div>
           Event Hubs guarantees <strong>at-least-once delivery</strong>. A consumer that crashes between receiving an event and checkpointing will re-read that event on restart. To achieve exactly-once semantics you must implement idempotency in your processing logic (e.g., track event IDs in a database and skip duplicates). The Kafka surface on Event Hubs supports idempotent producer settings, but the AMQP/SDK surface does not provide exactly-once out of the box.

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -24,19 +24,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
 a{color:var(--azure);text-decoration:none}
 a:hover{text-decoration:underline}
 #top-nav{background:var(--nav-bg);padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.35)}
-.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:#fff}
-.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff}
-.nav-bc{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6)}
-.nav-bc a{color:rgba(255,255,255,.75)}
-.nav-bc a:hover{color:#fff;text-decoration:none}
-.nav-bc span{color:rgba(255,255,255,.35)}
-.nav-bc strong{color:#fff}
-.nav-acts{display:flex;align-items:center;gap:8px}
-.btn{display:inline-flex;align-items:center;gap:5px;padding:.38rem .9rem;border-radius:var(--rs);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .12s,border-color .12s}
-.btn-ghost{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25)}
-.btn-ghost:hover{background:rgba(255,255,255,.1);text-decoration:none}
-.btn-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
-.btn-primary:hover{background:var(--azure-dark);text-decoration:none}
+.nav-brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:600;font-size:16px}
+.nav-brand-icon{width:30px;height:30px;background:var(--azure);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.nav-badge{background:var(--azure);color:#fff;font-size:11px;padding:2px 9px;border-radius:20px;font-weight:600}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.btn-nav{padding:.4rem 1rem;border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-nav-outline{background:transparent;color:#e2e8f0;border:1px solid rgba(255,255,255,.25)}
+.btn-nav-outline:hover{background:rgba(255,255,255,.1);text-decoration:none}
+.btn-nav-primary{background:var(--azure);color:#fff;border:1px solid var(--azure)}
+.btn-nav-primary:hover{background:var(--azure-dark);text-decoration:none}
 .page-layout{display:flex;min-height:calc(100vh - 54px)}
 .sidebar{width:252px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto}
 .sb-back{display:flex;align-items:center;gap:6px;padding:.5rem 1rem;font-size:12px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:.5rem}
@@ -50,7 +46,7 @@ a:hover{text-decoration:underline}
 .sb-next:hover{color:var(--azure);text-decoration:none}
 .main{flex:1;max-width:860px;padding:2rem 1.75rem;overflow-x:hidden}
 .topic-header{display:flex;align-items:flex-start;gap:14px;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
-.topic-icon-lg{font-size:36px;line-height:1;flex-shrink:0}
+.topic-icon-lg{width:40px;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.topic-icon-lg img{display:block}
 .topic-header h1{font-size:22px;font-weight:800;margin-bottom:3px}
 .topic-header p{font-size:13px;color:var(--text-muted);margin:0}
 .topic-num{background:var(--azure);color:#fff;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;align-self:flex-start;margin-left:auto;flex-shrink:0}
@@ -75,7 +71,7 @@ td:first-child{color:var(--text);font-weight:500}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fafafa}
 .callout{display:flex;gap:.75rem;padding:.85rem 1.1rem;border-radius:var(--rs);margin:.6rem 0;font-size:12.5px;line-height:1.6}
-.callout-icon{font-size:16px;flex-shrink:0;line-height:1.5}
+.callout-icon{width:16px;height:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.callout-icon img{width:16px;height:16px;display:block}
 .callout-body{flex:1}
 .callout-title{font-weight:700;font-size:12.5px;margin-bottom:2px}
 .callout.gotcha{background:var(--err-bg);border-left:3px solid var(--err-bdr)}
@@ -108,21 +104,17 @@ tr:hover td{background:#fafafa}
 @media(max-width:768px){.sidebar{display:none}.main{padding:1.25rem 1rem}}
 
 </style>
-</head>
+<link rel="icon" type="image/svg+xml" href="svg/favicon.svg"></head>
 <body>
 
 <nav id="top-nav">
   <div class="nav-brand">
     <div class="nav-brand-icon">Az</div>
-    <div class="nav-bc">
-      <a href="learn.html">Study Notes</a>
-      <span>/</span>
-      <strong>API Management</strong>
-    </div>
+    <span>API Management</span>
+    <span class="nav-badge">AZ-204</span>
   </div>
-  <div class="nav-acts">
-    <a href="learn.html" class="btn btn-ghost">← All Topics</a>
-    <a href="index.html" class="btn btn-primary">Practice Tests</a>
+  <div class="nav-actions">
+    <a href="learn.html" class="btn-nav btn-nav-outline">&#8592; Study Notes</a>
   </div>
 </nav>
 
@@ -130,13 +122,13 @@ tr:hover td{background:#fafafa}
   <aside class="sidebar">
     <a href="learn.html" class="sb-back">← All Topics</a>
     <div class="sb-label">API Management</div>
-    <a href="#m1" class="sb-link" data-m="1">🔍 Explore API Management<span class="sb-num">6 sections</span></a>
+    <a href="#m1" class="sb-link" data-m="1"><img src="svg/sec-explore.svg" width="14" height="14" alt="" style="flex-shrink:0"> Explore API Management<span class="sb-num">6 sections</span></a>
     <a href="learn-09-events.html" class="sb-next">Next: Events →</a>
   </aside>
 
   <main class="main">
     <div class="topic-header">
-      <div class="topic-icon-lg">🔀</div>
+      <div class="topic-icon-lg"><img src="svg/topic-api.svg" width="36" height="36" alt=""></div>
       <div>
         <h1>API Management</h1>
         <p>1 module · Explore API Management</p>
@@ -155,7 +147,7 @@ tr:hover td{background:#fafafa}
       <p>Azure API Management sits between API consumers and your backend services. Every request passes through the <strong>Gateway</strong>, which applies policies, enforces authentication, throttles traffic, and forwards calls to the backend. The <strong>Management Plane</strong> is the administrative API used by the Azure Portal, CLI, ARM templates, and Bicep — it lets you define APIs, configure products, write policies, and manage users. The <strong>Developer Portal</strong> is an auto-generated, customizable website where API consumers browse documentation, test endpoints interactively, and self-subscribe to products.</p>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Gateway is the only component that handles live traffic</div>
           Changes made in the Management Plane (new policies, new API versions) do not take effect until the Gateway picks them up. In the Consumption tier this is near-instant; in dedicated tiers there can be a short propagation delay. The Developer Portal is for documentation and subscription management only — it never proxies API calls.
@@ -195,7 +187,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">VNET support is tier-gated — Premium only for production VNET</div>
           Developer tier supports VNET but has no SLA. If a scenario requires VNET injection AND production-grade SLA, the answer is always <strong>Premium</strong>. Basic and Standard do not support VNET at all. The Consumption tier also has no VNET support.
@@ -238,7 +230,7 @@ tr:hover td{background:#fafafa}
       <p>Named Values are a global key-value store in APIM used to avoid hard-coding secrets or configuration strings directly in policy XML. A Named Value is referenced in policy using double-curly-brace syntax: <code>{{my-named-value}}</code>. Values can be plain text, secrets (stored encrypted), or references to Azure Key Vault secrets. Using Key Vault-backed Named Values is the exam-preferred approach for storing API keys, connection strings, and signing certificates.</p>
 
       <div class="callout tip">
-        <div class="callout-icon">💡</div>
+        <div class="callout-icon"><img src="svg/tip.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Named Values vs. hard-coded secrets in policy XML</div>
           On the exam, any scenario asking how to store a backend API key securely without embedding it in policy XML should be answered with <strong>Named Values backed by Key Vault</strong>. APIM uses its system-assigned Managed Identity to retrieve the Key Vault secret, so no credentials are stored in APIM itself.
@@ -278,7 +270,7 @@ tr:hover td{background:#fafafa}
       <div class="sec-lbl">② Exam Gotchas</div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">rate-limit vs. rate-limit-by-key — shared key = shared limit</div>
           <code>rate-limit</code> applies its counter <em>per subscription key</em>. If two callers (e.g., two mobile app instances) both use the same subscription key, they collectively exhaust the same rate-limit counter — there is no per-IP or per-caller isolation. To independently limit each caller's IP address regardless of which subscription key they use, you must use <code>rate-limit-by-key</code> with <code>counter-key="@(context.Request.IpAddress)"</code>. The exam frequently presents scenarios where "each unique IP should get 100 calls/minute" — the only correct policy is <code>rate-limit-by-key</code>, not <code>rate-limit</code>.
@@ -286,7 +278,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Omitting &lt;base/&gt; silently skips parent scope policies</div>
           When you write a policy at the Operation scope, the default template includes <code>&lt;base/&gt;</code> in each section, which instructs APIM to execute the parent (API-level) policy at that point. If you delete <code>&lt;base/&gt;</code> from the <code>&lt;inbound&gt;</code> section of an operation policy, the API-level inbound policy — including any <code>validate-jwt</code> or rate-limit configured there — is silently skipped for that operation. This is a common trap: an operation appears to bypass authentication because someone removed <code>&lt;base/&gt;</code> while "cleaning up" the policy XML. The exam may present this as a security scenario where one operation is unprotected.
@@ -294,7 +286,7 @@ tr:hover td{background:#fafafa}
       </div>
 
       <div class="callout gotcha">
-        <div class="callout-icon">🚨</div>
+        <div class="callout-icon"><img src="svg/gotcha.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">validate-jwt validates but does NOT authorize — require-claim is separate</div>
           <code>validate-jwt</code> checks the token's signature against the provided JWKS/certificate and verifies standard claims (expiry, issuer, audience). It does NOT check whether the token contains a specific role or scope claim. If a valid token for a read-only user calls an admin endpoint, <code>validate-jwt</code> alone will let it through. To enforce role-based authorization, you must add a <code>&lt;required-claims&gt;</code> element inside <code>validate-jwt</code>, or follow up with a <code>choose</code>/<code>when</code> policy that inspects <code>context.Request.Headers["Authorization"]</code> claims. The exam presents scenarios where "only users with the admin role should access this operation" — the answer is <code>validate-jwt</code> with <code>required-claims</code>.
@@ -442,7 +434,7 @@ var response = await client.GetAsync("https://my-apim.azure-api.net/orders");
       <div class="sec-lbl">⑤ Wrong-Answer Traps</div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "Use Consumption tier for VNET-integrated backend access"</div>
           The Consumption tier has <strong>zero VNET support</strong>. It cannot reach backends deployed in private virtual networks. Questions that describe a backend App Service deployed in a VNET (internal VNET integration) and ask which APIM tier supports this should be answered with <strong>Premium</strong> (for production with SLA) or Developer (for testing only, no SLA). Choosing Consumption tier here is a plausible-sounding wrong answer because Consumption is "modern" and "serverless."
@@ -450,7 +442,7 @@ var response = await client.GetAsync("https://my-apim.azure-api.net/orders");
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "mock-response still calls the backend for fallback if there is no mock"</div>
           <code>mock-response</code> <strong>always terminates the pipeline immediately</strong> — it never falls through to the backend. When the policy is present and active, the backend service is never called, regardless of whether the mock data fully covers all scenarios. This is by design: it is used during development to simulate responses before the backend exists. If you need conditional mock behavior (mock only for certain inputs), you must wrap it in a <code>&lt;choose&gt;&lt;when condition="..."&gt;</code> block. The exam may imply mock-response is a "soft fallback" — it is not.
@@ -458,7 +450,7 @@ var response = await client.GetAsync("https://my-apim.azure-api.net/orders");
       </div>
 
       <div class="callout warn">
-        <div class="callout-icon">⚠️</div>
+        <div class="callout-icon"><img src="svg/warn.svg" alt="" width="16" height="16"></div>
         <div class="callout-body">
           <div class="callout-title">Trap: "quota and rate-limit are the same thing — just different time windows"</div>
           They are semantically different. <code>rate-limit</code> enforces a <strong>burst rate</strong> (calls per short window, typically seconds or minutes) and resets automatically each window. <code>quota</code> enforces a <strong>total allocation</strong> over a longer renewal period (days, weeks, months) and is used for billing/entitlement: "your plan includes 10,000 calls per month." They are complementary — production APIM deployments often use both together: rate-limit to prevent bursts, quota to enforce the total monthly allowance. The exam distinguishes them: "prevent a single client from overwhelming the API in a burst" = rate-limit; "enforce monthly API consumption limits per subscription plan" = quota.
