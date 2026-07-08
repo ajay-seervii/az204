@@ -54,11 +54,15 @@ Write the file in chunks using bash append (>>), never in one shot:
 - Vanilla JS only, no frameworks
 - All questions in a single TOPICS object and TESTS array
 - Each question: { q, options, answer, explanation, code (optional) }
+- No emoji anywhere in the UI — icons are inline SVG only, matching the existing style
+  (viewBox 24x24, fill="none", stroke="currentColor", stroke-width 1.5, round linecap/linejoin).
+  This applies to every file in the project (index.html, learn-*.html, reference.html), not just
+  new features — if you need an icon, write a matching inline SVG (or reuse one from `svg/`).
 
 ## Visual upgrades over reference.html
 - Dark sidebar or top nav with Azure blue (#0078D4) accent
 - Hero-style home screen with exam stats (total questions, topics, tests)
-- Topic cards with icons (use emoji — 🗄️ Storage, ⚡ Functions, 🔐 Security etc.)
+- Topic cards with icons (inline SVG, one per topic — see TOPICS.<name>.icon in index.html)
 - Practice test cards showing test number, question count, time limit
 - Smooth transitions between home/drill/test views
 - Better score screen — pass/fail banner, per-topic breakdown on practice tests

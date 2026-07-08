@@ -784,7 +784,7 @@ az cosmosdb sql container update \
         <div class="callout-icon">&#128161;</div>
         <div class="callout-body">
           <div class="callout-title">Tracking deletes in change feed: soft-delete pattern</div>
-          Since change feed does not capture hard deletes, the standard pattern is: add an <code>isDeleted: true</code> flag to documents instead of deleting them, and set a short TTL on those documents. The change feed will emit the update (setting <code>isDeleted = true</code), downstream consumers process the logical delete, and then Cosmos DB removes the item after the TTL expires. This is the canonical exam answer when a scenario requires tracking deletes via change feed.
+          Since change feed does not capture hard deletes, the standard pattern is: add an <code>isDeleted: true</code> flag to documents instead of deleting them, and set a short TTL on those documents. The change feed will emit the update (setting <code>isDeleted = true</code>), downstream consumers process the logical delete, and then Cosmos DB removes the item after the TTL expires. This is the canonical exam answer when a scenario requires tracking deletes via change feed.
         </div>
       </div>
 
