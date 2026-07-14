@@ -16,7 +16,7 @@ Build a single standalone HTML file (no server, opens directly in browser, works
 4. API Management
 5. Event Grid / Service Bus / Event Hubs
 6. Security — Key Vault, Managed Identity, RBAC
-7. Containers — ACI, AKS, Azure Container Apps
+7. Containers — Azure Container Registry (ACR), Azure Container Instances (ACI), Azure Container Apps (ACA). AKS is out of scope for AZ-204 (it belongs to AZ-104/AZ-400/AZ-500) — do not add AKS-administration questions (cluster autoscaler, node pools, kubectl/RBAC, Kubernetes manifests, etc.). AKS may only appear as a brief contrast point in an ACA question (e.g., "ACA abstracts Kubernetes management, unlike AKS"), never as the subject being tested.
 8. Azure AD / Authentication / Authorization
 9. Monitoring, Logging, Application Insights
 10. Caching (Redis) & CDN

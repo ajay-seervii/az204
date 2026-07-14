@@ -884,3 +884,620 @@ services.AddStackExchangeRedisCache(options => {
       </div>
     </section>
     <!-- END MODULE 2 -->
+
+    <!-- ═══════════════════════════════════════════════════════════ MODULE 3 -->
+    <section class="module" id="m3">
+      <h2><span class="mod-num">03</span> Shared Access Signatures (SAS)</h2>
+
+      <div class="sec-lbl">&#9312; Key Concepts</div>
+
+      <h3>What a SAS Is — and What It Is Not</h3>
+      <p>A <strong>Shared Access Signature</strong> is a signed URI that grants time-limited, permission-scoped access to storage resources <em>without</em> sharing the account key. It is a delegation mechanism for Azure Storage (Blob, Queue, Table, File) — it is <strong>not</strong> an Azure AD identity and does not appear in sign-in logs. The exam frequently pits SAS against Azure AD / Managed Identity RBAC as the "more secure" alternative.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>SAS Type</th><th>Scope</th><th>Signed with</th><th>Typical use</th></tr></thead>
+          <tbody>
+            <tr><td>User Delegation SAS</td><td>Blob storage only</td><td>Azure AD (Entra ID) credentials — <code>getUserDelegationKey</code></td><td>Most secure option; no account key ever generated or stored</td></tr>
+            <tr><td>Service SAS</td><td>A single service (blob, queue, table, or file) at container/blob level</td><td>Storage account key</td><td>Delegate access to one container/blob without an access policy</td></tr>
+            <tr><td>Account SAS</td><td>One or more services, at the account level</td><td>Storage account key</td><td>Broadest scope — can grant access to multiple services, including account-level ops like List Containers</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Anatomy of a SAS Token</h3>
+      <p>A SAS URI is the resource URI plus a query string of parameters. The exam expects you to recognise these fields in a snippet and reason about what they restrict.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Parameter</th><th>Meaning</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><code>sv</code></td><td>Storage service version</td><td>2022-11-02</td></tr>
+            <tr><td><code>sp</code></td><td>Permissions (r=read, w=write, d=delete, l=list, a=add, c=create, u=update, p=process)</td><td>rwdl</td></tr>
+            <tr><td><code>se</code></td><td>Expiry time (UTC)</td><td>2025-06-01T00:00:00Z</td></tr>
+            <tr><td><code>st</code></td><td>Start time (UTC) — optional</td><td>2025-05-01T00:00:00Z</td></tr>
+            <tr><td><code>sig</code></td><td>HMAC-SHA256 signature — proves the token was signed by the key/identity holder</td><td>base64 string</td></tr>
+            <tr><td><code>si</code></td><td>Stored access policy identifier — links token to a revocable server-side policy</td><td>policy1</td></tr>
+            <tr><td><code>spr</code></td><td>Allowed protocol</td><td>https (should always be https-only)</td></tr>
+            <tr><td><code>sip</code></td><td>Allowed IP address/range — optional lock-down</td><td>168.1.5.60-168.1.5.70</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">&#128161;</div>
+        <div class="callout-body">
+          <div class="callout-title">Ad hoc SAS vs Stored Access Policy</div>
+          An <strong>ad hoc SAS</strong> encodes all restrictions (permissions, expiry) directly in the token — the only way to revoke it early is to rotate the storage account key (which invalidates every SAS signed with that key). A SAS tied to a <strong>stored access policy</strong> (<code>si</code> parameter) reads its permissions/expiry from a container-level policy that can be modified or deleted at any time to instantly revoke access — without rotating the account key. Exam scenario: "You need the ability to revoke a single client's access without affecting other SAS tokens." Answer: stored access policy.
+        </div>
+      </div>
+
+      <h3>User Delegation SAS — the Azure AD-backed option</h3>
+      <p>A <strong>User Delegation SAS</strong> is signed with a <em>user delegation key</em>, which is itself obtained using Azure AD credentials (<code>GetUserDelegationKeyAsync</code>) rather than the storage account key. This means:</p>
+      <ul>
+        <li>The caller must have an Azure RBAC role (e.g., <strong>Storage Blob Data Contributor</strong>) that includes the <code>Microsoft.Storage/storageAccounts/blobServices/generateUserDelegationKey/action</code> permission.</li>
+        <li>The resulting SAS is bound to that Azure AD principal's permissions — it cannot exceed what the caller's RBAC role allows.</li>
+        <li>Maximum validity is <strong>7 days</strong> from the time the key was requested (the account-key-based SAS types have no such Azure-imposed ceiling, only whatever expiry you set).</li>
+        <li>Works for <strong>Blob storage only</strong> — not available for Queue, Table, or File.</li>
+      </ul>
+
+      <h3>Comparing Delegation Options</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Approach</th><th>Requires account key?</th><th>Revocable instantly?</th><th>Identity traceable?</th></tr></thead>
+          <tbody>
+            <tr><td>User Delegation SAS</td><td>No</td><td>No (must wait for expiry, max 7 days) unless the RBAC role is revoked</td><td>Yes — tied to an Azure AD principal</td></tr>
+            <tr><td>Service/Account SAS (ad hoc)</td><td>Yes</td><td>Only by rotating the account key (invalidates all SAS tokens)</td><td>No — anonymous bearer token</td></tr>
+            <tr><td>Service/Account SAS (stored policy)</td><td>Yes</td><td>Yes — delete/modify the policy</td><td>No</td></tr>
+            <tr><td>Azure AD RBAC direct (no SAS)</td><td>No</td><td>Yes — remove role assignment</td><td>Yes</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">&#9313; Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Rotating the account key invalidates every ad hoc SAS signed with it — including ones you meant to keep</div>
+          Because ad hoc Service/Account SAS tokens are signed with the storage account key, regenerating that key (e.g., during a security rotation) immediately invalidates <strong>all</strong> SAS tokens signed with it, not just the one you intended to revoke. This is why production systems should prefer stored access policies (targeted revocation) or User Delegation SAS (no account key involved at all). Exam scenario: "After rotating the primary key, several unrelated client integrations broke. Why?" Answer: they were all using SAS tokens signed with the primary key.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">A SAS token does not appear in Azure AD sign-in logs</div>
+          SAS access is anonymous at the identity layer — Azure Monitor / Storage Analytics logs will show the request, but there is no Azure AD principal to audit in sign-in logs (except for User Delegation SAS, where the <em>key generation</em> event is logged, not each subsequent use of the resulting token). If the exam scenario requires per-user audit trails of every access, plain SAS is the wrong answer — Azure AD RBAC direct or User Delegation SAS (for the issuance step only) get you closer, but only Azure AD-authenticated calls without SAS give a full per-request identity trail.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Account SAS can grant account-level operations that Service SAS cannot</div>
+          A Service SAS is scoped to operations within one service (e.g., reading blobs in a container). An Account SAS can additionally grant account-level operations such as <code>List Containers</code>, <code>Get/Set Service Properties</code>, and can span multiple services (blob + queue + table + file) in one token. If a scenario needs a client to enumerate containers in an account, a Service SAS cannot do it — only an Account SAS (with the <code>sp=l</code> at account scope) or Azure AD RBAC can.
+        </div>
+      </div>
+
+      <div class="sec-lbl">&#9314; Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Metric</th><th>Value</th><th>Exam Note</th></tr></thead>
+          <tbody>
+            <tr><td>User Delegation SAS max validity</td><td>7 days</td><td>Hard Azure AD-imposed ceiling from the time the delegation key is requested</td></tr>
+            <tr><td>Account/Service SAS max validity</td><td>No Azure-enforced ceiling</td><td>Governed entirely by the <code>se</code> parameter you set — best practice is &lt;= 1 hour</td></tr>
+            <tr><td>Stored access policies per container</td><td>5 maximum</td><td>Applies to blob containers, file shares, queues, and tables</td></tr>
+            <tr><td>Recommended max SAS lifetime (Microsoft guidance)</td><td>&lt;= 1 hour (no start time) or use policies</td><td>Reduces exposure window if the token leaks</td></tr>
+            <tr><td>Clock skew tolerance for <code>st</code>/<code>se</code></td><td>~15 minutes</td><td>Omit <code>st</code> (start time) to avoid clock-skew rejection on immediate use</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">&#9315; CLI / SDK Patterns</div>
+
+<pre><code># Generate a service SAS for a blob container (CLI, account-key based)
+az storage container generate-sas \
+  --account-name mystorageacct \
+  --name mycontainer \
+  --permissions rwdl \
+  --expiry 2025-06-01T00:00:00Z \
+  --https-only \
+  --auth-mode key
+
+# Generate an account SAS spanning blob + file services
+az storage account generate-sas \
+  --account-name mystorageacct \
+  --services bf \
+  --resource-types sco \
+  --permissions rwdlac \
+  --expiry 2025-06-01T00:00:00Z \
+  --https-only</code></pre>
+
+<pre><code>// C# — User Delegation SAS (Azure AD-backed, no account key)
+BlobServiceClient serviceClient = new BlobServiceClient(
+    new Uri("https://mystorageacct.blob.core.windows.net"),
+    new DefaultAzureCredential());   // caller needs Storage Blob Data Contributor (or similar)
+
+UserDelegationKey key = await serviceClient.GetUserDelegationKeyAsync(
+    DateTimeOffset.UtcNow,
+    DateTimeOffset.UtcNow.AddHours(2));   // max 7 days total
+
+BlobSasBuilder sasBuilder = new BlobSasBuilder {
+    BlobContainerName = "mycontainer",
+    BlobName = "report.pdf",
+    Resource = "b",
+    ExpiresOn = DateTimeOffset.UtcNow.AddHours(1)
+};
+sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+string sasToken = sasBuilder.ToSasQueryParameters(key, "mystorageacct").ToString();
+string sasUri = $"https://mystorageacct.blob.core.windows.net/mycontainer/report.pdf?{sasToken}";</code></pre>
+
+<pre><code>// Create a stored access policy for targeted revocation (C#)
+BlobSignedIdentifier policy = new BlobSignedIdentifier {
+    Id = "readonly-30days",
+    AccessPolicy = new BlobAccessPolicy {
+        PolicyStartsOn = DateTimeOffset.UtcNow,
+        PolicyExpiresOn = DateTimeOffset.UtcNow.AddDays(30),
+        Permissions = "r"
+    }
+};
+await containerClient.SetAccessPolicyAsync(permissions: new[] { policy });
+
+// SAS tokens created with sasBuilder.Identifier = "readonly-30days"
+// inherit permissions/expiry from the policy — deleting the policy revokes them instantly</code></pre>
+
+      <div class="sec-lbl">&#9316; Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Use an Account SAS whenever you need to share a single blob"</div>
+          Account SAS is the <strong>broadest</strong>, most privileged SAS type — using it to share one blob violates least privilege. A Service SAS (or better, a User Delegation SAS) scoped to that container/blob is the correct answer whenever access needs to be narrow. Reach for Account SAS only when the scenario genuinely needs account-level operations or access across multiple storage services in one token.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "SAS tokens are tied to a user identity, so you can audit exactly who accessed a blob"</div>
+          <strong>False</strong> for Service/Account SAS — anyone holding the URL can use it; there is no per-use identity check. Only a User Delegation SAS ties the <em>issuance</em> of the token to an Azure AD principal (visible in that principal's audit trail), but subsequent uses of the resulting SAS URL are still anonymous bearer access, same as any other SAS. If the requirement is "audit every individual access by user," the answer is Azure AD RBAC direct access (no SAS at all), not any SAS variant.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "A stored access policy is required for every SAS token"</div>
+          Stored access policies are <strong>optional</strong> — most SAS tokens in practice are ad hoc, with permissions and expiry baked directly into the token. Stored access policies exist specifically to solve the revocation problem; they are not a mandatory prerequisite for generating a SAS. The exam trap usually reverses this: it implies ad hoc SAS "doesn't work" without a policy, which is false.
+        </div>
+      </div>
+
+      <div class="sec-lbl">&#9317; Practice Q&amp;A</div>
+
+      <div class="qa-list">
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">A partner organisation needs read-only access to a single blob container for 3 months. Their access must be revocable at any time without affecting other integrations that also use SAS tokens signed with the same storage account. What should you configure?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; A Service SAS tied to a stored access policy on that container</div>
+            <div class="qa-body">
+              A <strong>stored access policy</strong> lets you revoke this one integration's access by deleting/modifying the policy — without rotating the account key and breaking every other ad hoc SAS token.
+              <ul>
+                <li>Create the policy on the container with the desired permissions and a ~90-day expiry.</li>
+                <li>Generate the Service SAS referencing the policy's <code>si</code> identifier — the token itself carries no embedded expiry/permissions.</li>
+                <li>Wrong: an ad hoc Service SAS would require an account key rotation to revoke early, breaking unrelated tokens.</li>
+                <li>Wrong: Account SAS is broader scope than needed — violates least privilege for a single-container scenario.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">A web app needs to generate short-lived download links for blobs on behalf of signed-in users, without ever storing or handling the storage account key in application code. Which SAS approach fits, and what is required of the app's identity?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; User Delegation SAS — the app's managed identity needs an RBAC role with generateUserDelegationKey permission</div>
+            <div class="qa-body">
+              <strong>User Delegation SAS</strong> is signed with a key derived from Azure AD credentials, so the account key never needs to be present in app code or config.
+              <ul>
+                <li>The app (typically via Managed Identity) calls <code>GetUserDelegationKeyAsync</code>, which requires an RBAC role such as <strong>Storage Blob Data Contributor</strong>.</li>
+                <li>The resulting SAS can be no broader than the caller's own RBAC permissions.</li>
+                <li>Max validity from the time the key is requested is 7 days — plan short expiries (e.g., a few hours) for download links.</li>
+                <li>Wrong: Account/Service SAS would require embedding or retrieving the storage account key, which the requirement explicitly disallows.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">After a suspected credential leak, an administrator regenerates the primary storage account key. Immediately afterward, several client integrations that were working the day before start failing with 403 errors. What is the most likely cause?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Those integrations were using ad hoc SAS tokens signed with the primary key, which are now invalid</div>
+            <div class="qa-body">
+              Any Service/Account SAS <strong>signed with the primary key</strong> becomes invalid the instant that key is regenerated — regardless of the token's own <code>se</code> expiry.
+              <ul>
+                <li>This is expected behaviour, not a bug — key rotation invalidates every signature dependent on that key.</li>
+                <li>To avoid blast radius on future rotations: use the secondary key to sign some tokens (rotate keys independently), use stored access policies, or move to User Delegation SAS / Azure AD RBAC entirely.</li>
+                <li>User Delegation SAS tokens are unaffected by account key rotation since they don't depend on the account key at all.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">A client application needs to list all containers in a storage account and upload files to any of them. Which SAS type, at minimum, supports this?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Account SAS</div>
+            <div class="qa-body">
+              Listing containers is an <strong>account-level</strong> operation, not scoped to a single container.
+              <ul>
+                <li>A Service SAS is scoped to a single container/blob and cannot enumerate other containers.</li>
+                <li>An Account SAS with <code>sp=l</code> (list) at the account resource type and write permission across containers covers this.</li>
+                <li>User Delegation SAS is Blob-only and still scoped similarly to Service SAS semantics per resource — it does not grant account-wide list either.</li>
+                <li>Alternative: Azure AD RBAC role like Storage Blob Data Contributor scoped at the account level achieves the same without any SAS.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">A compliance review requires that you be able to identify exactly which individual accessed a specific blob at a specific time. Your current design uses Service SAS tokens distributed by email. What is the correct remediation?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Replace SAS-based access with Azure AD RBAC direct access so each request is authenticated as a specific principal</div>
+            <div class="qa-body">
+              SAS tokens (including User Delegation SAS at the point of use) are <strong>anonymous bearer credentials</strong> — the storage service cannot distinguish which human is presenting the token.
+              <ul>
+                <li>Only Azure AD-authenticated requests (users or managed identities calling with RBAC roles) produce per-principal entries in resource logs.</li>
+                <li>Switching to Azure AD RBAC means each user authenticates with their own identity — no shareable token exists at all.</li>
+                <li>User Delegation SAS only logs the <em>key generation</em> event under the requesting identity — every subsequent download using that URL is still anonymous.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END MODULE 3 -->
+
+    <!-- ═══════════════════════════════════════════════════════════ MODULE 4 -->
+    <section class="module" id="m4">
+      <h2><span class="mod-num">04</span> Microsoft Graph</h2>
+
+      <div class="sec-lbl">&#9312; Key Concepts</div>
+
+      <h3>What Microsoft Graph Is</h3>
+      <p><strong>Microsoft Graph</strong> is the unified REST API and SDK surface for Microsoft 365, Azure AD, and related services (Users, Groups, Mail, Calendar, Teams, SharePoint, Intune, security signals). AZ-204 tests it as the standard way an app reads/writes Azure AD data and Microsoft 365 resources — always through the same OAuth 2.0 mechanics covered in Module 1, using either delegated or application permissions.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td>Graph REST API</td><td>https://graph.microsoft.com/v1.0 (stable) or /beta (preview features, not for production)</td></tr>
+            <tr><td>Microsoft Graph SDK</td><td>Language-specific client libraries (Microsoft.Graph NuGet, @microsoft/microsoft-graph-client) that wrap REST + auth + retry logic</td></tr>
+            <tr><td>Microsoft Graph PowerShell / CLI</td><td>Administrative scripting against the same API surface</td></tr>
+            <tr><td>Change notifications (webhooks)</td><td>Subscribe to resource changes (e.g., new mail, calendar update) instead of polling</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Calling Graph — the Auth Handshake</h3>
+      <p>Every Graph call requires a bearer access token with <code>aud</code> = <code>https://graph.microsoft.com</code>, obtained via the flows from Module 1 and MSAL methods from Module 2. There is no separate "Graph login" — it is the same Microsoft Identity Platform token flow, just requesting Graph scopes/roles.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Scenario</th><th>Permission type</th><th>Example scope/role</th><th>Token claim</th></tr></thead>
+          <tbody>
+            <tr><td>User signs in, app reads their own profile</td><td>Delegated</td><td>User.Read</td><td>scp</td></tr>
+            <tr><td>App reads all users' profiles, no sign-in</td><td>Application</td><td>User.Read.All</td><td>roles</td></tr>
+            <tr><td>App sends mail as the signed-in user</td><td>Delegated</td><td>Mail.Send</td><td>scp</td></tr>
+            <tr><td>App sends mail as any mailbox, unattended</td><td>Application</td><td>Mail.Send (application)</td><td>roles</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Throttling and Retry</h3>
+      <p>Graph enforces per-app, per-tenant rate limits. Exceeding them returns <strong>HTTP 429 (Too Many Requests)</strong> with a <code>Retry-After</code> header specifying seconds to wait.</p>
+      <ul>
+        <li>Clients must honour <code>Retry-After</code> and use exponential backoff — never retry immediately in a tight loop.</li>
+        <li>The Microsoft Graph SDKs include a built-in retry handler that does this automatically.</li>
+        <li>Batching multiple requests into one HTTP call (<code>$batch</code>) reduces the number of round trips and helps avoid throttling for bulk operations.</li>
+      </ul>
+
+      <h3>Querying Efficiently — OData Parameters</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Parameter</th><th>Purpose</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><code>$select</code></td><td>Return only specified fields — reduces payload</td><td>?$select=displayName,mail</td></tr>
+            <tr><td><code>$filter</code></td><td>Server-side filtering</td><td>?$filter=startswith(displayName,'A')</td></tr>
+            <tr><td><code>$expand</code></td><td>Include related resources inline</td><td>?$expand=manager</td></tr>
+            <tr><td><code>$top</code></td><td>Page size</td><td>?$top=50</td></tr>
+            <tr><td><code>@odata.nextLink</code></td><td>Pagination cursor returned in the response — follow it to get the next page</td><td>(response field, not a request param)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-icon">&#128161;</div>
+        <div class="callout-body">
+          <div class="callout-title">Always paginate with @odata.nextLink — never assume one page has everything</div>
+          Graph list endpoints (e.g., <code>/users</code>, <code>/groups/{id}/members</code>) page results by default (typically 100–999 depending on the resource). A response is only complete when there is no <code>@odata.nextLink</code>. Code that reads <code>value[]</code> once and stops will silently miss data in any tenant large enough to paginate — a classic exam "what's wrong with this code" trap.
+        </div>
+      </div>
+
+      <div class="sec-lbl">&#9313; Exam Gotchas</div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">/beta endpoints are not supported for production workloads</div>
+          The <code>/beta</code> version of Graph exposes preview functionality that can change or disappear without notice and carries no SLA. Using it in production code is a common "what's wrong with this design" trap — the fix is to use <code>/v1.0</code> and, if a needed feature is beta-only, wait for GA or find a v1.0 equivalent rather than shipping against beta.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">429 without backoff causes cascading failures, not just a single failed call</div>
+          If a client retries immediately after a 429 instead of respecting <code>Retry-After</code>, it worsens the throttling condition for itself and potentially other apps in the same tenant. The exam may describe a scenario where "calls started failing intermittently after scaling out the client" — root cause is usually naive retry-without-backoff amplifying throttling, not a Graph outage.
+        </div>
+      </div>
+
+      <div class="callout gotcha">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Application permissions on Graph can be far broader than intended — least privilege matters</div>
+          <code>User.ReadWrite.All</code> as an application permission lets the app modify <strong>every</strong> user in the tenant, unrestricted by any delegated user context. Exam scenario: "An app only needs to update profile photos for users in the Marketing group, but was granted User.ReadWrite.All (application)." The better design uses Azure AD Administrative Units or a narrower delegated-permission-based approach with the app acting on behalf of a scoped admin, rather than a blanket application permission.
+        </div>
+      </div>
+
+      <div class="sec-lbl">&#9314; Key Numbers &amp; Limits</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Metric</th><th>Value</th><th>Exam Note</th></tr></thead>
+          <tbody>
+            <tr><td>Default page size (varies by resource)</td><td>~100–999 items</td><td>Always follow <code>@odata.nextLink</code> until absent</td></tr>
+            <tr><td>Batch request limit</td><td>20 requests per <code>$batch</code> call</td><td>Reduces round trips; still counts as 20 calls against throttling limits</td></tr>
+            <tr><td>Throttling response</td><td>HTTP 429 + Retry-After header (seconds)</td><td>Must honour Retry-After; SDKs auto-handle this</td></tr>
+            <tr><td>Change notification (webhook) max subscription lifetime</td><td>Varies by resource, e.g. ~4230 min (~3 days) for most resources, up to 29 days for Teams chat messages</td><td>Subscriptions must be renewed before expiry via PATCH</td></tr>
+            <tr><td>API versions</td><td>v1.0 (stable/GA), beta (preview)</td><td>Production apps must target v1.0</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sec-lbl">&#9315; CLI / SDK Patterns</div>
+
+<pre><code>// C# — Microsoft Graph SDK with delegated permissions (interactive)
+var scopes = new[] { "User.Read", "Mail.Send" };
+var credential = new InteractiveBrowserCredential();
+var graphClient = new GraphServiceClient(credential, scopes);
+
+var me = await graphClient.Me.GetAsync();</code></pre>
+
+<pre><code>// C# — Microsoft Graph SDK with application permissions (client credentials)
+var credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
+var graphClient = new GraphServiceClient(credential, new[] { "https://graph.microsoft.com/.default" });
+
+// Requires User.Read.All (application) + admin consent
+var users = await graphClient.Users.GetAsync(config => {
+    config.QueryParameters.Select = new[] { "displayName", "mail" };
+    config.QueryParameters.Top = 50;
+});
+
+// Correct pagination pattern — follow @odata.nextLink until null
+var pageIterator = PageIterator<User, UserCollectionResponse>
+    .CreatePageIterator(graphClient, users, user => { Console.WriteLine(user.DisplayName); return true; });
+await pageIterator.IterateAsync();</code></pre>
+
+<pre><code>// REST — raw HTTP call with retry-aware handling of 429
+GET https://graph.microsoft.com/v1.0/users?$select=displayName,mail&$top=50
+Authorization: Bearer {access_token}
+
+// If response is 429:
+// Retry-After: 30
+// -> wait 30s, then retry with exponential backoff, do not hammer immediately</code></pre>
+
+<pre><code>// Create a change notification subscription (webhook) instead of polling
+POST https://graph.microsoft.com/v1.0/subscriptions
+{
+  "changeType": "created,updated",
+  "notificationUrl": "https://myapp.example.com/notifications",
+  "resource": "/me/mailFolders('Inbox')/messages",
+  "expirationDateTime": "2025-06-01T18:23:45.9356913Z",
+  "clientState": "secretClientValue"
+}
+// Must renew (PATCH) before expirationDateTime — subscriptions are not indefinite</code></pre>
+
+      <div class="sec-lbl">&#9316; Wrong-Answer Traps</div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Poll the Graph API every few seconds to detect new emails as fast as possible"</div>
+          Polling wastes API quota, increases throttling risk, and adds latency between the event and detection. The correct pattern for near-real-time notification of changes is a <strong>change notification subscription</strong> (webhook) — Graph pushes a notification to your endpoint when the resource changes. Polling is only acceptable for low-frequency, low-volume scenarios where webhook infrastructure isn't justified.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Use /beta because it has the newest features and will eventually become v1.0 with the same shape"</div>
+          Beta endpoints can change shape or be removed entirely before (or instead of) reaching v1.0 — there's no guarantee of a stable migration path. Production code must target <code>/v1.0</code>; if a required capability only exists in beta, treat that as a blocker to raise with stakeholders, not a reason to ship against beta.
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-icon">&#9888;</div>
+        <div class="callout-body">
+          <div class="callout-title">Trap: "Grant User.ReadWrite.All (application) since it's simpler than figuring out delegated scopes"</div>
+          Broad application permissions are an over-privileged shortcut, not a simplification the exam rewards. When a scenario describes a need scoped to specific users or a specific action, the expected answer favours delegated permissions (scoped to what the signed-in user can already do) or the narrowest application permission that satisfies the requirement — not the broadest one available.
+        </div>
+      </div>
+
+      <div class="sec-lbl">&#9317; Practice Q&amp;A</div>
+
+      <div class="qa-list">
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">1</div>
+            <div class="qa-text">An application needs to be notified within seconds whenever a new email arrives in a shared mailbox, without polling. What Microsoft Graph feature should it use?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Create a change notification (webhook) subscription on the mailbox's messages resource</div>
+            <div class="qa-body">
+              <strong>Change notifications</strong> push events to a registered endpoint as they happen, avoiding polling latency and quota waste.
+              <ul>
+                <li>POST to <code>/subscriptions</code> with <code>resource</code> set to the mail folder, <code>changeType: "created"</code>, and a callback <code>notificationUrl</code>.</li>
+                <li>Subscriptions expire and must be renewed with a PATCH request before <code>expirationDateTime</code>.</li>
+                <li>The app must validate the <code>clientState</code> value on incoming notifications to confirm authenticity.</li>
+                <li>Wrong: polling on a timer introduces latency and burns API quota, and is more likely to trigger throttling under load.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">2</div>
+            <div class="qa-text">Code that calls GET /users and only reads the first `value` array in the response is missing users in a large tenant. What is the bug?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; The code does not follow @odata.nextLink to retrieve subsequent pages</div>
+            <div class="qa-body">
+              Graph list endpoints are paginated by default — a single response only contains a page of results (commonly up to a few hundred, resource-dependent).
+              <ul>
+                <li>The response includes an <code>@odata.nextLink</code> URL when more results exist; absence of that field means the last page was reached.</li>
+                <li>The fix is to loop, requesting <code>@odata.nextLink</code> repeatedly until it's absent — or use the SDK's <code>PageIterator</code>, which does this automatically.</li>
+                <li>This bug is invisible in small test tenants (everything fits on one page) and only surfaces at production scale — a classic AZ-204 "why does this work in dev but not prod" trap.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">3</div>
+            <div class="qa-text">A background service calling Microsoft Graph starts receiving HTTP 429 responses under load. The current implementation retries immediately in a tight loop. What should change?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Honour the Retry-After header and use exponential backoff between retries</div>
+            <div class="qa-body">
+              HTTP 429 means the app has exceeded Graph's throttling limits; immediate retries make it worse.
+              <ul>
+                <li>The response includes a <code>Retry-After</code> header specifying the minimum wait in seconds before retrying.</li>
+                <li>Exponential backoff (with jitter) should be applied on repeated 429s beyond the first.</li>
+                <li>The Microsoft Graph SDKs include a default retry handler that implements this — prefer it over hand-rolled retry logic.</li>
+                <li>Batching related calls via <code>$batch</code> can also reduce the total request count and lower throttling risk.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">4</div>
+            <div class="qa-text">An app must let a signed-in user forward one of their own calendar meetings via Graph. Which permission model is appropriate?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Delegated permission (e.g., Calendars.ReadWrite) — the app acts as the signed-in user</div>
+            <div class="qa-body">
+              Because the action is scoped to the user's own data and performed in a user-present context, delegated permissions are correct and least-privileged.
+              <ul>
+                <li>The resulting token carries <code>scp</code> with <code>Calendars.ReadWrite</code>, and Graph enforces that the user can only act on their own calendar (or others they already have delegate/share access to).</li>
+                <li>Application permission (<code>Calendars.ReadWrite</code> as a role) would let the app act on <strong>any</strong> user's calendar — unnecessarily broad for this scenario and a red flag on the exam if chosen for a single-user action.</li>
+                <li>Use application permissions only for admin/unattended scenarios spanning multiple mailboxes.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-q">
+            <div class="qa-n">5</div>
+            <div class="qa-text">A developer is building a feature against a Graph API that only exists under /beta and plans to ship it to production next week. What is the risk, and what should the team do?</div>
+            <div class="qa-tog">&#9660;</div>
+          </div>
+          <div class="qa-ans">
+            <div class="qa-correct">&#10003; Beta endpoints have no SLA and can change or be removed without notice — avoid shipping production dependencies on /beta</div>
+            <div class="qa-body">
+              <code>/beta</code> is explicitly a preview surface, not a staging area guaranteed to promote unchanged to <code>/v1.0</code>.
+              <ul>
+                <li>Shape changes, field removals, or full endpoint retirement can happen with little or no warning.</li>
+                <li>The team should check whether an equivalent v1.0 endpoint exists, delay the feature until GA, or explicitly accept and monitor the risk if there's no alternative — but never treat beta as production-stable by default.</li>
+                <li>This is a frequent "spot the bad practice" style question on the exam.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END MODULE 4 -->
+
+    <div class="nav-end">
+      <a href="learn-05-containers.html" class="btn-link">&#8592; Containers</a>
+      <a href="learn-07-security.html" class="btn-link fwd">Security &#8594;</a>
+    </div>
+  </main>
+</div>
+
+<script>
+
+(function(){
+  // Q&A accordion
+  document.querySelectorAll('.qa-q').forEach(function(q){
+    q.addEventListener('click',function(){
+      this.closest('.qa-item').classList.toggle('open');
+    });
+  });
+  // Sidebar scroll-spy
+  var links=document.querySelectorAll('.sb-link[data-m]');
+  var sections=document.querySelectorAll('.module[id]');
+  if(links.length&&sections.length){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var n=e.target.id.replace('m','');
+          links.forEach(function(l){l.classList.toggle('active',l.dataset.m===n);});
+        }
+      });
+    },{rootMargin:'-8% 0px -72% 0px'});
+    sections.forEach(function(s){obs.observe(s);});
+  }
+  // Sidebar click scroll
+  links.forEach(function(l){
+    l.addEventListener('click',function(e){
+      e.preventDefault();
+      var t=document.getElementById('m'+this.dataset.m);
+      if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+})();
+
+</script>
+</body>
+</html>
