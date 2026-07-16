@@ -525,7 +525,7 @@ function renderQuestion(){
     <span class="diff-badge ${q.difficulty==='Hard'?'diff-hard':'diff-medium'}">${q.difficulty}</span>
     <span class="topic-lbl">${t.icon} ${tKey}</span>
   </div>
-  <div class="q-text">${q.q}</div>`;
+  <div class="q-text">${escapeHtml(q.q)}</div>`;
   if(q.q_code) html+=`<pre class="q-code">${escapeHtml(q.q_code)}</pre>`;
   html+='<div class="opts">';
   const order = state.optionOrder[state.current] || q.options.map((_,i)=>i);
@@ -544,14 +544,14 @@ function renderQuestion(){
       if(origIdx===q.answer) indicator='<span class="opt-indicator opt-check">[Y]</span>';
       else if(origIdx===ans && ans!==q.answer) indicator='<span class="opt-indicator opt-cross">[N]</span>';
     }
-    html+=`<div class="${cls}" data-idx="${origIdx}"><span class="opt-lbl">${String.fromCharCode(65+pos)}</span>${opt}${indicator}</div>`;
+    html+=`<div class="${cls}" data-idx="${origIdx}"><span class="opt-lbl">${String.fromCharCode(65+pos)}</span>${escapeHtml(opt)}${indicator}</div>`;
   });
   html+='</div>';
   if(rev){
     const ok = ans===q.answer;
     html+=`<div class="expl show">
       <div class="expl-hdr ${ok?'ok':'bad'}">${ok?'[Y] Correct':'[N] Incorrect'}</div>
-      <p>${q.explanation}</p>
+      <p>${escapeHtml(q.explanation)}</p>
     </div>`;
   } else if(ans>=0 && state.blind){
     html+=`<div class="expl show"><p>Answer locked in. Feedback and explanation will be shown when you finish (blind mode).</p></div>`;
